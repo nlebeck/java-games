@@ -6,4 +6,7 @@ the process. I do hope to use open-source sprite collections like spritelib for
 art, at least to start out. Since I'll be working on game programming in my
 free time, my progress will probably be very slow and uneven.
 
+My main reference as of right now is the online draft of "Killer Game Programming
+in Java" by Andrew Davison.
+
 Niel Lebeck
