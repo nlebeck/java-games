@@ -4,6 +4,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.JPanel;
 import javax.swing.JFrame;
@@ -25,22 +29,58 @@ public class Main {
 }
 
 class GamePanel extends JPanel implements Runnable {
-	private static final int PWIDTH = 640;
-	private static final int PHEIGHT = 480;
+	private static final int PANEL_WIDTH = 640;
+	private static final int PANEL_HEIGHT = 480;
+	private static final int RENDER_PERIOD = 17; //in ms
+
 	
 	private Thread animator;
 	private boolean running = false;
-	private int renderPeriod = 17; //in ms
 	
 	private Graphics bufferGraphics;
 	private Image bufferImage = null;
 	
-	//temp
-	float secondCounter = 0;
-	int milliCounter = 0;
+	private Set<Integer> keySet;
+	private Set<Integer> prevKeySet;
+	
+	//game state
+	int rectPosX;
+	int rectPosY;
 	
 	public GamePanel() {
-		setPreferredSize(new Dimension(PWIDTH, PHEIGHT));
+		setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+		setFocusable(true);
+		
+		initializeGameState();
+		
+		keySet = new HashSet<Integer>();
+		prevKeySet = new HashSet<Integer>();
+		
+		addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				keySet.add(e.getKeyCode());
+			}
+			public void keyReleased(KeyEvent e) {
+				keySet.remove(e.getKeyCode());
+			}
+		});
+	}
+	
+	public void initializeGameState() {
+		rectPosX = 300;
+		rectPosY = 220;
+	}
+	
+	public boolean keyPressed(int keyCode) {
+		return keySet.contains(keyCode) && !prevKeySet.contains(keyCode);
+	}
+	
+	public boolean keyReleased(int keyCode) {
+		return !keySet.contains(keyCode) && prevKeySet.contains(keyCode);
+	}
+	
+	public boolean keyIsDown(int keyCode) {
+		return keySet.contains(keyCode);
 	}
 	
 	public void addNotify() {
@@ -57,20 +97,32 @@ class GamePanel extends JPanel implements Runnable {
 	
 	public void render() {
 		if (bufferImage == null) {
-			bufferImage = createImage(PWIDTH, PHEIGHT);
+			bufferImage = createImage(PANEL_WIDTH, PANEL_HEIGHT);
 			bufferGraphics = bufferImage.getGraphics();
 		}
 		
-		//TODO: render game
-		
 		//draw background
 		bufferGraphics.setColor(Color.white);
-		bufferGraphics.fillRect(0, 0, PWIDTH, PHEIGHT);
+		bufferGraphics.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
 		
+		//render game
+		bufferGraphics.setColor(Color.red);
+		bufferGraphics.fillRect(rectPosX, rectPosY, 40, 40);
 	}
 	
-	public void updateState() {
-		//TODO: actually do stuff
+	public void updateGameState() {
+		if (keyIsDown(KeyEvent.VK_LEFT)) {
+			rectPosX -= 2;
+		}
+		else if (keyIsDown(KeyEvent.VK_RIGHT)) {
+			rectPosX += 2;
+		}
+		if (keyIsDown(KeyEvent.VK_UP)) {
+			rectPosY -= 2;
+		}
+		else if (keyIsDown(KeyEvent.VK_DOWN)) {
+			rectPosY += 2;
+		}
 	}
 	
 	public void paintScreen() {
@@ -95,12 +147,15 @@ class GamePanel extends JPanel implements Runnable {
 		beforeTime = System.currentTimeMillis();
 		
 		while (running) {
-			updateState();
+			updateGameState();
 			render();
 			paintScreen();
 			
+			prevKeySet = keySet;
+			keySet = new HashSet<Integer>(prevKeySet);
+			
 			timeDiff = System.currentTimeMillis() - beforeTime;
-			sleepTime = renderPeriod - timeDiff;
+			sleepTime = RENDER_PERIOD - timeDiff;
 			if (sleepTime < 0) {
 				sleepTime = 5;
 			}
