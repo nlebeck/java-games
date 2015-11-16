@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -46,6 +47,7 @@ class GamePanel extends JPanel implements Runnable {
 	
 	//game state
 	Sprite playerChar;
+	List<Sprite> objects;
 	
 	public GamePanel() {
 		setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
@@ -68,6 +70,11 @@ class GamePanel extends JPanel implements Runnable {
 	
 	public void initializeGameState() {
 		playerChar = new Sprite(300, 220);
+		objects = new ArrayList<Sprite>();
+		objects.add(new Rock(100, 100));
+		objects.add(new Rock(500, 150));
+		objects.add(new Rock(200, 200));
+		
 	}
 	
 	public boolean keyPressed(int keyCode) {
@@ -106,6 +113,9 @@ class GamePanel extends JPanel implements Runnable {
 		
 		//render game
 		playerChar.draw(bufferGraphics);
+		for (Sprite s : objects) {
+			s.draw(bufferGraphics);
+		}
 	}
 	
 	public void updateGameState() {
