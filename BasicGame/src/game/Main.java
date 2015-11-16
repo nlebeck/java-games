@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -118,19 +119,52 @@ class GamePanel extends JPanel implements Runnable {
 		}
 	}
 	
-	public void updateGameState() {
-		if (keyIsDown(KeyEvent.VK_LEFT)) {
-			playerChar.moveLeft();
+	public Constants.Direction getArrowKeyDirection() {
+		Constants.Direction dir = Constants.Direction.NONE;
+		if (keyIsDown(KeyEvent.VK_LEFT) && keyIsDown(KeyEvent.VK_UP)) {
+			dir = Constants.Direction.UP_LEFT;
+		}
+		else if (keyIsDown(KeyEvent.VK_LEFT) && keyIsDown(KeyEvent.VK_DOWN)) {
+			dir = Constants.Direction.DOWN_LEFT;
+		}
+		else if (keyIsDown(KeyEvent.VK_RIGHT) && keyIsDown(KeyEvent.VK_UP)) {
+			dir = Constants.Direction.UP_RIGHT;
+		}
+		else if (keyIsDown(KeyEvent.VK_RIGHT) && keyIsDown(KeyEvent.VK_DOWN)) {
+			dir = Constants.Direction.DOWN_RIGHT;
+		}
+		else if (keyIsDown(KeyEvent.VK_LEFT)) {
+			dir = Constants.Direction.LEFT;
 		}
 		else if (keyIsDown(KeyEvent.VK_RIGHT)) {
-			playerChar.moveRight();
+			dir = Constants.Direction.RIGHT;
 		}
-		if (keyIsDown(KeyEvent.VK_UP)) {
-			playerChar.moveUp();
+		else if (keyIsDown(KeyEvent.VK_UP)) {
+			dir = Constants.Direction.UP;
 		}
 		else if (keyIsDown(KeyEvent.VK_DOWN)) {
-			playerChar.moveDown();
+			dir = Constants.Direction.DOWN;
 		}
+		return dir;
+	}
+	
+	public void updateGameState() {
+		Constants.Direction dir = getArrowKeyDirection();
+		playerChar.move(dir);
+		if (isCollision(playerChar, objects)) {
+			playerChar.undoLastMove();
+		}
+	}
+	
+	public boolean isCollision(Sprite sprite, List<Sprite> spriteList) {
+		boolean result = false;
+		Rectangle spriteBoundingBox = sprite.getBoundingBox();
+		for (Sprite otherSprite : spriteList) {
+			if (spriteBoundingBox.intersects(otherSprite.getBoundingBox())) {
+				result = true;
+			}
+		}
+		return result;
 	}
 	
 	public void paintScreen() {
