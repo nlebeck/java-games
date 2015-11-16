@@ -7,6 +7,7 @@ import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.JPanel;
@@ -44,8 +45,7 @@ class GamePanel extends JPanel implements Runnable {
 	private Set<Integer> prevKeySet;
 	
 	//game state
-	int rectPosX;
-	int rectPosY;
+	Sprite playerChar;
 	
 	public GamePanel() {
 		setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
@@ -67,8 +67,7 @@ class GamePanel extends JPanel implements Runnable {
 	}
 	
 	public void initializeGameState() {
-		rectPosX = 300;
-		rectPosY = 220;
+		playerChar = new Sprite(300, 220);
 	}
 	
 	public boolean keyPressed(int keyCode) {
@@ -106,22 +105,21 @@ class GamePanel extends JPanel implements Runnable {
 		bufferGraphics.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
 		
 		//render game
-		bufferGraphics.setColor(Color.red);
-		bufferGraphics.fillRect(rectPosX, rectPosY, 40, 40);
+		playerChar.draw(bufferGraphics);
 	}
 	
 	public void updateGameState() {
 		if (keyIsDown(KeyEvent.VK_LEFT)) {
-			rectPosX -= 2;
+			playerChar.moveLeft();
 		}
 		else if (keyIsDown(KeyEvent.VK_RIGHT)) {
-			rectPosX += 2;
+			playerChar.moveRight();
 		}
 		if (keyIsDown(KeyEvent.VK_UP)) {
-			rectPosY -= 2;
+			playerChar.moveUp();
 		}
 		else if (keyIsDown(KeyEvent.VK_DOWN)) {
-			rectPosY += 2;
+			playerChar.moveDown();
 		}
 	}
 	
