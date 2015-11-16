@@ -150,22 +150,9 @@ class GamePanel extends JPanel implements Runnable {
 	
 	public void updateGameState() {
 		Constants.Direction dir = getArrowKeyDirection();
-		playerChar.move(dir);
-		if (isCollision(playerChar, objects)) {
-			playerChar.undoLastMove();
-		}
+		playerChar.move(dir, objects);
 	}
-	
-	public boolean isCollision(Sprite sprite, List<Sprite> spriteList) {
-		boolean result = false;
-		Rectangle spriteBoundingBox = sprite.getBoundingBox();
-		for (Sprite otherSprite : spriteList) {
-			if (spriteBoundingBox.intersects(otherSprite.getBoundingBox())) {
-				result = true;
-			}
-		}
-		return result;
-	}
+
 	
 	public void paintScreen() {
 		Graphics g;
