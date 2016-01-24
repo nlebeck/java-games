@@ -6,15 +6,20 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
+import game.Constants.Direction;
+import game.Constants.SpriteType;
+
 public class Sprite {
 	int posX;
 	int posY;
 	int speed;
+	SpriteType type;
 		
 	public Sprite(int initX, int initY) {
 		posX = initX;
 		posY = initY;
-		speed = 2;
+		speed = 0;
+		type = SpriteType.BASE_SPRITE;
 	}
 	
 	public void draw(Graphics g) {
@@ -26,7 +31,7 @@ public class Sprite {
 		return new Rectangle(posX, posY, 40, 40);
 	}
 	
-	public void move(Constants.Direction dir, List<Sprite> collisionObjects) {
+	public void move(Direction dir, List<Sprite> collisionObjects) {
 		int lastPosX = posX;
 		int lastPosY = posY;
 		
@@ -36,8 +41,8 @@ public class Sprite {
 			posX = lastPosX;
 			posY = lastPosY;
 			
-			List<Constants.Direction> componentDirs = getComponentDirections(dir);
-			for (Constants.Direction componentDir : componentDirs) {
+			List<Direction> componentDirs = getComponentDirections(dir);
+			for (Direction componentDir : componentDirs) {
 				tempMove(componentDir);
 				if (isCollision(this, collisionObjects)) {
 					posX = lastPosX;
@@ -52,42 +57,42 @@ public class Sprite {
 		
 	}
 	
-	public void tempMove(Constants.Direction dir) {
-		if (dir == Constants.Direction.LEFT || dir == Constants.Direction.UP_LEFT
-				|| dir == Constants.Direction.DOWN_LEFT) {
+	public void tempMove(Direction dir) {
+		if (dir == Direction.LEFT || dir == Direction.UP_LEFT
+				|| dir == Direction.DOWN_LEFT) {
 			posX -= speed;
 		}
-		if (dir == Constants.Direction.RIGHT || dir == Constants.Direction.UP_RIGHT
-				|| dir == Constants.Direction.DOWN_RIGHT) {
+		if (dir == Direction.RIGHT || dir == Direction.UP_RIGHT
+				|| dir == Direction.DOWN_RIGHT) {
 			posX += speed;
 		}
-		if (dir == Constants.Direction.UP || dir == Constants.Direction.UP_LEFT
-				|| dir == Constants.Direction.UP_RIGHT) {
+		if (dir == Direction.UP || dir == Direction.UP_LEFT
+				|| dir == Direction.UP_RIGHT) {
 			posY -= speed;
 		}
-		if (dir == Constants.Direction.DOWN || dir == Constants.Direction.DOWN_LEFT
-				|| dir == Constants.Direction.DOWN_RIGHT) {
+		if (dir == Direction.DOWN || dir == Direction.DOWN_LEFT
+				|| dir == Direction.DOWN_RIGHT) {
 			posY += speed;
 		}
 	}
 	
-	public List<Constants.Direction> getComponentDirections(Constants.Direction dir) {
-		List<Constants.Direction> result = new ArrayList<Constants.Direction>(); 
-		if (dir == Constants.Direction.UP_LEFT) {
-			result.add(Constants.Direction.UP);
-			result.add(Constants.Direction.LEFT);
+	public List<Direction> getComponentDirections(Direction dir) {
+		List<Direction> result = new ArrayList<Direction>(); 
+		if (dir == Direction.UP_LEFT) {
+			result.add(Direction.UP);
+			result.add(Direction.LEFT);
 		}
-		else if (dir == Constants.Direction.UP_RIGHT) {
-			result.add(Constants.Direction.UP);
-			result.add(Constants.Direction.RIGHT);
+		else if (dir == Direction.UP_RIGHT) {
+			result.add(Direction.UP);
+			result.add(Direction.RIGHT);
 		}
-		else if (dir == Constants.Direction.DOWN_LEFT) {
-			result.add(Constants.Direction.DOWN);
-			result.add(Constants.Direction.LEFT);
+		else if (dir == Direction.DOWN_LEFT) {
+			result.add(Direction.DOWN);
+			result.add(Direction.LEFT);
 		}
-		else if (dir == Constants.Direction.DOWN_RIGHT) {
-			result.add(Constants.Direction.DOWN);
-			result.add(Constants.Direction.RIGHT);
+		else if (dir == Direction.DOWN_RIGHT) {
+			result.add(Direction.DOWN);
+			result.add(Direction.RIGHT);
 		}
 		else {
 			result.add(dir);

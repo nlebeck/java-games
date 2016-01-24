@@ -7,4 +7,10 @@ public class Constants {
 		DOWN_LEFT, DOWN_RIGHT,
 		NONE
 	}
+	
+	enum SpriteType {
+		BASE_SPRITE,
+		ROCK,
+		PLAYER_CHARACTER
+	}
 }

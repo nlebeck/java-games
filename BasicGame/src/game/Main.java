@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Set;
 
 import javax.swing.JPanel;
+
+import game.Constants.Direction;
+
 import javax.swing.JFrame;
 
 public class Main {
@@ -47,7 +50,7 @@ class GamePanel extends JPanel implements Runnable {
 	private Set<Integer> prevKeySet;
 	
 	//game state
-	Sprite playerChar;
+	PlayerCharacter playerChar;
 	List<Sprite> objects;
 	
 	public GamePanel() {
@@ -70,7 +73,7 @@ class GamePanel extends JPanel implements Runnable {
 	}
 	
 	public void initializeGameState() {
-		playerChar = new Sprite(300, 220);
+		playerChar = new PlayerCharacter(300, 220);
 		objects = new ArrayList<Sprite>();
 		objects.add(new Rock(100, 100));
 		objects.add(new Rock(500, 150));
@@ -119,37 +122,37 @@ class GamePanel extends JPanel implements Runnable {
 		}
 	}
 	
-	public Constants.Direction getArrowKeyDirection() {
-		Constants.Direction dir = Constants.Direction.NONE;
+	public Direction getArrowKeyDirection() {
+		Direction dir = Direction.NONE;
 		if (keyIsDown(KeyEvent.VK_LEFT) && keyIsDown(KeyEvent.VK_UP)) {
-			dir = Constants.Direction.UP_LEFT;
+			dir = Direction.UP_LEFT;
 		}
 		else if (keyIsDown(KeyEvent.VK_LEFT) && keyIsDown(KeyEvent.VK_DOWN)) {
-			dir = Constants.Direction.DOWN_LEFT;
+			dir = Direction.DOWN_LEFT;
 		}
 		else if (keyIsDown(KeyEvent.VK_RIGHT) && keyIsDown(KeyEvent.VK_UP)) {
-			dir = Constants.Direction.UP_RIGHT;
+			dir = Direction.UP_RIGHT;
 		}
 		else if (keyIsDown(KeyEvent.VK_RIGHT) && keyIsDown(KeyEvent.VK_DOWN)) {
-			dir = Constants.Direction.DOWN_RIGHT;
+			dir = Direction.DOWN_RIGHT;
 		}
 		else if (keyIsDown(KeyEvent.VK_LEFT)) {
-			dir = Constants.Direction.LEFT;
+			dir = Direction.LEFT;
 		}
 		else if (keyIsDown(KeyEvent.VK_RIGHT)) {
-			dir = Constants.Direction.RIGHT;
+			dir = Direction.RIGHT;
 		}
 		else if (keyIsDown(KeyEvent.VK_UP)) {
-			dir = Constants.Direction.UP;
+			dir = Direction.UP;
 		}
 		else if (keyIsDown(KeyEvent.VK_DOWN)) {
-			dir = Constants.Direction.DOWN;
+			dir = Direction.DOWN;
 		}
 		return dir;
 	}
 	
 	public void updateGameState() {
-		Constants.Direction dir = getArrowKeyDirection();
+		Direction dir = getArrowKeyDirection();
 		playerChar.move(dir, objects);
 	}
 
