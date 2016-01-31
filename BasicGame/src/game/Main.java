@@ -139,6 +139,7 @@ class GamePanel extends JPanel implements Runnable {
 			bufferGraphics.setColor(Color.black);
 			bufferGraphics.drawString("Niel's awesome action-adventure game", PANEL_WIDTH / 2 - 80, PANEL_HEIGHT / 2 - 40);
 			bufferGraphics.drawString("Press A to begin", PANEL_WIDTH / 2 - 20, PANEL_HEIGHT / 2 - 10);
+			bufferGraphics.drawString("Controls: arrow keys move, A shoots", PANEL_WIDTH / 2 - 80, PANEL_HEIGHT / 2 + 20);
 		}
 		else if (gameState == GameState.GAME_OVER) {
 			bufferGraphics.setColor(Color.white);
