@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -12,11 +11,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import game.Constants.Direction;
-
-import javax.swing.JFrame;
+import game.Constants.GameState;
 
 public class Main {
 
@@ -50,6 +49,7 @@ class GamePanel extends JPanel implements Runnable {
 	private Set<Integer> prevKeySet;
 	
 	//game state
+	GameState gameState;
 	PlayerCharacter playerChar;
 	List<Sprite> objects;
 	
@@ -73,6 +73,7 @@ class GamePanel extends JPanel implements Runnable {
 	}
 	
 	public void initializeGameState() {
+		gameState = GameState.START_MENU;
 		playerChar = new PlayerCharacter(300, 220);
 		objects = new ArrayList<Sprite>();
 		objects.add(new Rock(100, 100));
@@ -111,14 +112,23 @@ class GamePanel extends JPanel implements Runnable {
 			bufferGraphics = bufferImage.getGraphics();
 		}
 		
-		//draw background
-		bufferGraphics.setColor(Color.white);
-		bufferGraphics.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
+		if (gameState == GameState.PLAYING) {
+			//draw background
+			bufferGraphics.setColor(Color.white);
+			bufferGraphics.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
 		
-		//render game
-		playerChar.draw(bufferGraphics);
-		for (Sprite s : objects) {
-			s.draw(bufferGraphics);
+			//render game
+			playerChar.draw(bufferGraphics);
+			for (Sprite s : objects) {
+				s.draw(bufferGraphics);
+			}
+		}
+		else if (gameState == GameState.START_MENU) {
+			bufferGraphics.setColor(Color.white);
+			bufferGraphics.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
+			bufferGraphics.setColor(Color.black);
+			bufferGraphics.drawString("Niel's awesome action-adventure game", PANEL_WIDTH / 2 - 80, PANEL_HEIGHT / 2 - 40);
+			bufferGraphics.drawString("Press A to begin", PANEL_WIDTH / 2 - 20, PANEL_HEIGHT / 2 - 10);
 		}
 	}
 	
@@ -152,8 +162,15 @@ class GamePanel extends JPanel implements Runnable {
 	}
 	
 	public void updateGameState() {
-		Direction dir = getArrowKeyDirection();
-		playerChar.move(dir, objects);
+		if (gameState == GameState.PLAYING) {
+			Direction dir = getArrowKeyDirection();
+			playerChar.move(dir, objects);
+		}
+		else if (gameState == GameState.START_MENU) {
+			if (keyPressed(KeyEvent.VK_A)) {
+				gameState = GameState.PLAYING;
+			}
+		}
 	}
 
 	

@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import game.Constants.Direction;
 import game.Constants.SpriteType;
@@ -31,20 +33,23 @@ public class Sprite {
 		return new Rectangle(posX, posY, 40, 40);
 	}
 	
-	public void move(Direction dir, List<Sprite> collisionObjects) {
+	public void move(Direction dir, List<Sprite> objects) {
 		int lastPosX = posX;
 		int lastPosY = posY;
 		
 		tempMove(dir);
 		
-		if (isCollision(this, collisionObjects)) {
+		Set<Sprite> collisionSet = getCollisionSet(this, objects);
+		if (collisionSet.size() > 0) {
 			posX = lastPosX;
 			posY = lastPosY;
 			
 			List<Direction> componentDirs = getComponentDirections(dir);
 			for (Direction componentDir : componentDirs) {
 				tempMove(componentDir);
-				if (isCollision(this, collisionObjects)) {
+				Set<Sprite> tempCollisionSet = getCollisionSet(this, objects);
+				collisionSet.addAll(tempCollisionSet);
+				if (tempCollisionSet.size() > 0) {
 					posX = lastPosX;
 					posY = lastPosY;
 				}
@@ -52,10 +57,14 @@ public class Sprite {
 					break;
 				}
 			}
-
 		}
 		
+		for (Sprite collidedObject : collisionSet) {
+			this.processCollision(collidedObject);
+		}
 	}
+	
+	public void processCollision(Sprite collidedObject) {}
 	
 	public void tempMove(Direction dir) {
 		if (dir == Direction.LEFT || dir == Direction.UP_LEFT
@@ -100,14 +109,14 @@ public class Sprite {
 		return result;
 	}
 	
-	public boolean isCollision(Sprite sprite, List<Sprite> spriteList) {
-		boolean result = false;
+	public Set<Sprite> getCollisionSet(Sprite sprite, List<Sprite> spriteList) {
+		Set<Sprite> collisionSet = new HashSet<Sprite>();
 		Rectangle spriteBoundingBox = sprite.getBoundingBox();
 		for (Sprite otherSprite : spriteList) {
 			if (spriteBoundingBox.intersects(otherSprite.getBoundingBox())) {
-				result = true;
+				collisionSet.add(otherSprite);
 			}
 		}
-		return result;
+		return collisionSet;
 	}
 }

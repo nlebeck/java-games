@@ -13,4 +13,11 @@ public class Constants {
 		ROCK,
 		PLAYER_CHARACTER
 	}
+	
+	enum GameState {
+		START_MENU,
+		DIALOG,
+		MENU,
+		PLAYING
+	}
 }
