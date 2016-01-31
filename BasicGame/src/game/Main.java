@@ -14,8 +14,13 @@ import java.util.Set;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import game.Constants.Direction;
-import game.Constants.GameState;
+enum GameState {
+	START_MENU,
+	DIALOG,
+	MENU,
+	PLAYING,
+	GAME_OVER
+}
 
 public class Main {
 
@@ -38,6 +43,7 @@ class GamePanel extends JPanel implements Runnable {
 	private static final int PANEL_HEIGHT = 480;
 	private static final int RENDER_PERIOD = 17; //in ms
 
+	private static final int BULLET_COOLDOWN = 10; //in frames
 	
 	private Thread animator;
 	private boolean running = false;
@@ -52,6 +58,8 @@ class GamePanel extends JPanel implements Runnable {
 	GameState gameState;
 	PlayerCharacter playerChar;
 	List<Sprite> objects;
+	Direction lastPlayerDir;
+	int timeUntilNextBullet;
 	
 	public GamePanel() {
 		setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
@@ -79,6 +87,8 @@ class GamePanel extends JPanel implements Runnable {
 		objects.add(new Rock(100, 100));
 		objects.add(new Rock(500, 150));
 		objects.add(new Rock(200, 200));
+		lastPlayerDir = Direction.RIGHT;
+		timeUntilNextBullet = 0;
 		
 	}
 	
@@ -130,6 +140,12 @@ class GamePanel extends JPanel implements Runnable {
 			bufferGraphics.drawString("Niel's awesome action-adventure game", PANEL_WIDTH / 2 - 80, PANEL_HEIGHT / 2 - 40);
 			bufferGraphics.drawString("Press A to begin", PANEL_WIDTH / 2 - 20, PANEL_HEIGHT / 2 - 10);
 		}
+		else if (gameState == GameState.GAME_OVER) {
+			bufferGraphics.setColor(Color.white);
+			bufferGraphics.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
+			bufferGraphics.setColor(Color.black);
+			bufferGraphics.drawString("Game over", PANEL_WIDTH / 2 - 60, PANEL_HEIGHT / 2 - 40);
+		}
 	}
 	
 	public Direction getArrowKeyDirection() {
@@ -164,7 +180,30 @@ class GamePanel extends JPanel implements Runnable {
 	public void updateGameState() {
 		if (gameState == GameState.PLAYING) {
 			Direction dir = getArrowKeyDirection();
+			if (keyIsDown(KeyEvent.VK_A) && timeUntilNextBullet <= 0) {
+				shootBullet(dir);
+			}
+			System.out.println("Time until bullet: " + timeUntilNextBullet);
 			playerChar.move(dir, objects);
+			for (Sprite object : objects) {
+				object.update(objects);
+			}
+			List<Sprite> newObjectList = new ArrayList<Sprite>();
+			for (Sprite object : objects) {
+				if (!object.isDestroyed()) {
+					newObjectList.add(object);
+				}
+			}
+			if (playerChar.isDestroyed()) {
+				gameState = GameState.GAME_OVER;
+			}
+			objects = newObjectList;
+			if (dir != Direction.NONE) {
+				lastPlayerDir = dir;
+			}
+			if (timeUntilNextBullet > 0) {
+				timeUntilNextBullet--;
+			}
 		}
 		else if (gameState == GameState.START_MENU) {
 			if (keyPressed(KeyEvent.VK_A)) {
@@ -172,7 +211,32 @@ class GamePanel extends JPanel implements Runnable {
 			}
 		}
 	}
-
+	
+	public void shootBullet(Direction dir) {
+		System.out.println("Creating bullet");
+		int offsetX = 0;
+		int offsetY = 0;
+		Direction bulletDir = dir;
+		if (bulletDir == Direction.NONE) {
+			bulletDir = lastPlayerDir;
+		}
+		bulletDir = DirectionUtils.getComponentDirections(bulletDir).get(0);
+		if (bulletDir == Direction.LEFT) {
+			offsetX = -(playerChar.getWidth() / 2) - Bullet.BULLET_WIDTH;
+		}
+		else if (bulletDir == Direction.RIGHT) {
+			offsetX = (playerChar.getWidth() / 2) + Bullet.BULLET_WIDTH;
+		}
+		else if (bulletDir == Direction.UP) {
+			offsetY = -(playerChar.getHeight() / 2) - Bullet.BULLET_HEIGHT;
+		}
+		else if (bulletDir == Direction.DOWN) {
+			offsetY = (playerChar.getHeight() / 2) + Bullet.BULLET_HEIGHT;
+		}
+		Bullet bullet = new Bullet(playerChar.getX() + offsetX, playerChar.getY() + offsetY, bulletDir);
+		objects.add(bullet);
+		timeUntilNextBullet = BULLET_COOLDOWN;
+	}
 	
 	public void paintScreen() {
 		Graphics g;

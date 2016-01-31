@@ -3,34 +3,71 @@ package game;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import game.Constants.Direction;
-import game.Constants.SpriteType;
+enum SpriteType {
+	BASE_SPRITE,
+	ROCK,
+	PLAYER_CHARACTER,
+	BULLET
+}
 
 public class Sprite {
-	int posX;
-	int posY;
-	int speed;
-	SpriteType type;
+	protected int posX;
+	protected int posY;
+	protected int speed;
+	protected SpriteType type;
+	protected boolean destroyed;
+	protected int width;
+	protected int height;
 		
-	public Sprite(int initX, int initY) {
+	public Sprite(int initX, int initY, int initWidth, int initHeight) {
 		posX = initX;
 		posY = initY;
+		width = initWidth;
+		height = initHeight;
 		speed = 0;
 		type = SpriteType.BASE_SPRITE;
+		destroyed = false;
+	}
+	
+	public boolean isDestroyed() {
+		return destroyed;
+	}
+	
+	public void destroy() {
+		destroyed = true;
+	}
+	
+	public SpriteType getType() {
+		return type;
+	}
+	
+	public int getX() {
+		return posX;
+	}
+	
+	public int getY() {
+		return posY;
+	}
+	
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return height;
 	}
 	
 	public void draw(Graphics g) {
-		g.setColor(Color.RED);
-		g.fillRect(posX, posY, 40, 40);
+		g.setColor(Color.black);
+		g.fillRect(posX, posY, width, height);
 	}
 	
 	public Rectangle getBoundingBox() {
-		return new Rectangle(posX, posY, 40, 40);
+		return new Rectangle(posX - (width / 2), posY - (height / 2), width, height);
 	}
 	
 	public void move(Direction dir, List<Sprite> objects) {
@@ -39,15 +76,15 @@ public class Sprite {
 		
 		tempMove(dir);
 		
-		Set<Sprite> collisionSet = getCollisionSet(this, objects);
+		Set<Sprite> collisionSet = CollisionHandler.getCollisionSet(this, objects);
 		if (collisionSet.size() > 0) {
 			posX = lastPosX;
 			posY = lastPosY;
 			
-			List<Direction> componentDirs = getComponentDirections(dir);
+			List<Direction> componentDirs = DirectionUtils.getComponentDirections(dir);
 			for (Direction componentDir : componentDirs) {
 				tempMove(componentDir);
-				Set<Sprite> tempCollisionSet = getCollisionSet(this, objects);
+				Set<Sprite> tempCollisionSet = CollisionHandler.getCollisionSet(this, objects);
 				collisionSet.addAll(tempCollisionSet);
 				if (tempCollisionSet.size() > 0) {
 					posX = lastPosX;
@@ -60,12 +97,10 @@ public class Sprite {
 		}
 		
 		for (Sprite collidedObject : collisionSet) {
-			this.processCollision(collidedObject);
+			CollisionHandler.handleCollision(this, collidedObject);
 		}
 	}
-	
-	public void processCollision(Sprite collidedObject) {}
-	
+		
 	public void tempMove(Direction dir) {
 		if (dir == Direction.LEFT || dir == Direction.UP_LEFT
 				|| dir == Direction.DOWN_LEFT) {
@@ -84,39 +119,6 @@ public class Sprite {
 			posY += speed;
 		}
 	}
-	
-	public List<Direction> getComponentDirections(Direction dir) {
-		List<Direction> result = new ArrayList<Direction>(); 
-		if (dir == Direction.UP_LEFT) {
-			result.add(Direction.UP);
-			result.add(Direction.LEFT);
-		}
-		else if (dir == Direction.UP_RIGHT) {
-			result.add(Direction.UP);
-			result.add(Direction.RIGHT);
-		}
-		else if (dir == Direction.DOWN_LEFT) {
-			result.add(Direction.DOWN);
-			result.add(Direction.LEFT);
-		}
-		else if (dir == Direction.DOWN_RIGHT) {
-			result.add(Direction.DOWN);
-			result.add(Direction.RIGHT);
-		}
-		else {
-			result.add(dir);
-		}
-		return result;
-	}
-	
-	public Set<Sprite> getCollisionSet(Sprite sprite, List<Sprite> spriteList) {
-		Set<Sprite> collisionSet = new HashSet<Sprite>();
-		Rectangle spriteBoundingBox = sprite.getBoundingBox();
-		for (Sprite otherSprite : spriteList) {
-			if (spriteBoundingBox.intersects(otherSprite.getBoundingBox())) {
-				collisionSet.add(otherSprite);
-			}
-		}
-		return collisionSet;
-	}
+
+	public void update(List<Sprite> objects) {}
 }
