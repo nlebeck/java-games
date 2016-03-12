@@ -1,12 +1,14 @@
 package game;
 
-import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import javax.imageio.ImageIO;
 
 public class Tilemap {
 	private static final String TILEMAP_MAGIC_WORD = "tilemap";
@@ -15,9 +17,21 @@ public class Tilemap {
 	private int numRows;
 	private int numCols;
 	private int tileWidth;
+	private Image[] images;
 	
-	public Tilemap(Path p) {
-		tileWidth = 40;
+	public Tilemap(Path p, Path tileFolder, int numTiles, String suffix, int tileWidth) {
+		this.tileWidth = tileWidth;
+		
+		images = new Image[numTiles];
+		for (int i = 0; i < numTiles; i++) {
+			Path imagePath = tileFolder.resolve(i + suffix);
+			try {
+				images[i] = ImageIO.read(imagePath.toFile());
+			} catch (IOException e) {
+				System.out.println("Error loading image for tile " + i + ": " + e);
+			}
+		}
+		
 		numRows = -1;
 		numCols = -1;
 		int currentRow = 0;
@@ -38,7 +52,7 @@ public class Tilemap {
 				}
 			}
 		} catch (IOException e) {
-			System.err.println("Error reading tilemap file");
+			System.err.println("Error reading tilemap file: " + e);
 		}
 	}
 	
@@ -46,13 +60,7 @@ public class Tilemap {
 		for (int i = 0; i < numCols; i++) {
 			for (int j = 0; j < numRows; j++) {
 				int tile = tiles[j * numCols + i];
-				if (tile == 0) {
-					g.setColor(Color.GREEN);
-				}
-				else if (tile == 1) {
-					g.setColor(Color.BLUE);
-				}
-				g.fillRect(i * tileWidth, j * tileWidth, tileWidth, tileWidth);
+				g.drawImage(images[tile], i * tileWidth, j * tileWidth, null);
 			}
 		}
 	}
