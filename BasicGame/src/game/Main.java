@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -61,11 +62,15 @@ class GamePanel extends JPanel implements Runnable {
 	Direction lastPlayerDir;
 	int timeUntilNextBullet;
 	
+	//graphics state
+	Tilemap tilemap;
+	
 	public GamePanel() {
 		setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
 		setFocusable(true);
 		
 		initializeGameState();
+		initializeGraphicsState();
 		
 		keySet = new HashSet<Integer>();
 		prevKeySet = new HashSet<Integer>();
@@ -90,6 +95,10 @@ class GamePanel extends JPanel implements Runnable {
 		lastPlayerDir = Direction.RIGHT;
 		timeUntilNextBullet = BULLET_COOLDOWN;
 		
+	}
+	
+	public void initializeGraphicsState() {
+		tilemap = new Tilemap(Paths.get("res", "tilemap.txt"));
 	}
 	
 	public boolean keyPressed(int keyCode) {
@@ -123,9 +132,12 @@ class GamePanel extends JPanel implements Runnable {
 		}
 		
 		if (gameState == GameState.PLAYING) {
-			//draw background
+			//clear buffer
 			bufferGraphics.setColor(Color.white);
 			bufferGraphics.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
+			
+			//draw background
+			tilemap.draw(bufferGraphics);
 		
 			//render game
 			playerChar.draw(bufferGraphics);
