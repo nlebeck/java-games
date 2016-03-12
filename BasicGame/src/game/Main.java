@@ -88,7 +88,7 @@ class GamePanel extends JPanel implements Runnable {
 		objects.add(new Rock(500, 150));
 		objects.add(new Rock(200, 200));
 		lastPlayerDir = Direction.RIGHT;
-		timeUntilNextBullet = 0;
+		timeUntilNextBullet = BULLET_COOLDOWN;
 		
 	}
 	
@@ -184,7 +184,6 @@ class GamePanel extends JPanel implements Runnable {
 			if (keyIsDown(KeyEvent.VK_A) && timeUntilNextBullet <= 0) {
 				shootBullet(dir);
 			}
-			System.out.println("Time until bullet: " + timeUntilNextBullet);
 			playerChar.move(dir, objects);
 			for (Sprite object : objects) {
 				object.update(objects);
@@ -214,7 +213,6 @@ class GamePanel extends JPanel implements Runnable {
 	}
 	
 	public void shootBullet(Direction dir) {
-		System.out.println("Creating bullet");
 		int offsetX = 0;
 		int offsetY = 0;
 		Direction bulletDir = dir;

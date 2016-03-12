@@ -29,7 +29,6 @@ public class Bullet extends Sprite {
 	}
 	
 	public void destroy() {
-		System.out.println("u wot m8");
 		super.destroy();
 	}
 
