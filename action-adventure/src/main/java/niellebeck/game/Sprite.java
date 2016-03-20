@@ -1,9 +1,8 @@
 package niellebeck.game;
 
-import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Rectangle;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -22,8 +21,14 @@ public class Sprite {
 	protected boolean destroyed;
 	protected int width;
 	protected int height;
+	protected Image img;
 		
-	public Sprite(int initX, int initY, int initWidth, int initHeight) {
+	public Sprite(int initX, int initY, int initWidth, int initHeight, String imagePath) {
+		this(initX, initY, initWidth, initHeight);
+		img = ResourceLoader.loadImage(imagePath);
+	}
+	
+	protected Sprite(int initX, int initY, int initWidth, int initHeight) {
 		posX = initX;
 		posY = initY;
 		width = initWidth;
@@ -31,6 +36,7 @@ public class Sprite {
 		speed = 0;
 		type = SpriteType.BASE_SPRITE;
 		destroyed = false;
+		img = null;
 	}
 	
 	public boolean isDestroyed() {
@@ -62,8 +68,9 @@ public class Sprite {
 	}
 	
 	public void draw(Graphics g) {
-		g.setColor(Color.black);
-		g.fillRect(posX, posY, width, height);
+		if (img != null) {
+			g.drawImage(img, posX, posY, width, height, null);
+		}
 	}
 	
 	public Rectangle getBoundingBox() {

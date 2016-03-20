@@ -4,13 +4,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import javax.imageio.ImageIO;
 
 public class Tilemap {
 	private static final String TILEMAP_MAGIC_WORD = "tilemap";
@@ -62,11 +56,7 @@ public class Tilemap {
 		images = new Image[numTiles];
 		for (int i = 0; i < numTiles; i++) {
 			String imagePath = tileDir + "/" + i + suffix;
-			try {
-				images[i] = ImageIO.read(getClass().getResourceAsStream(imagePath));
-			} catch (IOException e) {
-				Logger.panic("Error loading image for tile " + i + ": " + e);
-			}
+			images[i] = ResourceLoader.loadImage(imagePath);
 		}
 	}
 	
