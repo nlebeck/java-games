@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,30 +21,32 @@ public class Tilemap {
 	private int tileWidth;
 	private Image[] images;
 	
-	public Tilemap(Path p, Path tileFolder, int numTiles, String suffix, int tileWidth) {
-		this.tileWidth = tileWidth;
-		
-		images = new Image[numTiles];
-		for (int i = 0; i < numTiles; i++) {
-			Path imagePath = tileFolder.resolve(i + suffix);
-			try {
-				images[i] = ImageIO.read(imagePath.toFile());
-			} catch (IOException e) {
-				System.out.println("Error loading image for tile " + i + ": " + e);
-			}
-		}
-		
+	public Tilemap(String tilemapFile) {		
 		numRows = -1;
 		numCols = -1;
+		int numTiles = -1;
+		String tileDir = null;
+		String suffix = null;
+		
 		int currentRow = 0;
-		try (BufferedReader reader = Files.newBufferedReader(p, Charset.forName("US-ASCII"))) {
+		try (BufferedReader reader = new BufferedReader(
+				new InputStreamReader(getClass().getResourceAsStream(tilemapFile)))) {
 			String line = null;
 			while((line = reader.readLine()) != null) {
 				String[] split = line.split("\\s+");
+				if (split.length < 7) {
+					Logger.panic("Malformed tilemap header");
+				}
 				if (split[0].equalsIgnoreCase(TILEMAP_MAGIC_WORD)) {
 					numRows = Integer.parseInt(split[1]);
 					numCols = Integer.parseInt(split[2]);
+					tileDir = split[3];
+					numTiles = Integer.parseInt(split[4]);
+					int tileWidth = Integer.parseInt(split[5]);
+					suffix = split[6];
+					
 					tiles = new int[numRows * numCols];
+					this.tileWidth = tileWidth;
 				}
 				else {
 					for (int i = 0; i < numCols; i++) {
@@ -52,7 +56,17 @@ public class Tilemap {
 				}
 			}
 		} catch (IOException e) {
-			System.err.println("Error reading tilemap file: " + e);
+			Logger.panic("Error reading tilemap file: " + e);
+		}
+		
+		images = new Image[numTiles];
+		for (int i = 0; i < numTiles; i++) {
+			String imagePath = tileDir + "/" + i + suffix;
+			try {
+				images[i] = ImageIO.read(getClass().getResourceAsStream(imagePath));
+			} catch (IOException e) {
+				Logger.panic("Error loading image for tile " + i + ": " + e);
+			}
 		}
 	}
 	

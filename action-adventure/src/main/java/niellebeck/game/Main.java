@@ -98,7 +98,7 @@ class GamePanel extends JPanel implements Runnable {
 	}
 	
 	public void initializeGraphicsState() {
-		tilemap = new Tilemap(Paths.get("tilemap.txt"), Paths.get("tiles"), 2, ".png", 40);
+		tilemap = new Tilemap("/tilemap.txt");
 	}
 	
 	public boolean keyPressed(int keyCode) {
