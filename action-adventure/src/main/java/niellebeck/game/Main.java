@@ -1,4 +1,4 @@
-package game;
+package niellebeck.game;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -98,7 +98,7 @@ class GamePanel extends JPanel implements Runnable {
 	}
 	
 	public void initializeGraphicsState() {
-		tilemap = new Tilemap(Paths.get("res", "tilemap.txt"), Paths.get("res", "tiles"), 2, ".png", 40);
+		tilemap = new Tilemap(Paths.get("tilemap.txt"), Paths.get("tiles"), 2, ".png", 40);
 	}
 	
 	public boolean keyPressed(int keyCode) {

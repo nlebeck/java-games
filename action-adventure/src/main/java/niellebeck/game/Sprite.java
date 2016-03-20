@@ -1,4 +1,4 @@
-package game;
+package niellebeck.game;
 
 import java.awt.Color;
 import java.awt.Graphics;

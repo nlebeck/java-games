@@ -1,4 +1,4 @@
-package game;
+package niellebeck.game;
 
 import java.awt.Rectangle;
 import java.util.HashSet;
