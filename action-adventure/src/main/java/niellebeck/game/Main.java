@@ -52,9 +52,6 @@ class GamePanel extends JPanel implements Runnable {
 	private Graphics bufferGraphics;
 	private Image bufferImage = null;
 	
-	private Set<Integer> keySet;
-	private Set<Integer> prevKeySet;
-	
 	//game state
 	GameState gameState;
 	PlayerCharacter playerChar;
@@ -65,6 +62,9 @@ class GamePanel extends JPanel implements Runnable {
 	//graphics state
 	Tilemap tilemap;
 	
+	//input
+	KeyboardInput keyboard;
+	
 	public GamePanel() {
 		setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
 		setFocusable(true);
@@ -72,17 +72,7 @@ class GamePanel extends JPanel implements Runnable {
 		initializeGameState();
 		initializeGraphicsState();
 		
-		keySet = new HashSet<Integer>();
-		prevKeySet = new HashSet<Integer>();
-		
-		addKeyListener(new KeyAdapter() {
-			public void keyPressed(KeyEvent e) {
-				keySet.add(e.getKeyCode());
-			}
-			public void keyReleased(KeyEvent e) {
-				keySet.remove(e.getKeyCode());
-			}
-		});
+		keyboard = new KeyboardInput(this);
 	}
 	
 	public void initializeGameState() {
@@ -99,18 +89,6 @@ class GamePanel extends JPanel implements Runnable {
 	
 	public void initializeGraphicsState() {
 		tilemap = new Tilemap("/tilemap.txt");
-	}
-	
-	public boolean keyPressed(int keyCode) {
-		return keySet.contains(keyCode) && !prevKeySet.contains(keyCode);
-	}
-	
-	public boolean keyReleased(int keyCode) {
-		return !keySet.contains(keyCode) && prevKeySet.contains(keyCode);
-	}
-	
-	public boolean keyIsDown(int keyCode) {
-		return keySet.contains(keyCode);
 	}
 	
 	public void addNotify() {
@@ -161,44 +139,16 @@ class GamePanel extends JPanel implements Runnable {
 		}
 	}
 	
-	public Direction getArrowKeyDirection() {
-		Direction dir = Direction.NONE;
-		if (keyIsDown(KeyEvent.VK_LEFT) && keyIsDown(KeyEvent.VK_UP)) {
-			dir = Direction.UP_LEFT;
-		}
-		else if (keyIsDown(KeyEvent.VK_LEFT) && keyIsDown(KeyEvent.VK_DOWN)) {
-			dir = Direction.DOWN_LEFT;
-		}
-		else if (keyIsDown(KeyEvent.VK_RIGHT) && keyIsDown(KeyEvent.VK_UP)) {
-			dir = Direction.UP_RIGHT;
-		}
-		else if (keyIsDown(KeyEvent.VK_RIGHT) && keyIsDown(KeyEvent.VK_DOWN)) {
-			dir = Direction.DOWN_RIGHT;
-		}
-		else if (keyIsDown(KeyEvent.VK_LEFT)) {
-			dir = Direction.LEFT;
-		}
-		else if (keyIsDown(KeyEvent.VK_RIGHT)) {
-			dir = Direction.RIGHT;
-		}
-		else if (keyIsDown(KeyEvent.VK_UP)) {
-			dir = Direction.UP;
-		}
-		else if (keyIsDown(KeyEvent.VK_DOWN)) {
-			dir = Direction.DOWN;
-		}
-		return dir;
-	}
-	
 	public void updateGameState() {
 		if (gameState == GameState.PLAYING) {
-			Direction dir = getArrowKeyDirection();
-			if (keyIsDown(KeyEvent.VK_A) && timeUntilNextBullet <= 0) {
+			Direction dir = keyboard.getArrowKeyDirection();
+			if (keyboard.keyIsDown(KeyEvent.VK_A) && timeUntilNextBullet <= 0) {
 				shootBullet(dir);
 			}
 			playerChar.move(dir, objects);
+			playerChar.update(keyboard, objects);
 			for (Sprite object : objects) {
-				object.update(objects);
+				object.update(keyboard, objects);
 			}
 			List<Sprite> newObjectList = new ArrayList<Sprite>();
 			for (Sprite object : objects) {
@@ -218,7 +168,7 @@ class GamePanel extends JPanel implements Runnable {
 			}
 		}
 		else if (gameState == GameState.START_MENU) {
-			if (keyPressed(KeyEvent.VK_A)) {
+			if (keyboard.keyPressed(KeyEvent.VK_A)) {
 				gameState = GameState.PLAYING;
 			}
 		}
@@ -275,8 +225,7 @@ class GamePanel extends JPanel implements Runnable {
 			render();
 			paintScreen();
 			
-			prevKeySet = keySet;
-			keySet = new HashSet<Integer>(prevKeySet);
+			keyboard.update();
 			
 			timeDiff = System.currentTimeMillis() - beforeTime;
 			sleepTime = RENDER_PERIOD - timeDiff;

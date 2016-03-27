@@ -31,8 +31,9 @@ public class Bullet extends Sprite {
 	public void destroy() {
 		super.destroy();
 	}
-
-	public void update(List<Sprite> objects) {
+	
+	@Override
+	public void update(KeyboardInput keyboard, List<Sprite> objects) {
 		this.move(dir, objects);
 		if (Math.abs(this.posX - this.startingX) > MAX_DISTANCE || Math.abs(this.posY - this.startingY) > MAX_DISTANCE) {
 			this.destroy();

@@ -127,5 +127,5 @@ public class Sprite {
 		}
 	}
 
-	public void update(List<Sprite> objects) {}
+	public void update(KeyboardInput keyboard, List<Sprite> objects) {}
 }
