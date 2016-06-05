@@ -37,11 +37,11 @@ public class PlayerCharacter extends Sprite {
 	}
 	
 	@Override
-	public void update(KeyboardInput keyboard, List<Sprite> objects) {
+	public void update(KeyboardInput keyboard, List<Sprite> sprites) {
 		Direction moveDir = keyboard.getArrowKeyDirection();
 		img = animate(moveDir);
 		if (moveDir != Direction.NONE) {
-			move(moveDir, objects);
+			move(moveDir, sprites);
 		}
 	}
 	

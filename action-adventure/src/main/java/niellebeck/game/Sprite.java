@@ -64,13 +64,13 @@ public class Sprite {
 		return new Rectangle(posX - (width / 2), posY - (height / 2), width, height);
 	}
 	
-	public void move(Direction dir, List<Sprite> objects) {
+	public void move(Direction dir, List<Sprite> sprites) {
 		int lastPosX = posX;
 		int lastPosY = posY;
 		
 		tempMove(dir);
 		
-		Set<Sprite> collisionSet = CollisionHandler.getCollisionSet(this, objects);
+		Set<Sprite> collisionSet = CollisionHandler.getCollisionSet(this, sprites);
 		if (collisionSet.size() > 0) {
 			posX = lastPosX;
 			posY = lastPosY;
@@ -78,7 +78,7 @@ public class Sprite {
 			List<Direction> componentDirs = DirectionUtils.getComponentDirections(dir);
 			for (Direction componentDir : componentDirs) {
 				tempMove(componentDir);
-				Set<Sprite> tempCollisionSet = CollisionHandler.getCollisionSet(this, objects);
+				Set<Sprite> tempCollisionSet = CollisionHandler.getCollisionSet(this, sprites);
 				collisionSet.addAll(tempCollisionSet);
 				if (tempCollisionSet.size() > 0) {
 					posX = lastPosX;
@@ -90,8 +90,8 @@ public class Sprite {
 			}
 		}
 		
-		for (Sprite collidedObject : collisionSet) {
-			CollisionHandler.handleCollision(this, collidedObject);
+		for (Sprite collidedSprite : collisionSet) {
+			CollisionHandler.handleCollision(this, collidedSprite);
 		}
 	}
 		
@@ -114,5 +114,5 @@ public class Sprite {
 		}
 	}
 
-	public void update(KeyboardInput keyboard, List<Sprite> objects) {}
+	public void update(KeyboardInput keyboard, List<Sprite> sprites) {}
 }

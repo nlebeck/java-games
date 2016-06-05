@@ -11,7 +11,7 @@ public class Game {
 	private static final int BULLET_COOLDOWN = 10; //in frames
 	
 	PlayerCharacter playerChar;
-	List<Sprite> objects;
+	List<Sprite> sprites;
 	Direction lastPlayerDir;
 	int timeUntilNextBullet;
 	
@@ -20,12 +20,12 @@ public class Game {
 	
 	public Game() {
 		playerChar = new PlayerCharacter(300, 220);
-		objects = new ArrayList<Sprite>();
-		objects.add(new Rock(100, 100));
-		objects.add(new Rock(500, 150));
-		objects.add(new Rock(200, 200));
-		objects.add(new Enemy(400, 400));
-		objects.add(new Enemy(320, 100));
+		sprites = new ArrayList<Sprite>();
+		sprites.add(new Rock(100, 100));
+		sprites.add(new Rock(500, 150));
+		sprites.add(new Rock(200, 200));
+		sprites.add(new Enemy(400, 400));
+		sprites.add(new Enemy(320, 100));
 		lastPlayerDir = Direction.RIGHT;
 		timeUntilNextBullet = BULLET_COOLDOWN;
 		
@@ -42,7 +42,7 @@ public class Game {
 	
 		//render game
 		playerChar.draw(bufferGraphics);
-		for (Sprite s : objects) {
+		for (Sprite s : sprites) {
 			s.draw(bufferGraphics);
 		}
 	}
@@ -57,21 +57,21 @@ public class Game {
 			if (keyboard.keyIsDown(KeyEvent.VK_A) && timeUntilNextBullet <= 0) {
 				shootBullet(dir);
 			}
-			playerChar.move(dir, objects);
-			playerChar.update(keyboard, objects);
-			for (Sprite object : objects) {
-				object.update(keyboard, objects);
+			playerChar.move(dir, sprites);
+			playerChar.update(keyboard, sprites);
+			for (Sprite sprite : sprites) {
+				sprite.update(keyboard, sprites);
 			}
-			List<Sprite> newObjectList = new ArrayList<Sprite>();
-			for (Sprite object : objects) {
-				if (!object.isDestroyed()) {
-					newObjectList.add(object);
+			List<Sprite> newSpriteList = new ArrayList<Sprite>();
+			for (Sprite sprite : sprites) {
+				if (!sprite.isDestroyed()) {
+					newSpriteList.add(sprite);
 				}
 			}
 			if (playerChar.isDestroyed()) {
 				nextState = GameState.GAME_OVER;
 			}
-			objects = newObjectList;
+			sprites = newSpriteList;
 			if (dir != Direction.NONE) {
 				lastPlayerDir = dir;
 			}
@@ -104,7 +104,7 @@ public class Game {
 			offsetY = (playerChar.getHeight() / 2) + Bullet.BULLET_HEIGHT;
 		}
 		Bullet bullet = new Bullet(playerChar.getX() + offsetX, playerChar.getY() + offsetY, bulletDir);
-		objects.add(bullet);
+		sprites.add(bullet);
 		timeUntilNextBullet = BULLET_COOLDOWN;
 	}
 }
