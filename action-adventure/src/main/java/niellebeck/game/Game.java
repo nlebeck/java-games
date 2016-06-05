@@ -24,6 +24,8 @@ public class Game {
 		objects.add(new Rock(100, 100));
 		objects.add(new Rock(500, 150));
 		objects.add(new Rock(200, 200));
+		objects.add(new Enemy(400, 400));
+		objects.add(new Enemy(320, 100));
 		lastPlayerDir = Direction.RIGHT;
 		timeUntilNextBullet = BULLET_COOLDOWN;
 		
