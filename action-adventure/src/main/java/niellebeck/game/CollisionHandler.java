@@ -8,11 +8,11 @@ import java.util.Set;
 public class CollisionHandler {
 	//TODO: figure out a more elegant way to handle symmetric collisions
 	public static void handleCollision(Sprite collidingObj, Sprite collidedObj) {
-		if (collidingObj.getType() == SpriteType.BULLET) {
+		if (collidingObj.getClass() == Bullet.class) {
 			collidingObj.destroy();
 			collidedObj.destroy();
 		}
-		if (collidedObj.getType() == SpriteType.BULLET) {
+		if (collidedObj.getClass() == Bullet.class) {
 			collidingObj.destroy();
 			collidedObj.destroy();
 		}

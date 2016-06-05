@@ -6,18 +6,10 @@ import java.awt.Rectangle;
 import java.util.List;
 import java.util.Set;
 
-enum SpriteType {
-	BASE_SPRITE,
-	ROCK,
-	PLAYER_CHARACTER,
-	BULLET
-}
-
 public class Sprite {
 	protected int posX;
 	protected int posY;
 	protected int speed;
-	protected SpriteType type;
 	protected boolean destroyed;
 	protected int width;
 	protected int height;
@@ -34,7 +26,6 @@ public class Sprite {
 		width = initWidth;
 		height = initHeight;
 		speed = 0;
-		type = SpriteType.BASE_SPRITE;
 		destroyed = false;
 		img = null;
 	}
@@ -45,10 +36,6 @@ public class Sprite {
 	
 	public void destroy() {
 		destroyed = true;
-	}
-	
-	public SpriteType getType() {
-		return type;
 	}
 	
 	public int getX() {

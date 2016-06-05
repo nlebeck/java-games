@@ -20,7 +20,6 @@ public class Bullet extends Sprite {
 		this.speed = 10;
 		this.startingX = initX;
 		this.startingY = initY;
-		this.type = SpriteType.BULLET;
 	}
 	
 	public void draw(Graphics g) {
