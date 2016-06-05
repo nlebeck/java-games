@@ -38,4 +38,9 @@ public class Bullet extends Sprite {
 			this.destroy();
 		}
 	}
+	
+	@Override
+	public void onCollide(Sprite sprite) {
+		this.destroy();
+	}
 }

@@ -3,6 +3,7 @@ package niellebeck.game;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -70,7 +71,7 @@ public class Sprite {
 		
 		tempMove(dir);
 		
-		Set<Sprite> collisionSet = CollisionHandler.getCollisionSet(this, sprites);
+		Set<Sprite> collisionSet = getCollisionSet(sprites);
 		if (collisionSet.size() > 0) {
 			posX = lastPosX;
 			posY = lastPosY;
@@ -78,7 +79,7 @@ public class Sprite {
 			List<Direction> componentDirs = DirectionUtils.getComponentDirections(dir);
 			for (Direction componentDir : componentDirs) {
 				tempMove(componentDir);
-				Set<Sprite> tempCollisionSet = CollisionHandler.getCollisionSet(this, sprites);
+				Set<Sprite> tempCollisionSet = getCollisionSet(sprites);
 				collisionSet.addAll(tempCollisionSet);
 				if (tempCollisionSet.size() > 0) {
 					posX = lastPosX;
@@ -91,8 +92,20 @@ public class Sprite {
 		}
 		
 		for (Sprite collidedSprite : collisionSet) {
-			CollisionHandler.handleCollision(this, collidedSprite);
+			this.onCollide(collidedSprite);
+			collidedSprite.onCollide(this);
 		}
+	}
+	
+	public Set<Sprite> getCollisionSet(List<Sprite> spriteList) {
+		Set<Sprite> collisionSet = new HashSet<Sprite>();
+		Rectangle spriteBoundingBox = this.getBoundingBox();
+		for (Sprite otherSprite : spriteList) {
+			if (spriteBoundingBox.intersects(otherSprite.getBoundingBox()) && otherSprite != this) {
+				collisionSet.add(otherSprite);
+			}
+		}
+		return collisionSet;
 	}
 		
 	public void tempMove(Direction dir) {
@@ -115,4 +128,6 @@ public class Sprite {
 	}
 
 	public void update(KeyboardInput keyboard, List<Sprite> sprites) {}
+	
+	public void onCollide(Sprite sprite) {}
 }
