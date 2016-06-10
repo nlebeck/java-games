@@ -1,5 +1,6 @@
 package niellebeck.game;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.io.BufferedReader;
@@ -60,11 +61,11 @@ public class Tilemap {
 		}
 	}
 	
-	public void draw(Graphics g) {
+	public void draw(Graphics g, int cameraX, int cameraY) {
 		for (int i = 0; i < numCols; i++) {
 			for (int j = 0; j < numRows; j++) {
 				int tile = tiles[j * numCols + i];
-				g.drawImage(images[tile], i * tileWidth, j * tileWidth, null);
+				g.drawImage(images[tile], i * tileWidth - cameraX, j * tileWidth - cameraY, null);
 			}
 		}
 	}

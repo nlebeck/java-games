@@ -37,13 +37,16 @@ public class Game {
 		bufferGraphics.setColor(Color.white);
 		bufferGraphics.fillRect(0, 0, GamePanel.PANEL_WIDTH, GamePanel.PANEL_HEIGHT);
 		
+		int cameraX = playerChar.getX() - (GamePanel.PANEL_WIDTH / 2) + (playerChar.getWidth() / 2);
+		int cameraY = playerChar.getY() - (GamePanel.PANEL_HEIGHT / 2) + (playerChar.getHeight() / 2);
+		
 		//draw background
-		tilemap.draw(bufferGraphics);
+		tilemap.draw(bufferGraphics, cameraX, cameraY);
 	
 		//render game
-		playerChar.draw(bufferGraphics);
+		playerChar.draw(bufferGraphics, cameraX, cameraY);
 		for (Sprite s : sprites) {
-			s.draw(bufferGraphics);
+			s.draw(bufferGraphics, cameraX, cameraY);
 		}
 	}
 	

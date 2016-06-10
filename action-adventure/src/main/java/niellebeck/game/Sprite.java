@@ -55,9 +55,9 @@ public class Sprite {
 		return height;
 	}
 	
-	public void draw(Graphics g) {
+	public void draw(Graphics g, int cameraX, int cameraY) {
 		if (img != null) {
-			g.drawImage(img, posX, posY, width, height, null);
+			g.drawImage(img, posX - cameraX, posY - cameraY, width, height, null);
 		}
 	}
 	

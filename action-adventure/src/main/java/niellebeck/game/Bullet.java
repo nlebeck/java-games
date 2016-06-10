@@ -22,9 +22,10 @@ public class Bullet extends Sprite {
 		this.startingY = initY;
 	}
 	
-	public void draw(Graphics g) {
+	@Override
+	public void draw(Graphics g, int cameraX, int cameraY) {
 		g.setColor(Color.black);
-		g.fillOval(posX, posY, width, height);
+		g.fillOval(posX - cameraX, posY - cameraY, width, height);
 	}
 	
 	public void destroy() {
