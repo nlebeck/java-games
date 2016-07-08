@@ -10,7 +10,6 @@ import java.util.Set;
 public class Sprite {
 	protected int posX;
 	protected int posY;
-	protected int speed;
 	protected boolean destroyed;
 	protected int width;
 	protected int height;
@@ -26,7 +25,6 @@ public class Sprite {
 		posY = initY;
 		width = initWidth;
 		height = initHeight;
-		speed = 0;
 		destroyed = false;
 		img = null;
 	}
@@ -65,11 +63,11 @@ public class Sprite {
 		return new Rectangle(posX - (width / 2), posY - (height / 2), width, height);
 	}
 	
-	public void move(Direction dir, List<Sprite> sprites) {
+	public void move(Direction dir, int distance, List<Sprite> sprites) {
 		int lastPosX = posX;
 		int lastPosY = posY;
 		
-		tempMove(dir);
+		tempMove(dir, distance);
 		
 		Set<Sprite> collisionSet = getCollisionSet(sprites);
 		if (collisionSet.size() > 0) {
@@ -78,7 +76,7 @@ public class Sprite {
 			
 			List<Direction> componentDirs = DirectionUtils.getComponentDirections(dir);
 			for (Direction componentDir : componentDirs) {
-				tempMove(componentDir);
+				tempMove(componentDir, distance);
 				Set<Sprite> tempCollisionSet = getCollisionSet(sprites);
 				collisionSet.addAll(tempCollisionSet);
 				if (tempCollisionSet.size() > 0) {
@@ -108,22 +106,22 @@ public class Sprite {
 		return collisionSet;
 	}
 		
-	public void tempMove(Direction dir) {
+	public void tempMove(Direction dir, int distance) {
 		if (dir == Direction.LEFT || dir == Direction.UP_LEFT
 				|| dir == Direction.DOWN_LEFT) {
-			posX -= speed;
+			posX -= distance;
 		}
 		if (dir == Direction.RIGHT || dir == Direction.UP_RIGHT
 				|| dir == Direction.DOWN_RIGHT) {
-			posX += speed;
+			posX += distance;
 		}
 		if (dir == Direction.UP || dir == Direction.UP_LEFT
 				|| dir == Direction.UP_RIGHT) {
-			posY -= speed;
+			posY -= distance;
 		}
 		if (dir == Direction.DOWN || dir == Direction.DOWN_LEFT
 				|| dir == Direction.DOWN_RIGHT) {
-			posY += speed;
+			posY += distance;
 		}
 	}
 

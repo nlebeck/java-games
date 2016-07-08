@@ -8,7 +8,7 @@ public class Bullet extends Sprite {
 	public static final int BULLET_WIDTH = 10;
 	public static final int BULLET_HEIGHT = 10;
 	private static final int MAX_DISTANCE = 1000;
-	
+	private static final int SPEED = 10;
 	
 	Direction dir;
 	int startingX;
@@ -17,7 +17,6 @@ public class Bullet extends Sprite {
 	public Bullet(int initX, int initY, Direction initDir) {
 		super(initX, initY, BULLET_WIDTH, BULLET_HEIGHT);
 		this.dir = initDir;
-		this.speed = 10;
 		this.startingX = initX;
 		this.startingY = initY;
 	}
@@ -34,7 +33,7 @@ public class Bullet extends Sprite {
 	
 	@Override
 	public void update(KeyboardInput keyboard, List<Sprite> sprites) {
-		this.move(dir, sprites);
+		this.move(dir, SPEED, sprites);
 		if (Math.abs(this.posX - this.startingX) > MAX_DISTANCE || Math.abs(this.posY - this.startingY) > MAX_DISTANCE) {
 			this.destroy();
 		}

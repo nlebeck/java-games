@@ -15,12 +15,13 @@ public class PlayerCharacter extends Sprite {
 		MOVING_DOWN
 	}
 	
+	private static final int SPEED = 4;
+	
 	protected AnimationState animationState;
 	protected Map<AnimationState, Animation> animations;
 	
 	public PlayerCharacter(int initX, int initY) {
 		super(initX, initY, 40, 40, "/sprites/stickfigure/standing.png");
-		speed = 4;
 		animationState = AnimationState.STANDING;
 		
 		animations = new HashMap<AnimationState, Animation>();
@@ -41,7 +42,7 @@ public class PlayerCharacter extends Sprite {
 		Direction moveDir = keyboard.getArrowKeyDirection();
 		img = animate(moveDir);
 		if (moveDir != Direction.NONE) {
-			move(moveDir, sprites);
+			move(moveDir, SPEED, sprites);
 		}
 	}
 	
