@@ -60,7 +60,6 @@ public class Game {
 			if (keyboard.keyIsDown(KeyEvent.VK_A) && timeUntilNextBullet <= 0) {
 				shootBullet(dir);
 			}
-			playerChar.move(dir, sprites);
 			playerChar.update(keyboard, sprites);
 			for (Sprite sprite : sprites) {
 				sprite.update(keyboard, sprites);
