@@ -60,9 +60,9 @@ public class Game {
 			if (keyboard.keyIsDown(KeyEvent.VK_A) && timeUntilNextBullet <= 0) {
 				shootBullet(dir);
 			}
-			playerChar.update(keyboard, sprites);
+			playerChar.update(keyboard, sprites, tilemap);
 			for (Sprite sprite : sprites) {
-				sprite.update(keyboard, sprites);
+				sprite.update(keyboard, sprites, tilemap);
 			}
 			List<Sprite> newSpriteList = new ArrayList<Sprite>();
 			for (Sprite sprite : sprites) {

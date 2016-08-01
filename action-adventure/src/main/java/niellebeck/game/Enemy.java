@@ -26,7 +26,7 @@ public class Enemy extends Sprite {
 	}
 	
 	@Override
-	public void update(KeyboardInput keyboard, List<Sprite> sprites) {
+	public void update(KeyboardInput keyboard, List<Sprite> sprites, Tilemap tilemap) {
 		movementTime += 1;
 		if (movementTime >= movementDuration) {
 			Random random = new Random();
@@ -42,6 +42,6 @@ public class Enemy extends Sprite {
 			}
 		}
 		
-		this.move(currentDir, SPEED, sprites);
+		this.move(currentDir, SPEED, sprites, tilemap);
 	}
 }

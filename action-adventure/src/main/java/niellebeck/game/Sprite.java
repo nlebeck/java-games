@@ -60,17 +60,18 @@ public class Sprite {
 	}
 	
 	public Rectangle getBoundingBox() {
-		return new Rectangle(posX - (width / 2), posY - (height / 2), width, height);
+		//return new Rectangle(posX - (width / 2), posY - (height / 2), width, height);
+		return new Rectangle(posX, posY, width, height);
 	}
 	
-	public void move(Direction dir, int distance, List<Sprite> sprites) {
+	public void move(Direction dir, int distance, List<Sprite> sprites, Tilemap tilemap) {
 		int lastPosX = posX;
 		int lastPosY = posY;
 		
 		tempMove(dir, distance);
 		
 		Set<Sprite> collisionSet = getCollisionSet(sprites);
-		if (collisionSet.size() > 0) {
+		if (collisionSet.size() > 0 || tilemap.collidesWithSprite(this)) {
 			posX = lastPosX;
 			posY = lastPosY;
 			
@@ -79,7 +80,7 @@ public class Sprite {
 				tempMove(componentDir, distance);
 				Set<Sprite> tempCollisionSet = getCollisionSet(sprites);
 				collisionSet.addAll(tempCollisionSet);
-				if (tempCollisionSet.size() > 0) {
+				if (tempCollisionSet.size() > 0 || tilemap.collidesWithSprite(this)) {
 					posX = lastPosX;
 					posY = lastPosY;
 				}
@@ -125,7 +126,7 @@ public class Sprite {
 		}
 	}
 
-	public void update(KeyboardInput keyboard, List<Sprite> sprites) {}
+	public void update(KeyboardInput keyboard, List<Sprite> sprites, Tilemap tilemap) {}
 	
 	public void onCollide(Sprite sprite) {}
 }

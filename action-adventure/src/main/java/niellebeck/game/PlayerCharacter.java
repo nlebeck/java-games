@@ -38,11 +38,11 @@ public class PlayerCharacter extends Sprite {
 	}
 	
 	@Override
-	public void update(KeyboardInput keyboard, List<Sprite> sprites) {
+	public void update(KeyboardInput keyboard, List<Sprite> sprites, Tilemap tilemap) {
 		Direction moveDir = keyboard.getArrowKeyDirection();
 		img = animate(moveDir);
 		if (moveDir != Direction.NONE) {
-			move(moveDir, SPEED, sprites);
+			move(moveDir, SPEED, sprites, tilemap);
 		}
 	}
 	

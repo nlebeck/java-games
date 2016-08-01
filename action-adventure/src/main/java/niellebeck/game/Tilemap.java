@@ -3,9 +3,12 @@ package niellebeck.game;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Tilemap {
 	private static final String TILEMAP_MAGIC_WORD = "tilemap";
@@ -15,49 +18,54 @@ public class Tilemap {
 	private int numCols;
 	private int tileWidth;
 	private Image[] images;
+	private Set<Integer> collidableTiles;
 	
-	public Tilemap(String tilemapFile) {		
+	public Tilemap(String tilemapFile) {
+		collidableTiles = new HashSet<Integer>();
+		
 		numRows = -1;
 		numCols = -1;
 		int numTiles = -1;
-		String tileDir = null;
-		String suffix = null;
 		
-		int currentRow = 0;
 		try (BufferedReader reader = new BufferedReader(
 				new InputStreamReader(getClass().getResourceAsStream(tilemapFile)))) {
-			String line = null;
-			while((line = reader.readLine()) != null) {
-				String[] split = line.split("\\s+");
-				if (split.length < 7) {
-					Logger.panic("Malformed tilemap header");
+			
+			String header = reader.readLine();
+			String[] headerSplit = header.split("\\s+");
+			if (headerSplit.length < 5 || !headerSplit[0].equalsIgnoreCase(TILEMAP_MAGIC_WORD)) {
+				Logger.panic("Malformed tilemap header");
+			}
+			numRows = Integer.parseInt(headerSplit[1]);
+			numCols = Integer.parseInt(headerSplit[2]);
+			numTiles = Integer.parseInt(headerSplit[3]);
+			tileWidth = Integer.parseInt(headerSplit[4]);
+			
+			tiles = new int[numRows * numCols];
+			images = new Image[numTiles];
+			
+			for (int k = 0; k < numTiles; k++) {
+				String tileLine = reader.readLine();
+				String[] tileLineSplit = tileLine.split("\\s+");
+				
+				int tileIndex = Integer.parseInt(tileLineSplit[0]);
+				
+				String imagePath = tileLineSplit[1];
+				images[tileIndex] = ResourceLoader.loadImage(imagePath);
+				
+				if (tileLineSplit.length >= 3 && tileLineSplit[2].equals("collidable")) {
+					collidableTiles.add(tileIndex);
 				}
-				if (split[0].equalsIgnoreCase(TILEMAP_MAGIC_WORD)) {
-					numRows = Integer.parseInt(split[1]);
-					numCols = Integer.parseInt(split[2]);
-					tileDir = split[3];
-					numTiles = Integer.parseInt(split[4]);
-					int tileWidth = Integer.parseInt(split[5]);
-					suffix = split[6];
-					
-					tiles = new int[numRows * numCols];
-					this.tileWidth = tileWidth;
-				}
-				else {
-					for (int i = 0; i < numCols; i++) {
-						tiles[currentRow * numCols + i] = Integer.parseInt(split[i]);
-					}
-					currentRow++;
+			}
+			
+			for (int j = 0; j < numRows; j++) {
+				String tileMapLine = reader.readLine();
+				String[] tileMapLineSplit = tileMapLine.split("\\s+");
+				for (int i = 0; i < numCols; i++) {
+					tiles[j * numCols + i] = Integer.parseInt(tileMapLineSplit[i]);
 				}
 			}
 		} catch (IOException e) {
 			Logger.panic("Error reading tilemap file: " + e);
-		}
-		
-		images = new Image[numTiles];
-		for (int i = 0; i < numTiles; i++) {
-			String imagePath = tileDir + "/" + i + suffix;
-			images[i] = ResourceLoader.loadImage(imagePath);
 		}
 	}
 	
@@ -68,5 +76,25 @@ public class Tilemap {
 				g.drawImage(images[tile], i * tileWidth - cameraX, j * tileWidth - cameraY, null);
 			}
 		}
+	}
+	
+	public boolean collidesWithSprite(Sprite sprite) {
+		Rectangle boundingBox = sprite.getBoundingBox();
+		
+		int leftmostTileCol = boundingBox.x / tileWidth;
+		int rightmostTileCol = (boundingBox.x + boundingBox.width) / tileWidth + 1;
+		int uppermostTileRow = boundingBox.y / tileWidth;
+		int lowermostTileRow = (boundingBox.y + boundingBox.height) / tileWidth + 1;
+		
+		for (int i = leftmostTileCol; i < rightmostTileCol; i++) {
+			for (int j = uppermostTileRow; j < lowermostTileRow; j++) {
+				Rectangle tileBoundingBox = new Rectangle(i * tileWidth, j * tileWidth, tileWidth, tileWidth);
+				int tile = tiles[j * numCols + i];
+				if (tileBoundingBox.intersects(boundingBox) && collidableTiles.contains(tile)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }
