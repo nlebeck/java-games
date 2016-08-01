@@ -71,7 +71,8 @@ public class Sprite {
 		tempMove(dir, distance);
 		
 		Set<Sprite> collisionSet = getCollisionSet(sprites);
-		if (collisionSet.size() > 0 || tilemap.collidesWithSprite(this)) {
+		boolean tilemapCollision = tilemap.collidesWithSprite(this);
+		if (collisionSet.size() > 0 || tilemapCollision) {
 			posX = lastPosX;
 			posY = lastPosY;
 			
@@ -80,7 +81,9 @@ public class Sprite {
 				tempMove(componentDir, distance);
 				Set<Sprite> tempCollisionSet = getCollisionSet(sprites);
 				collisionSet.addAll(tempCollisionSet);
-				if (tempCollisionSet.size() > 0 || tilemap.collidesWithSprite(this)) {
+				boolean tempTilemapCollision = tilemap.collidesWithSprite(this);
+				tilemapCollision = tilemapCollision || tempTilemapCollision;
+				if (tempCollisionSet.size() > 0 || tempTilemapCollision) {
 					posX = lastPosX;
 					posY = lastPosY;
 				}
@@ -93,6 +96,10 @@ public class Sprite {
 		for (Sprite collidedSprite : collisionSet) {
 			this.onCollide(collidedSprite);
 			collidedSprite.onCollide(this);
+		}
+		
+		if (tilemapCollision) {
+			this.onCollideTilemap();
 		}
 	}
 	
@@ -129,4 +136,6 @@ public class Sprite {
 	public void update(KeyboardInput keyboard, List<Sprite> sprites, Tilemap tilemap) {}
 	
 	public void onCollide(Sprite sprite) {}
+	
+	public void onCollideTilemap() {}
 }

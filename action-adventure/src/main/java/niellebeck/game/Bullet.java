@@ -43,4 +43,9 @@ public class Bullet extends Sprite {
 	public void onCollide(Sprite sprite) {
 		this.destroy();
 	}
+	
+	@Override
+	public void onCollideTilemap() {
+		this.destroy();
+	}
 }
