@@ -21,9 +21,6 @@ public class Game {
 	public Game() {
 		playerChar = new PlayerCharacter(300, 220);
 		sprites = new ArrayList<Sprite>();
-		sprites.add(new Rock(100, 100));
-		sprites.add(new Rock(500, 150));
-		sprites.add(new Rock(200, 200));
 		sprites.add(new Enemy(400, 400));
 		sprites.add(new Enemy(320, 100));
 		lastPlayerDir = Direction.RIGHT;
