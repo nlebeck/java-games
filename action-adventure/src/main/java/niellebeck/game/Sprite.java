@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 public class Sprite {
-	protected int posX;
+	protected int posX; //x- and y-coordinates of the center of the sprite
 	protected int posY;
 	protected boolean destroyed;
 	protected int width;
@@ -55,13 +55,12 @@ public class Sprite {
 	
 	public void draw(Graphics g, int cameraX, int cameraY) {
 		if (img != null) {
-			g.drawImage(img, posX - cameraX, posY - cameraY, width, height, null);
+			g.drawImage(img, posX - (width / 2) - cameraX, posY - (height / 2) - cameraY, width, height, null);
 		}
 	}
 	
 	public Rectangle getBoundingBox() {
-		//return new Rectangle(posX - (width / 2), posY - (height / 2), width, height);
-		return new Rectangle(posX, posY, width, height);
+		return new Rectangle(posX - (width / 2), posY - (height / 2), width, height);
 	}
 	
 	public void move(Direction dir, int distance, List<Sprite> sprites, Tilemap tilemap) {
