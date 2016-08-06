@@ -23,6 +23,7 @@ public class Game {
 		sprites = new ArrayList<Sprite>();
 		sprites.add(new Enemy(400, 400));
 		sprites.add(new Enemy(320, 100));
+		sprites.add(playerChar);
 		lastPlayerDir = Direction.RIGHT;
 		timeUntilNextBullet = BULLET_COOLDOWN;
 		
@@ -57,7 +58,6 @@ public class Game {
 			if (keyboard.keyIsDown(KeyEvent.VK_A) && timeUntilNextBullet <= 0) {
 				shootBullet(dir);
 			}
-			playerChar.update(keyboard, sprites, tilemap);
 			for (Sprite sprite : sprites) {
 				sprite.update(keyboard, sprites, tilemap);
 			}
