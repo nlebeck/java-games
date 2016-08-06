@@ -16,12 +16,15 @@ public class PlayerCharacter extends Sprite {
 	}
 	
 	private static final int SPEED = 4;
+	private static final int MAX_HP = 20;
 	
 	protected AnimationState animationState;
 	protected Map<AnimationState, Animation> animations;
+	private int hp;
 	
 	public PlayerCharacter(int initX, int initY) {
 		super(initX, initY, 40, 40, "/sprites/stickfigure/standing.png");
+		hp = MAX_HP;
 		animationState = AnimationState.STANDING;
 		
 		animations = new HashMap<AnimationState, Animation>();
@@ -44,6 +47,10 @@ public class PlayerCharacter extends Sprite {
 		if (moveDir != Direction.NONE) {
 			move(moveDir, SPEED, sprites, tilemap);
 		}
+		
+		if (hp <= 0) {
+			this.destroy();
+		}
 	}
 	
 	protected Image animate(Direction dir) {
@@ -63,5 +70,16 @@ public class PlayerCharacter extends Sprite {
 			animations.get(animationState).reset();
 		}
 		return animations.get(animationState).animate();
+	}
+	
+	public int getHp() {
+		return hp;
+	}
+	
+	@Override
+	public void onCollide(Sprite sprite) {
+		if (sprite.getClass() == Enemy.class) {
+			hp = (hp - 1 >= 0) ? hp - 1 : 0;
+		}
 	}
 }

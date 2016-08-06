@@ -41,11 +41,19 @@ public class Game {
 		//draw background
 		tilemap.draw(bufferGraphics, cameraX, cameraY);
 	
-		//render game
+		//draw sprites
 		playerChar.draw(bufferGraphics, cameraX, cameraY);
 		for (Sprite s : sprites) {
 			s.draw(bufferGraphics, cameraX, cameraY);
 		}
+		
+		//draw overlay
+		bufferGraphics.setColor(Color.black);
+		bufferGraphics.drawRect(0, 0, 80, 40);
+		bufferGraphics.setColor(Color.white);
+		bufferGraphics.fillRect(1, 1, 79, 39);
+		bufferGraphics.setColor(Color.black);
+		bufferGraphics.drawString("HP: " + playerChar.getHp(), 10, 20);
 	}
 	
 	public GameState update(KeyboardInput keyboard) {
