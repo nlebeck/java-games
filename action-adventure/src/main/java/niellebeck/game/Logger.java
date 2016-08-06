@@ -5,4 +5,8 @@ public class Logger {
 		System.err.println("PANIC: " + message);
 		System.exit(1);
 	}
+	
+	public static void info(String message) {
+		System.out.println("INFO: " + message);
+	}
 }
