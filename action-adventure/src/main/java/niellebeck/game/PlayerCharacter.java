@@ -15,17 +15,25 @@ public class PlayerCharacter extends Sprite {
 		MOVING_DOWN
 	}
 	
+	private static final int PLAYER_WIDTH = 40;
+	private static final int PLAYER_HEIGHT = 40;
+	
 	private static final int SPEED = 4;
 	private static final int MAX_HP = 20;
+	private static final int INVULNERABLE_TIME = 30;
 	
 	protected AnimationState animationState;
 	protected Map<AnimationState, Animation> animations;
 	private int hp;
+	private int invulnerableTimer;
+	private boolean invulnerable;
 	
 	public PlayerCharacter(int initX, int initY) {
-		super(initX, initY, 40, 40, "/sprites/stickfigure/standing.png");
+		super(initX, initY, PLAYER_WIDTH, PLAYER_HEIGHT, "/sprites/stickfigure/standing.png");
 		hp = MAX_HP;
 		animationState = AnimationState.STANDING;
+		invulnerableTimer = INVULNERABLE_TIME;
+		invulnerable = false;
 		
 		animations = new HashMap<AnimationState, Animation>();
 		Animation leftRightAnimation = new Animation(5,
@@ -51,6 +59,14 @@ public class PlayerCharacter extends Sprite {
 		if (hp <= 0) {
 			this.destroy();
 		}
+		
+		if (invulnerable) {
+			invulnerableTimer--;
+			if (invulnerableTimer <= 0) {
+				invulnerable = false;
+				invulnerableTimer = INVULNERABLE_TIME;
+			}
+		}
 	}
 	
 	protected Image animate(Direction dir) {
@@ -69,7 +85,15 @@ public class PlayerCharacter extends Sprite {
 		if (prevAnimationState != animationState) {
 			animations.get(animationState).reset();
 		}
-		return animations.get(animationState).animate();
+		Image animationImage = animations.get(animationState).animate();
+		
+		if (invulnerable) {
+			if (invulnerableTimer % 2 == 0) {
+				animationImage = Animation.getBlankImage(PLAYER_WIDTH, PLAYER_HEIGHT);
+			}
+		}
+		
+		return animationImage;
 	}
 	
 	public int getHp() {
@@ -79,7 +103,10 @@ public class PlayerCharacter extends Sprite {
 	@Override
 	public void onCollide(Sprite sprite) {
 		if (sprite.getClass() == Enemy.class) {
-			hp = (hp - 1 >= 0) ? hp - 1 : 0;
+			if (!invulnerable) {
+				hp = (hp - 1 >= 0) ? hp - 1 : 0;
+				invulnerable = true;
+			}
 		}
 	}
 }

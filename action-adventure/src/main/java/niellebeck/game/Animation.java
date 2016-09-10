@@ -1,6 +1,7 @@
 package niellebeck.game;
 
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,5 +49,9 @@ public class Animation {
 	
 	public void reset() {
 		imageIndex = 0;
+	}
+	
+	public static Image getBlankImage(int width, int height) {
+		return new BufferedImage(width, height, BufferedImage.TRANSLUCENT);
 	}
 }
