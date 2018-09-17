@@ -1,6 +1,0 @@
-TODO:
-
-* Figure out way to handle collisions symmetrically (i.e. if either the
-	colliding or collided object is a bullet, destroy the bullet and
-	damage the other object)
-* Make bullet direction more natural in the case of diagonal directions
