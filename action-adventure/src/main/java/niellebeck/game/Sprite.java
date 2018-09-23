@@ -63,26 +63,22 @@ public class Sprite {
 		return new Rectangle(posX - (width / 2), posY - (height / 2), width, height);
 	}
 	
-	public void move(Direction dir, int distance, List<Sprite> sprites, Tilemap tilemap) {
+	public void move(Direction dir, int distance, CollisionManager collisionManager) {
 		int lastPosX = posX;
 		int lastPosY = posY;
 		
 		tempMove(dir, distance);
 		
-		Set<Sprite> collisionSet = getCollisionSet(sprites);
-		boolean tilemapCollision = tilemap.collidesWithSprite(this);
-		if (collisionSet.size() > 0 || tilemapCollision) {
+		boolean collision = collisionManager.testAndAddCollisions(this);
+		if (collision) {
 			posX = lastPosX;
 			posY = lastPosY;
 			
 			List<Direction> componentDirs = DirectionUtils.getComponentDirections(dir);
 			for (Direction componentDir : componentDirs) {
 				tempMove(componentDir, distance);
-				Set<Sprite> tempCollisionSet = getCollisionSet(sprites);
-				collisionSet.addAll(tempCollisionSet);
-				boolean tempTilemapCollision = tilemap.collidesWithSprite(this);
-				tilemapCollision = tilemapCollision || tempTilemapCollision;
-				if (tempCollisionSet.size() > 0 || tempTilemapCollision) {
+				collision = collisionManager.testAndAddCollisions(this);
+				if (collision) {
 					posX = lastPosX;
 					posY = lastPosY;
 				}
@@ -90,15 +86,6 @@ public class Sprite {
 					break;
 				}
 			}
-		}
-		
-		for (Sprite collidedSprite : collisionSet) {
-			this.onCollide(collidedSprite);
-			collidedSprite.onCollide(this);
-		}
-		
-		if (tilemapCollision) {
-			this.onCollideTilemap();
 		}
 	}
 	
@@ -132,7 +119,7 @@ public class Sprite {
 		}
 	}
 
-	public void update(KeyboardInput keyboard, List<Sprite> sprites, Tilemap tilemap) {}
+	public void update(KeyboardInput keyboard, CollisionManager collisionManager) {}
 	
 	public void onCollide(Sprite sprite) {}
 	

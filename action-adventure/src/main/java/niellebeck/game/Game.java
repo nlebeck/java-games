@@ -15,6 +15,8 @@ public class Game {
 	Direction lastPlayerDir;
 	int timeUntilNextBullet;
 	
+	CollisionManager collisionManager;
+	
 	//graphics state
 	Tilemap tilemap;
 	
@@ -27,7 +29,17 @@ public class Game {
 		lastPlayerDir = Direction.RIGHT;
 		timeUntilNextBullet = BULLET_COOLDOWN;
 		
+		collisionManager = new CollisionManager(this);
+		
 		tilemap = new Tilemap("/tilemap.txt");
+	}
+	
+	public List<Sprite> getSpriteList() {
+		return sprites;
+	}
+	
+	public Tilemap getTilemap() {
+		return tilemap;
 	}
 	
 	public void draw(Graphics bufferGraphics) {
@@ -67,8 +79,9 @@ public class Game {
 				shootBullet(dir);
 			}
 			for (Sprite sprite : sprites) {
-				sprite.update(keyboard, sprites, tilemap);
+				sprite.update(keyboard, collisionManager);
 			}
+			collisionManager.processCollisions();
 			List<Sprite> newSpriteList = new ArrayList<Sprite>();
 			for (Sprite sprite : sprites) {
 				if (!sprite.isDestroyed()) {

@@ -32,8 +32,8 @@ public class Bullet extends Sprite {
 	}
 	
 	@Override
-	public void update(KeyboardInput keyboard, List<Sprite> sprites, Tilemap tilemap) {
-		this.move(dir, SPEED, sprites, tilemap);
+	public void update(KeyboardInput keyboard, CollisionManager collisionManager) {
+		this.move(dir, SPEED, collisionManager);
 		if (Math.abs(this.posX - this.startingX) > MAX_DISTANCE || Math.abs(this.posY - this.startingY) > MAX_DISTANCE) {
 			this.destroy();
 		}
