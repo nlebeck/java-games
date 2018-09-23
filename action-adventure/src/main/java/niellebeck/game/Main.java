@@ -29,7 +29,7 @@ public class Main {
 class GamePanel extends JPanel implements Runnable {
 	public static final int PANEL_WIDTH = 640;
 	public static final int PANEL_HEIGHT = 480;
-	public static final int RENDER_PERIOD = 17; //in ms
+	public static final int RENDER_PERIOD_MS = 17;
 	
 	private Thread animator;
 	private boolean running = false;
@@ -127,9 +127,7 @@ class GamePanel extends JPanel implements Runnable {
 	public void run() {
 		running = true;
 		
-		long beforeTime, timeDiff, sleepTime;
-		
-		beforeTime = System.currentTimeMillis();
+		long beforeTimeNs = System.nanoTime();
 		
 		while (running) {
 			updateGameState();
@@ -138,18 +136,18 @@ class GamePanel extends JPanel implements Runnable {
 			
 			keyboard.update();
 			
-			timeDiff = System.currentTimeMillis() - beforeTime;
-			sleepTime = RENDER_PERIOD - timeDiff;
-			if (sleepTime < 0) {
-				sleepTime = 5;
+			long timeDiffMs = (System.nanoTime() - beforeTimeNs) / (1000 * 1000);
+			long sleepTimeMs = RENDER_PERIOD_MS - timeDiffMs;
+			if (sleepTimeMs < 0) {
+				sleepTimeMs = 5;
 			}
 			
 			try {
-				Thread.sleep(sleepTime);
+				Thread.sleep(sleepTimeMs);
 			}
 			catch (InterruptedException e) {}
 			
-			beforeTime = System.currentTimeMillis();
+			beforeTimeNs = System.nanoTime();
 		}
 	}
 }
