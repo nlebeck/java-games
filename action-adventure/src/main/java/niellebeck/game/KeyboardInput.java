@@ -6,38 +6,64 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class KeyboardInput {
+	/*
+	 * I referenced the following StackOverflow posts when adding locking to
+	 * this class:
+	 * 
+	 * https://stackoverflow.com/a/6711917
+	 * I made the lock Object final based on this answer's recommendation.
+	 * 
+	 * https://stackoverflow.com/q/7971946
+	 * The answers to this question told me that it was safe to have a return
+	 * statement inside of a synchronized block.
+	 */
+	
 	private Set<Integer> keySet;
 	private Set<Integer> prevKeySet;
+	private final Object lock;
 	
 	public KeyboardInput(GamePanel gp) {
 		keySet = new HashSet<Integer>();
 		prevKeySet = new HashSet<Integer>();
+		lock = new Object();
 		
 		gp.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
-				keySet.add(e.getKeyCode());
+				synchronized (lock) {
+					keySet.add(e.getKeyCode());
+				}
 			}
 			public void keyReleased(KeyEvent e) {
-				keySet.remove(e.getKeyCode());
+				synchronized (lock) {
+					keySet.remove(e.getKeyCode());
+				}
 			}
 		});
 	}
 	
 	public void update() {
-		prevKeySet = keySet;
-		keySet = new HashSet<Integer>(prevKeySet);
+		synchronized (lock) {
+			prevKeySet = keySet;
+			keySet = new HashSet<Integer>(prevKeySet);
+		}
 	}
 	
 	public boolean keyPressed(int keyCode) {
-		return keySet.contains(keyCode) && !prevKeySet.contains(keyCode);
+		synchronized (lock) {
+			return keySet.contains(keyCode) && !prevKeySet.contains(keyCode);
+		}
 	}
 	
 	public boolean keyReleased(int keyCode) {
-		return !keySet.contains(keyCode) && prevKeySet.contains(keyCode);
+		synchronized (lock) {
+			return !keySet.contains(keyCode) && prevKeySet.contains(keyCode);
+		}
 	}
 	
 	public boolean keyIsDown(int keyCode) {
-		return keySet.contains(keyCode);
+		synchronized (lock) {
+			return keySet.contains(keyCode);
+		}
 	}
 	
 	public Direction getArrowKeyDirection() {
