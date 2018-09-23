@@ -100,13 +100,10 @@ public class PlayerCharacter extends Sprite {
 		return hp;
 	}
 	
-	@Override
-	public void onCollide(Sprite sprite) {
-		if (sprite.getClass() == Enemy.class) {
-			if (!invulnerable) {
-				hp = (hp - 1 >= 0) ? hp - 1 : 0;
-				invulnerable = true;
-			}
+	public void onEnemyHit() {
+		if (!invulnerable) {
+			hp = (hp - 1 >= 0) ? hp - 1 : 0;
+			invulnerable = true;
 		}
 	}
 }

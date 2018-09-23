@@ -121,7 +121,5 @@ public class Sprite {
 
 	public void update(KeyboardInput keyboard, CollisionManager collisionManager) {}
 	
-	public void onCollide(Sprite sprite) {}
-	
 	public void onCollideTilemap() {}
 }

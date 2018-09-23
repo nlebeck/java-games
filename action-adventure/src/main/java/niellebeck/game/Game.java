@@ -6,6 +6,9 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import niellebeck.game.collisionhandlers.BulletEnemyCollisionHandler;
+import niellebeck.game.collisionhandlers.EnemyPlayerCharacterCollisionHandler;
+
 public class Game {
 	
 	private static final int BULLET_COOLDOWN = 10; //in frames
@@ -30,6 +33,8 @@ public class Game {
 		timeUntilNextBullet = BULLET_COOLDOWN;
 		
 		collisionManager = new CollisionManager(this);
+		collisionManager.registerCollisionHandler(new BulletEnemyCollisionHandler());
+		collisionManager.registerCollisionHandler(new EnemyPlayerCharacterCollisionHandler());
 		
 		tilemap = new Tilemap("/tilemap.txt");
 	}

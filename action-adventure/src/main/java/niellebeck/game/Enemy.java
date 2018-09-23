@@ -19,13 +19,6 @@ public class Enemy extends Sprite {
 	}
 	
 	@Override
-	public void onCollide(Sprite sprite) {
-		if (sprite.getClass() == Bullet.class) {
-			this.destroy();
-		}
-	}
-	
-	@Override
 	public void update(KeyboardInput keyboard, CollisionManager collisionManager) {
 		movementTime += 1;
 		if (movementTime >= movementDuration) {

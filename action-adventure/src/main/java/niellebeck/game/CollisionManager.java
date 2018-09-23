@@ -1,9 +1,14 @@
 package niellebeck.game;
 
 import java.awt.Rectangle;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import niellebeck.game.collisionhandlers.ClassPair;
+import niellebeck.game.collisionhandlers.CollisionHandler;
 
 public class CollisionManager {
 	
@@ -48,11 +53,13 @@ public class CollisionManager {
 	private Game game;
 	private Set<CollisionPair> collisionPairs;
 	private Set<Sprite> tilemapCollisions;
+	private Map<ClassPair, CollisionHandler<?,?>> collisionHandlers;
 	
 	public CollisionManager (Game game) {
 		this.game = game;
 		collisionPairs = new HashSet<CollisionPair>();
 		tilemapCollisions = new HashSet<Sprite>();
+		collisionHandlers = new HashMap<ClassPair, CollisionHandler<?,?>>();
 	}
 	
 	public boolean testAndAddCollisions(Sprite sprite) {
@@ -82,13 +89,35 @@ public class CollisionManager {
 	
 	public void processCollisions() {
 		for (CollisionPair pair : collisionPairs) {
-			pair.getSpriteA().onCollide(pair.getSpriteB());
-			pair.getSpriteB().onCollide(pair.getSpriteA());
+			invokeCollisionHandler(pair);
 		}
 		for (Sprite sprite : tilemapCollisions) {
 			sprite.onCollideTilemap();
 		}
 		collisionPairs.clear();
 		tilemapCollisions.clear();
+	}
+	
+	public void registerCollisionHandler(CollisionHandler<? extends Sprite, ? extends Sprite> collisionHandler) {
+		if (collisionHandlers.containsKey(collisionHandler.getClassPair())) {
+			throw new IllegalStateException("This CollisionManager already has a CollisionHandler registered for the given pair of Sprite subclasses.");
+		}
+		collisionHandlers.put(collisionHandler.getClassPair(), collisionHandler);
+	}
+	
+	private CollisionHandler<? extends Sprite, ? extends Sprite> getCollisionHandler(Class<? extends Sprite> classA, Class<? extends Sprite> classB) {
+		ClassPair classPair = new ClassPair(classA, classB);
+		return collisionHandlers.get(classPair);
+	}
+	
+	private void invokeCollisionHandler(CollisionPair pair) {
+		Sprite spriteA = pair.getSpriteA();
+		Sprite spriteB = pair.getSpriteB();
+		Class<? extends Sprite> classA = spriteA.getClass();
+		Class<? extends Sprite> classB = spriteB.getClass();
+		CollisionHandler<? extends Sprite, ? extends Sprite> collisionHandler = getCollisionHandler(classA, classB);
+		if (collisionHandler != null) {
+			collisionHandler.castObjectsAndHandleCollision(spriteA, spriteB);
+		}
 	}
 }
