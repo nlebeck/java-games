@@ -5,15 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PlayerCharacter extends Sprite {
-
-	enum AnimationState {
-		STANDING,
-		MOVING_LEFT,
-		MOVING_RIGHT,
-		MOVING_UP,
-		MOVING_DOWN
-	}
+public class PlayerCharacter extends AnimatedSprite {
 	
 	private static final int PLAYER_WIDTH = 40;
 	private static final int PLAYER_HEIGHT = 40;
@@ -22,36 +14,39 @@ public class PlayerCharacter extends Sprite {
 	private static final int MAX_HP = 20;
 	private static final int INVULNERABLE_TIME = 30;
 	
-	protected AnimationState animationState;
-	protected Map<AnimationState, Animation> animations;
+	private static final int ANIMATION_STATE_STANDING = 0;
+	private static final int ANIMATION_STATE_MOVING_LEFT = 1;
+	private static final int ANIMATION_STATE_MOVING_RIGHT = 2;
+	private static final int ANIMATION_STATE_MOVING_UP = 3;
+	private static final int ANIMATION_STATE_MOVING_DOWN = 4;
+	
 	private int hp;
 	private int invulnerableTimer;
 	private boolean invulnerable;
 	
 	public PlayerCharacter(int initX, int initY) {
-		super(initX, initY, PLAYER_WIDTH, PLAYER_HEIGHT, "/sprites/stickfigure/standing.png");
+		super(initX, initY, PLAYER_WIDTH, PLAYER_HEIGHT);
 		hp = MAX_HP;
-		animationState = AnimationState.STANDING;
 		invulnerableTimer = INVULNERABLE_TIME;
 		invulnerable = false;
 		
-		animations = new HashMap<AnimationState, Animation>();
 		Animation leftRightAnimation = new Animation(5,
 				"/sprites/stickfigure/standing.png",
 				"/sprites/stickfigure/walking0.png",
 				"/sprites/stickfigure/walking1.png");
 		Animation standingAnimation = new Animation(1, "/sprites/stickfigure/standing.png");
-		animations.put(AnimationState.MOVING_LEFT, leftRightAnimation);
-		animations.put(AnimationState.MOVING_RIGHT, leftRightAnimation);
-		animations.put(AnimationState.STANDING, standingAnimation);
-		animations.put(AnimationState.MOVING_UP, standingAnimation);
-		animations.put(AnimationState.MOVING_DOWN, standingAnimation);
+		registerAnimationState(ANIMATION_STATE_MOVING_LEFT, leftRightAnimation);
+		registerAnimationState(ANIMATION_STATE_MOVING_RIGHT, leftRightAnimation);
+		registerAnimationState(ANIMATION_STATE_STANDING, standingAnimation);
+		registerAnimationState(ANIMATION_STATE_MOVING_UP, standingAnimation);
+		registerAnimationState(ANIMATION_STATE_MOVING_DOWN, standingAnimation);
+		
+		setAnimationState(ANIMATION_STATE_STANDING);
 	}
 	
 	@Override
 	public void update(KeyboardInput keyboard, CollisionManager collisionManager) {
 		Direction moveDir = keyboard.getArrowKeyDirection();
-		img = animate(moveDir);
 		if (moveDir != Direction.NONE) {
 			move(moveDir, SPEED, collisionManager);
 		}
@@ -67,37 +62,22 @@ public class PlayerCharacter extends Sprite {
 				invulnerableTimer = INVULNERABLE_TIME;
 			}
 		}
+		
+		if (moveDir == Direction.LEFT || moveDir == Direction.UP_LEFT || moveDir == Direction.DOWN_LEFT) {
+			setAnimationState(ANIMATION_STATE_MOVING_LEFT);
+		}
+		else if (moveDir == Direction.RIGHT || moveDir == Direction.UP_RIGHT || moveDir == Direction.DOWN_RIGHT) {
+			setAnimationState(ANIMATION_STATE_MOVING_RIGHT);
+		}
+		else {
+			setAnimationState(ANIMATION_STATE_STANDING);
+		}
+		setFlickering(invulnerable);
+		animate();
 	}
 	
 	@Override
 	public void onCollideTilemap() { }
-	
-	protected Image animate(Direction dir) {
-		AnimationState prevAnimationState = animationState;
-		
-		if (dir == Direction.LEFT || dir == Direction.UP_LEFT || dir == Direction.DOWN_LEFT) {
-			animationState = AnimationState.MOVING_LEFT;
-		}
-		else if (dir == Direction.RIGHT || dir == Direction.UP_RIGHT || dir == Direction.DOWN_RIGHT) {
-			animationState = AnimationState.MOVING_RIGHT;
-		}
-		else {
-			animationState = AnimationState.STANDING;
-		}
-		
-		if (prevAnimationState != animationState) {
-			animations.get(animationState).reset();
-		}
-		Image animationImage = animations.get(animationState).animate();
-		
-		if (invulnerable) {
-			if (invulnerableTimer % 2 == 0) {
-				animationImage = Animation.getBlankImage(PLAYER_WIDTH, PLAYER_HEIGHT);
-			}
-		}
-		
-		return animationImage;
-	}
 	
 	public int getHp() {
 		return hp;
