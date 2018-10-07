@@ -69,6 +69,9 @@ public class PlayerCharacter extends Sprite {
 		}
 	}
 	
+	@Override
+	public void onCollideTilemap() { }
+	
 	protected Image animate(Direction dir) {
 		AnimationState prevAnimationState = animationState;
 		

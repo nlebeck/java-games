@@ -37,4 +37,8 @@ public class Enemy extends Sprite {
 		
 		this.move(currentDir, SPEED, collisionManager);
 	}
+	
+	
+	@Override
+	public void onCollideTilemap() { }
 }

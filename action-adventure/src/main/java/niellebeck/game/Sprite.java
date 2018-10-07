@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Sprite {
+public abstract class Sprite {
 	protected int posX; //x- and y-coordinates of the center of the sprite
 	protected int posY;
 	protected boolean destroyed;
@@ -119,7 +119,7 @@ public class Sprite {
 		}
 	}
 
-	public void update(KeyboardInput keyboard, CollisionManager collisionManager) {}
+	public abstract void update(KeyboardInput keyboard, CollisionManager collisionManager);
 	
-	public void onCollideTilemap() {}
+	public abstract void onCollideTilemap();
 }
