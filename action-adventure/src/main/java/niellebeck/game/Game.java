@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import niellebeck.game.collisionhandlers.BulletEnemyCollisionHandler;
+import niellebeck.game.collisionhandlers.BulletNPCCollisionHandler;
 import niellebeck.game.collisionhandlers.EnemyPlayerCharacterCollisionHandler;
 
 public class Game {
@@ -28,6 +29,7 @@ public class Game {
 		sprites = new ArrayList<Sprite>();
 		sprites.add(new Enemy(400, 400));
 		sprites.add(new Enemy(320, 100));
+		sprites.add(new NPC(80, 350));
 		sprites.add(playerChar);
 		lastPlayerDir = Direction.RIGHT;
 		timeUntilNextBullet = BULLET_COOLDOWN;
@@ -35,6 +37,7 @@ public class Game {
 		collisionManager = new CollisionManager(this);
 		collisionManager.registerCollisionHandler(new BulletEnemyCollisionHandler());
 		collisionManager.registerCollisionHandler(new EnemyPlayerCharacterCollisionHandler());
+		collisionManager.registerCollisionHandler(new BulletNPCCollisionHandler());
 		
 		tilemap = new Tilemap("/tilemap.txt");
 	}
