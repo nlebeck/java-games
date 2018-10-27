@@ -80,6 +80,10 @@ class GamePanel extends JPanel implements Runnable {
 			game.draw(bufferGraphics);
 			menu.draw(bufferGraphics);
 		}
+		else if (gameState == GameState.DIALOGUE) {
+			game.draw(bufferGraphics);
+			DialogueManager.getInstance().draw(bufferGraphics);
+		}
 		else if (gameState == GameState.START_MENU) {
 			bufferGraphics.setColor(Color.white);
 			bufferGraphics.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
@@ -102,6 +106,9 @@ class GamePanel extends JPanel implements Runnable {
 		}
 		else if (gameState == GameState.MENU) {
 			gameState = menu.update(keyboard);
+		}
+		else if (gameState == GameState.DIALOGUE) {
+			gameState = DialogueManager.getInstance().update(keyboard);
 		}
 		else if (gameState == GameState.START_MENU) {
 			if (keyboard.keyPressed(KeyEvent.VK_A)) {

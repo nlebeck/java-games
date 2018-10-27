@@ -9,6 +9,7 @@ import java.util.List;
 import niellebeck.game.collisionhandlers.BulletEnemyCollisionHandler;
 import niellebeck.game.collisionhandlers.BulletNPCCollisionHandler;
 import niellebeck.game.collisionhandlers.EnemyPlayerCharacterCollisionHandler;
+import niellebeck.game.collisionhandlers.NPCPlayerCharacterCollisionHandler;
 
 public class Game {
 	
@@ -38,6 +39,7 @@ public class Game {
 		collisionManager.registerCollisionHandler(new BulletEnemyCollisionHandler());
 		collisionManager.registerCollisionHandler(new EnemyPlayerCharacterCollisionHandler());
 		collisionManager.registerCollisionHandler(new BulletNPCCollisionHandler());
+		collisionManager.registerCollisionHandler(new NPCPlayerCharacterCollisionHandler());
 		
 		tilemap = new Tilemap("/tilemap.txt");
 	}
@@ -80,6 +82,9 @@ public class Game {
 		GameState nextState = GameState.PLAYING;
 		if (keyboard.keyPressed(KeyEvent.VK_TAB)) {
 			nextState = GameState.MENU;
+		}
+		else if (DialogueManager.getInstance().inDialogue()) {
+			nextState = GameState.DIALOGUE;
 		}
 		else {
 			Direction dir = keyboard.getArrowKeyDirection();
