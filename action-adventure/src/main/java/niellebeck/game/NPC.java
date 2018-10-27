@@ -1,6 +1,6 @@
 package niellebeck.game;
 
-public class NPC extends Sprite {
+public class NPC extends Sprite implements Interactable {
 
 	public NPC(int initX, int initY) {
 		super(initX, initY, 40, 40, "/sprites/initial_npc/initial_npc.png");
@@ -17,5 +17,13 @@ public class NPC extends Sprite {
 		// TODO Auto-generated method stub
 
 	}
-
+	
+	@Override
+	public String getInteractionMessage() {
+		return "talk with NPC";
+	}
+	
+	public void interact() {
+		DialogueManager.getInstance().startDialogue();
+	}
 }

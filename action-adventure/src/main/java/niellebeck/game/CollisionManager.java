@@ -98,6 +98,22 @@ public class CollisionManager {
 		tilemapCollisions.clear();
 	}
 	
+	public void processProximityEvents() {
+		for (int i = 0; i < game.getSpriteList().size(); i++) {
+			Sprite spriteA = game.getSpriteList().get(i);
+			for (int j = i + 1; j < game.getSpriteList().size(); j++) {
+				Sprite spriteB = game.getSpriteList().get(j);
+				double distance = Math.sqrt(Math.pow(spriteB.posX - spriteA.posX, 2) + Math.pow(spriteB.posY - spriteA.posY, 2));
+				Class<? extends Sprite> classA = spriteA.getClass();
+				Class<? extends Sprite> classB = spriteB.getClass();
+				CollisionHandler<? extends Sprite, ? extends Sprite> collisionHandler = getCollisionHandler(classA, classB);
+				if (collisionHandler != null && collisionHandler.getProximityDistance() >= distance) {
+					collisionHandler.castObjectsAndHandleProximityEvent(game, spriteA, spriteB);
+				}
+			}
+		}
+	}
+	
 	public void registerCollisionHandler(CollisionHandler<? extends Sprite, ? extends Sprite> collisionHandler) {
 		if (collisionHandlers.containsKey(collisionHandler.getClassPair())) {
 			throw new IllegalStateException("This CollisionManager already has a CollisionHandler registered for the given pair of Sprite subclasses.");

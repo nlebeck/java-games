@@ -19,6 +19,7 @@ public class Game {
 	List<Sprite> sprites;
 	Direction lastPlayerDir;
 	int timeUntilNextBullet;
+	List<Interactable> interactables;
 	
 	CollisionManager collisionManager;
 	
@@ -34,6 +35,7 @@ public class Game {
 		sprites.add(playerChar);
 		lastPlayerDir = Direction.RIGHT;
 		timeUntilNextBullet = BULLET_COOLDOWN;
+		interactables = new ArrayList<Interactable>();
 		
 		collisionManager = new CollisionManager(this);
 		collisionManager.registerCollisionHandler(new BulletEnemyCollisionHandler());
@@ -76,6 +78,18 @@ public class Game {
 		bufferGraphics.fillRect(1, 1, 79, 39);
 		bufferGraphics.setColor(Color.black);
 		bufferGraphics.drawString("HP: " + playerChar.getHp(), 10, 20);
+		
+		//draw interaction message
+		if (interactables.size() > 0) {
+			Interactable interactable = chooseInteractable();
+			String message = interactable.getInteractionMessage();
+			bufferGraphics.setColor(Color.black);
+			bufferGraphics.drawRect(GamePanel.PANEL_WIDTH / 4, 0, GamePanel.PANEL_WIDTH / 2, 40);
+			bufferGraphics.setColor(Color.white);
+			bufferGraphics.fillRect(GamePanel.PANEL_WIDTH / 4 + 1, 1, GamePanel.PANEL_WIDTH / 2 - 1, 39);
+			bufferGraphics.setColor(Color.black);
+			bufferGraphics.drawString("Press ENTER to " + message, GamePanel.PANEL_WIDTH / 4 + 10, 20);
+		}
 	}
 	
 	public GameState update(KeyboardInput keyboard) {
@@ -87,14 +101,27 @@ public class Game {
 			nextState = GameState.DIALOGUE;
 		}
 		else {
+			interactables.clear();
+			
 			Direction dir = keyboard.getArrowKeyDirection();
 			if (keyboard.keyIsDown(KeyEvent.VK_A) && timeUntilNextBullet <= 0) {
 				shootBullet(dir);
 			}
+			
 			for (Sprite sprite : sprites) {
 				sprite.update(keyboard, collisionManager);
 			}
 			collisionManager.processCollisions();
+			collisionManager.processProximityEvents();
+			
+			if (interactables.size() > 0) {
+				if (keyboard.keyPressed(KeyEvent.VK_ENTER)) {
+					Interactable interactable = chooseInteractable();
+					interactable.interact();
+					interactables.clear();
+				}
+			}
+			
 			List<Sprite> newSpriteList = new ArrayList<Sprite>();
 			for (Sprite sprite : sprites) {
 				if (!sprite.isDestroyed()) {
@@ -115,6 +142,27 @@ public class Game {
 		return nextState;
 	}
 	
+	/**
+	 * Make the given Interactable available for the player character to
+	 * interact with by this frame pressing the Enter key.
+	 */
+	public void registerInteractable(Interactable interactable) {
+		interactables.add(interactable);
+	}
+	
+	/**
+	 * Select a single Interactable that will be used this frame. If the Enter
+	 * key is pressed this frame, the player will interact with this
+	 * Interactable; otherwise, an interaction message will be displayed.
+	 */
+	private Interactable chooseInteractable() {
+		if (interactables.size() > 0) {
+			return interactables.get(0);
+		}
+		else {
+			return null;
+		}
+	}
 	
 	public void shootBullet(Direction dir) {
 		int offsetX = 0;

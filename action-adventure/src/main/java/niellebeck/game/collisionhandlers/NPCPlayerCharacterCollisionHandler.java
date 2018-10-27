@@ -1,13 +1,9 @@
 package niellebeck.game.collisionhandlers;
 
-import niellebeck.game.DialogueManager;
+import niellebeck.game.Game;
 import niellebeck.game.NPC;
 import niellebeck.game.PlayerCharacter;
 
-/*
- * NOTE: This class is just a stand-in until I can build a system for detecting
- * proximity of objects and switch to using that to trigger dialogue.
- */
 public class NPCPlayerCharacterCollisionHandler extends CollisionHandler<NPC, PlayerCharacter> {
 
 	public NPCPlayerCharacterCollisionHandler() {
@@ -15,8 +11,12 @@ public class NPCPlayerCharacterCollisionHandler extends CollisionHandler<NPC, Pl
 	}
 
 	@Override
-	public void handleCollision(NPC npc, PlayerCharacter player) {
-		DialogueManager.getInstance().startDialogue();
+	public double getProximityDistance() {
+		return 56.6;
 	}
-
+	
+	@Override
+	public void handleProximityEvent(Game game, NPC npc, PlayerCharacter player) {
+		game.registerInteractable(npc);
+	}
 }

@@ -1,5 +1,6 @@
 package niellebeck.game.collisionhandlers;
 
+import niellebeck.game.Game;
 import niellebeck.game.Sprite;
 
 /**
@@ -49,5 +50,46 @@ public abstract class CollisionHandler<T1 extends Sprite, T2 extends Sprite> {
 		}
 	}
 	
-	public abstract void handleCollision(T1 spriteA, T2 spriteB);
+	/**
+	 * Figure out which argument is of which Sprite subclass, then invoke
+	 * handleProximityEvent() with the Sprite arguments in the right order.
+	 */
+	public void castObjectsAndHandleProximityEvent(Game game, Sprite spriteA, Sprite spriteB) {
+		if (spriteA.getClass().equals(classA)) {
+			handleProximityEvent(game, (T1)spriteA, (T2)spriteB);
+		}
+		else if (spriteB.getClass().equals(classA)) {
+			handleProximityEvent(game, (T1)spriteB, (T2)spriteA);
+		}
+		else {
+			throw new IllegalArgumentException("The passed-in sprites do not have the required types.");
+		}
+	}
+
+	/**
+	 * Called when a pair of these Sprite subclasses collided this frame.
+	 * Override this method if you want to handle collisions for this Sprite
+	 * subclass pair.
+	 * @param spriteA
+	 * @param spriteB
+	 */
+	public void handleCollision(T1 spriteA, T2 spriteB) { }
+	
+	/**
+	 * @return The maximum distance between a pair of these Sprite subclasses
+	 * required for a proximity event to trigger. Override this method if you
+	 * want to handle proximity events for this Sprite subclass pair.
+	 */
+	public double getProximityDistance() {
+		return 0;
+	}
+	
+	/**
+	 * Called when a pair of these Sprite subclasses is close enough to trigger
+	 * a proximity event. Override this method if you want to handle proximity
+	 * events for this Sprite subclass pair.
+	 * @param spriteA
+	 * @param spriteB
+	 */
+	public void handleProximityEvent(Game game, T1 spriteA, T2 spriteB) { }
 }
