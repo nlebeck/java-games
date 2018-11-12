@@ -18,52 +18,80 @@ public class KeyboardInput {
 	 * statement inside of a synchronized block.
 	 */
 	
+	/*
+	 * There are so many sets required due to the discrepancy between the
+	 * asynchronous KeyListener interface and the per-frame key information
+	 * that we want. Under the current design, the "current" keyboard state
+	 * according to this class's methods is the keyboard state as of the end
+	 * of the previous frame.
+	 * 
+	 * Note that this implementation risks a "false negative" when a key is
+	 * quickly pressed, released, and then pressed again during a single frame.
+	 * Any such key that is incorrectly counted as "not down" during that frame
+	 * will be correctly counted as "down" during the next frame, though, if
+	 * the player continues to hold the key down.
+	 * 
+	 * keySet: holds all keys that were down as of the end of the previous
+	 *     frame.
+	 * prevKeySet: holds all keys that were down as of the end of the frame
+	 *     before the previous frame.
+	 * futureKeySet: holds all keys that have been pressed during the current
+	 *     frame.
+	 * futureReleaseSet: holds all keys that have been released during the
+	 *     current frame.
+	 */
 	private Set<Integer> keySet;
 	private Set<Integer> prevKeySet;
+	private Set<Integer> futureKeySet;
+	private Set<Integer> futureReleaseSet;
 	private final Object lock;
 	
 	public KeyboardInput(GamePanel gp) {
 		keySet = new HashSet<Integer>();
 		prevKeySet = new HashSet<Integer>();
+		futureKeySet = new HashSet<Integer>();
+		futureReleaseSet = new HashSet<Integer>();
 		lock = new Object();
 		
 		gp.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				synchronized (lock) {
-					keySet.add(e.getKeyCode());
+					futureKeySet.add(e.getKeyCode());
 				}
 			}
 			public void keyReleased(KeyEvent e) {
 				synchronized (lock) {
-					keySet.remove(e.getKeyCode());
+					futureReleaseSet.add(e.getKeyCode());
 				}
 			}
 		});
 	}
 	
 	public void update() {
+		prevKeySet = keySet;
+		keySet = new HashSet<Integer>(prevKeySet);
 		synchronized (lock) {
-			prevKeySet = keySet;
-			keySet = new HashSet<Integer>(prevKeySet);
+			for (int keyCode : futureKeySet) {
+				keySet.add(keyCode);
+			}
+			for (int keyCode : futureReleaseSet) {
+				keySet.remove(keyCode);
+			}
+			futureKeySet.clear();
+			futureReleaseSet.clear();
 		}
 	}
 	
 	public boolean keyPressed(int keyCode) {
-		synchronized (lock) {
-			return keySet.contains(keyCode) && !prevKeySet.contains(keyCode);
-		}
+		return keySet.contains(keyCode) && !prevKeySet.contains(keyCode);
 	}
 	
 	public boolean keyReleased(int keyCode) {
-		synchronized (lock) {
-			return !keySet.contains(keyCode) && prevKeySet.contains(keyCode);
-		}
+		return !keySet.contains(keyCode) && prevKeySet.contains(keyCode);
 	}
 	
 	public boolean keyIsDown(int keyCode) {
-		synchronized (lock) {
-			return keySet.contains(keyCode);
-		}
+		return keySet.contains(keyCode);
 	}
 	
 	public Direction getArrowKeyDirection() {
