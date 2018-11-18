@@ -1,5 +1,7 @@
 package niellebeck.game;
 
+import niellebeck.game.dialogues.TestDialogue;
+
 public class NPC extends Sprite implements Interactable {
 
 	public NPC(int initX, int initY) {
@@ -24,6 +26,6 @@ public class NPC extends Sprite implements Interactable {
 	}
 	
 	public void interact() {
-		DialogueManager.getInstance().startDialogue();
+		DialogueManager.getInstance().startDialogue(new TestDialogue());
 	}
 }
