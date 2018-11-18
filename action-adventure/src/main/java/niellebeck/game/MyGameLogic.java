@@ -4,6 +4,10 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import niellebeck.game.collisionhandlers.BulletEnemyCollisionHandler;
+import niellebeck.game.collisionhandlers.BulletNPCCollisionHandler;
+import niellebeck.game.collisionhandlers.EnemyPlayerCharacterCollisionHandler;
+import niellebeck.game.collisionhandlers.NPCPlayerCharacterCollisionHandler;
 import niellebeck.game.overlays.HpOverlay;
 
 /**
@@ -31,6 +35,11 @@ public class MyGameLogic extends GameLogic {
 		getGame().addSprite(playerChar);
 		getGame().addSprite(npc);
 		getGame().addSprites(enemies);
+		
+		getGame().registerCollisionHandler(new BulletEnemyCollisionHandler());
+		getGame().registerCollisionHandler(new EnemyPlayerCharacterCollisionHandler());
+		getGame().registerCollisionHandler(new BulletNPCCollisionHandler());
+		getGame().registerCollisionHandler(new NPCPlayerCharacterCollisionHandler());
 		
 		getGame().addOverlay(new HpOverlay());
 		

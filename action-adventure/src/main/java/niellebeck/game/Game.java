@@ -7,10 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import niellebeck.game.collisionhandlers.BulletEnemyCollisionHandler;
-import niellebeck.game.collisionhandlers.BulletNPCCollisionHandler;
-import niellebeck.game.collisionhandlers.EnemyPlayerCharacterCollisionHandler;
-import niellebeck.game.collisionhandlers.NPCPlayerCharacterCollisionHandler;
+import niellebeck.game.collisionhandlers.CollisionHandler;
 import niellebeck.game.overlays.Overlay;
 
 public class Game {
@@ -31,10 +28,6 @@ public class Game {
 		interactables = new ArrayList<Interactable>();
 		
 		collisionManager = new CollisionManager(this);
-		collisionManager.registerCollisionHandler(new BulletEnemyCollisionHandler());
-		collisionManager.registerCollisionHandler(new EnemyPlayerCharacterCollisionHandler());
-		collisionManager.registerCollisionHandler(new BulletNPCCollisionHandler());
-		collisionManager.registerCollisionHandler(new NPCPlayerCharacterCollisionHandler());
 		
 		overlays = new ArrayList<Overlay>();
 		
@@ -46,6 +39,10 @@ public class Game {
 	
 	public void addOverlay(Overlay overlay) {
 		overlays.add(overlay);
+	}
+	
+	public void registerCollisionHandler(CollisionHandler<? extends Sprite, ? extends Sprite> collisionHandler) {
+		collisionManager.registerCollisionHandler(collisionHandler);
 	}
 	
 	public void addSprite(Sprite sprite) {
@@ -81,6 +78,9 @@ public class Game {
 		}
 		
 		//draw overlay
+		for (Overlay overlay : overlays) {
+			overlay.draw(bufferGraphics, gameLogic);
+		}
 		
 		//draw interaction message
 		if (interactables.size() > 0) {
