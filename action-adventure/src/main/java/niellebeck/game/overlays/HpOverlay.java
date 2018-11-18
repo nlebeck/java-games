@@ -3,8 +3,9 @@ package niellebeck.game.overlays;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import niellebeck.game.GameLogic;
 import niellebeck.game.MyGameLogic;
+import niellebeck.gameengine.GameLogic;
+import niellebeck.gameengine.Overlay;
 
 public class HpOverlay extends Overlay {
 	public void draw(Graphics g, GameLogic gameLogic) {

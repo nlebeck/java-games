@@ -1,4 +1,4 @@
-package niellebeck.game;
+package niellebeck.gameengine;
 
 public enum GameState {
 	START_MENU,

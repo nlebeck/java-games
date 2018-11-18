@@ -1,8 +1,9 @@
 package niellebeck.game.collisionhandlers;
 
-import niellebeck.game.Game;
 import niellebeck.game.NPC;
 import niellebeck.game.PlayerCharacter;
+import niellebeck.gameengine.CollisionHandler;
+import niellebeck.gameengine.GameEngine;
 
 public class NPCPlayerCharacterCollisionHandler extends CollisionHandler<NPC, PlayerCharacter> {
 
@@ -16,7 +17,7 @@ public class NPCPlayerCharacterCollisionHandler extends CollisionHandler<NPC, Pl
 	}
 	
 	@Override
-	public void handleProximityEvent(Game game, NPC npc, PlayerCharacter player) {
+	public void handleProximityEvent(GameEngine game, NPC npc, PlayerCharacter player) {
 		game.registerInteractable(npc);
 	}
 }

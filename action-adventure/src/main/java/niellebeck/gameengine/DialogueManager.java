@@ -1,10 +1,8 @@
-package niellebeck.game;
+package niellebeck.gameengine;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
-
-import niellebeck.game.dialogues.Dialogue;
 
 /*
  * NOTE: This class is ugly and has a bunch of hard-coded constants, copied

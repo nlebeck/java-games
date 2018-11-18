@@ -2,6 +2,7 @@ package niellebeck.game.collisionhandlers;
 
 import niellebeck.game.Enemy;
 import niellebeck.game.PlayerCharacter;
+import niellebeck.gameengine.CollisionHandler;
 
 public class EnemyPlayerCharacterCollisionHandler extends CollisionHandler<Enemy, PlayerCharacter> {
 	public EnemyPlayerCharacterCollisionHandler() {

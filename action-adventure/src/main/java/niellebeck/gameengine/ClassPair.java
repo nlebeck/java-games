@@ -1,4 +1,4 @@
-package niellebeck.game.collisionhandlers;
+package niellebeck.gameengine;
 
 /**
  * An unordered pair of Classes.

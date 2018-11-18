@@ -1,5 +1,7 @@
 package niellebeck.game.dialogues;
 
+import niellebeck.gameengine.Dialogue;
+
 public class TestDialogue extends Dialogue {
 
 	public TestDialogue() {

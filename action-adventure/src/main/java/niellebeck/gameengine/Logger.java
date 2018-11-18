@@ -1,4 +1,4 @@
-package niellebeck.game;
+package niellebeck.gameengine;
 
 public class Logger {
 	public static void panic(String message) {

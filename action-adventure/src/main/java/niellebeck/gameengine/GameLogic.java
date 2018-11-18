@@ -1,14 +1,14 @@
-package niellebeck.game;
+package niellebeck.gameengine;
 
 public abstract class GameLogic {
-	private Game game;
+	private GameEngine gameEngine;
 	
-	protected Game getGame() {
-		return game;
+	protected GameEngine getGameEngine() {
+		return gameEngine;
 	}
 	
-	public void setGame(Game game) {
-		this.game = game;
+	public void setGameEngine(GameEngine game) {
+		this.gameEngine = game;
 	}
 	
 	/**

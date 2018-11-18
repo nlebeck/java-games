@@ -1,4 +1,4 @@
-package niellebeck.game.dialogues;
+package niellebeck.gameengine;
 
 public abstract class Dialogue {
 	private String[] lines;

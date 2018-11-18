@@ -3,6 +3,12 @@ package niellebeck.game;
 import java.util.List;
 import java.util.Random;
 
+import niellebeck.gameengine.CollisionManager;
+import niellebeck.gameengine.Direction;
+import niellebeck.gameengine.DirectionUtils;
+import niellebeck.gameengine.KeyboardInput;
+import niellebeck.gameengine.Sprite;
+
 public class Enemy extends Sprite {
 	final int SPEED = 1;
 	

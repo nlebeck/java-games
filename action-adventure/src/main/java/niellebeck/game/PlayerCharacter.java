@@ -5,6 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import niellebeck.gameengine.AnimatedSprite;
+import niellebeck.gameengine.Animation;
+import niellebeck.gameengine.CollisionManager;
+import niellebeck.gameengine.Direction;
+import niellebeck.gameengine.KeyboardInput;
+
 public class PlayerCharacter extends AnimatedSprite {
 	
 	private static final int PLAYER_WIDTH = 40;

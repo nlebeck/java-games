@@ -1,7 +1,4 @@
-package niellebeck.game.collisionhandlers;
-
-import niellebeck.game.Game;
-import niellebeck.game.Sprite;
+package niellebeck.gameengine;
 
 /**
  * The base class for collision handlers for specific pairs of Sprite
@@ -54,7 +51,7 @@ public abstract class CollisionHandler<T1 extends Sprite, T2 extends Sprite> {
 	 * Figure out which argument is of which Sprite subclass, then invoke
 	 * handleProximityEvent() with the Sprite arguments in the right order.
 	 */
-	public void castObjectsAndHandleProximityEvent(Game game, Sprite spriteA, Sprite spriteB) {
+	public void castObjectsAndHandleProximityEvent(GameEngine game, Sprite spriteA, Sprite spriteB) {
 		if (spriteA.getClass().equals(classA)) {
 			handleProximityEvent(game, (T1)spriteA, (T2)spriteB);
 		}
@@ -91,5 +88,5 @@ public abstract class CollisionHandler<T1 extends Sprite, T2 extends Sprite> {
 	 * @param spriteA
 	 * @param spriteB
 	 */
-	public void handleProximityEvent(Game game, T1 spriteA, T2 spriteB) { }
+	public void handleProximityEvent(GameEngine game, T1 spriteA, T2 spriteB) { }
 }

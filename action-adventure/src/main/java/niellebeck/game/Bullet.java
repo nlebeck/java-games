@@ -4,6 +4,11 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.List;
 
+import niellebeck.gameengine.CollisionManager;
+import niellebeck.gameengine.Direction;
+import niellebeck.gameengine.KeyboardInput;
+import niellebeck.gameengine.Sprite;
+
 public class Bullet extends Sprite {
 	public static final int BULLET_WIDTH = 10;
 	public static final int BULLET_HEIGHT = 10;

@@ -1,4 +1,4 @@
-package niellebeck.game;
+package niellebeck.gameengine;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -40,7 +40,7 @@ class GamePanel extends JPanel implements Runnable {
 	GameState gameState;
 	KeyboardInput keyboard;
 	Menu menu;
-	Game game;
+	GameEngine game;
 	
 	public GamePanel() {
 		setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
@@ -50,7 +50,7 @@ class GamePanel extends JPanel implements Runnable {
 		
 		keyboard = new KeyboardInput(this);
 		menu = new Menu();
-		game = new Game();
+		game = new GameEngine();
 		
 		this.setFocusTraversalKeysEnabled(false);
 	}

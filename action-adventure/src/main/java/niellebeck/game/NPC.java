@@ -1,6 +1,11 @@
 package niellebeck.game;
 
 import niellebeck.game.dialogues.TestDialogue;
+import niellebeck.gameengine.CollisionManager;
+import niellebeck.gameengine.DialogueManager;
+import niellebeck.gameengine.Interactable;
+import niellebeck.gameengine.KeyboardInput;
+import niellebeck.gameengine.Sprite;
 
 public class NPC extends Sprite implements Interactable {
 

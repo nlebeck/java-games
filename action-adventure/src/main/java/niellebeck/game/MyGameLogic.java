@@ -9,6 +9,11 @@ import niellebeck.game.collisionhandlers.BulletNPCCollisionHandler;
 import niellebeck.game.collisionhandlers.EnemyPlayerCharacterCollisionHandler;
 import niellebeck.game.collisionhandlers.NPCPlayerCharacterCollisionHandler;
 import niellebeck.game.overlays.HpOverlay;
+import niellebeck.gameengine.Direction;
+import niellebeck.gameengine.DirectionUtils;
+import niellebeck.gameengine.GameLogic;
+import niellebeck.gameengine.KeyboardInput;
+import niellebeck.gameengine.Tilemap;
 
 /**
  * A concrete GameLogic implementation for my action-adventure game.
@@ -32,16 +37,16 @@ public class MyGameLogic extends GameLogic {
 		enemies.add(new Enemy(400, 400));
 		enemies.add(new Enemy(320, 100));
 		
-		getGame().addSprite(playerChar);
-		getGame().addSprite(npc);
-		getGame().addSprites(enemies);
+		getGameEngine().addSprite(playerChar);
+		getGameEngine().addSprite(npc);
+		getGameEngine().addSprites(enemies);
 		
-		getGame().registerCollisionHandler(new BulletEnemyCollisionHandler());
-		getGame().registerCollisionHandler(new EnemyPlayerCharacterCollisionHandler());
-		getGame().registerCollisionHandler(new BulletNPCCollisionHandler());
-		getGame().registerCollisionHandler(new NPCPlayerCharacterCollisionHandler());
+		getGameEngine().registerCollisionHandler(new BulletEnemyCollisionHandler());
+		getGameEngine().registerCollisionHandler(new EnemyPlayerCharacterCollisionHandler());
+		getGameEngine().registerCollisionHandler(new BulletNPCCollisionHandler());
+		getGameEngine().registerCollisionHandler(new NPCPlayerCharacterCollisionHandler());
 		
-		getGame().addOverlay(new HpOverlay());
+		getGameEngine().addOverlay(new HpOverlay());
 		
 		lastPlayerDir = Direction.RIGHT;
 		timeUntilNextBullet = BULLET_COOLDOWN;
@@ -65,7 +70,7 @@ public class MyGameLogic extends GameLogic {
 	@Override
 	public void update(KeyboardInput keyboard) {
 		if (playerChar.isDestroyed()) {
-			getGame().endGame();
+			getGameEngine().endGame();
 			return;
 		}
 		
@@ -107,7 +112,7 @@ public class MyGameLogic extends GameLogic {
 			offsetY = (playerChar.getHeight() / 2) + Bullet.BULLET_HEIGHT;
 		}
 		Bullet bullet = new Bullet(playerChar.getX() + offsetX, playerChar.getY() + offsetY, bulletDir);
-		getGame().addSprite(bullet);
+		getGameEngine().addSprite(bullet);
 		timeUntilNextBullet = BULLET_COOLDOWN;
 	}
 }

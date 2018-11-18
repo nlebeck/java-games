@@ -1,4 +1,4 @@
-package niellebeck.game;
+package niellebeck.gameengine;
 
 import java.awt.Rectangle;
 import java.util.HashMap;
@@ -6,9 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import niellebeck.game.collisionhandlers.ClassPair;
-import niellebeck.game.collisionhandlers.CollisionHandler;
 
 public class CollisionManager {
 	
@@ -50,12 +47,12 @@ public class CollisionManager {
 		}
 	}
 	
-	private Game game;
+	private GameEngine game;
 	private Set<CollisionPair> collisionPairs;
 	private Set<Sprite> tilemapCollisions;
 	private Map<ClassPair, CollisionHandler<?,?>> collisionHandlers;
 	
-	public CollisionManager (Game game) {
+	public CollisionManager (GameEngine game) {
 		this.game = game;
 		collisionPairs = new HashSet<CollisionPair>();
 		tilemapCollisions = new HashSet<Sprite>();

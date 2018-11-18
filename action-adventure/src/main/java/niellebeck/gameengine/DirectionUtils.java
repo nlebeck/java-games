@@ -1,15 +1,8 @@
-package niellebeck.game;
+package niellebeck.gameengine;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-enum Direction {
-	LEFT, RIGHT, UP, DOWN,
-	UP_LEFT, UP_RIGHT,
-	DOWN_LEFT, DOWN_RIGHT,
-	NONE
-}
 
 public class DirectionUtils {
 	

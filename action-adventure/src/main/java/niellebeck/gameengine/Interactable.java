@@ -1,4 +1,4 @@
-package niellebeck.game;
+package niellebeck.gameengine;
 
 public interface Interactable {
 	String getInteractionMessage();

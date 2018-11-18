@@ -1,4 +1,4 @@
-package niellebeck.game;
+package niellebeck.gameengine;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -7,10 +7,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import niellebeck.game.collisionhandlers.CollisionHandler;
-import niellebeck.game.overlays.Overlay;
+import niellebeck.game.MyGameLogic;
 
-public class Game {
+public class GameEngine {
 	
 	GameLogic gameLogic;
 	boolean isGameOver;
@@ -22,7 +21,7 @@ public class Game {
 	Tilemap tilemap;
 	List<Overlay> overlays;
 	
-	public Game() {
+	public GameEngine() {
 		isGameOver = false;
 		sprites = new ArrayList<Sprite>();
 		interactables = new ArrayList<Interactable>();
@@ -32,7 +31,7 @@ public class Game {
 		overlays = new ArrayList<Overlay>();
 		
 		gameLogic = new MyGameLogic();
-		gameLogic.setGame(this);
+		gameLogic.setGameEngine(this);
 		gameLogic.init();
 		tilemap = gameLogic.getTilemap();
 	}

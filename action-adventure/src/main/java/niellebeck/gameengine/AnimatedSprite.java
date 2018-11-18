@@ -1,4 +1,4 @@
-package niellebeck.game;
+package niellebeck.gameengine;
 
 import java.util.HashMap;
 import java.util.Map;
