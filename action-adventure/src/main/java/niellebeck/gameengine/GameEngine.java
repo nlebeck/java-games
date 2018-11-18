@@ -120,7 +120,7 @@ public class GameEngine {
 			if (interactables.size() > 0) {
 				if (keyboard.keyPressed(KeyEvent.VK_ENTER)) {
 					Interactable interactable = chooseInteractable();
-					interactable.interact();
+					interactable.interact(gameLogic);
 					interactables.clear();
 				}
 			}

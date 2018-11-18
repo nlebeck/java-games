@@ -86,6 +86,17 @@ public class MyGameLogic extends GameLogic {
 			timeUntilNextBullet--;
 		}
 	}
+
+	
+	public boolean allEnemiesDestroyed() {
+		boolean allDestroyed = true;
+		for (Enemy enemy : enemies) {
+			if (!enemy.isDestroyed()) {
+				allDestroyed = false;
+			}
+		}
+		return allDestroyed;
+	}
 	
 	public int getPlayerHp() {
 		return playerChar.getHp();
