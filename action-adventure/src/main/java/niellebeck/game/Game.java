@@ -4,37 +4,30 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import niellebeck.game.collisionhandlers.BulletEnemyCollisionHandler;
 import niellebeck.game.collisionhandlers.BulletNPCCollisionHandler;
 import niellebeck.game.collisionhandlers.EnemyPlayerCharacterCollisionHandler;
 import niellebeck.game.collisionhandlers.NPCPlayerCharacterCollisionHandler;
+import niellebeck.game.overlays.Overlay;
 
 public class Game {
 	
-	private static final int BULLET_COOLDOWN = 10; //in frames
-	
-	PlayerCharacter playerChar;
+	GameLogic gameLogic;
+	boolean isGameOver;
 	List<Sprite> sprites;
-	Direction lastPlayerDir;
-	int timeUntilNextBullet;
 	List<Interactable> interactables;
-	
 	CollisionManager collisionManager;
 	
 	//graphics state
 	Tilemap tilemap;
+	List<Overlay> overlays;
 	
 	public Game() {
-		playerChar = new PlayerCharacter(300, 220);
+		isGameOver = false;
 		sprites = new ArrayList<Sprite>();
-		sprites.add(new Enemy(400, 400));
-		sprites.add(new Enemy(320, 100));
-		sprites.add(new NPC(80, 350));
-		sprites.add(playerChar);
-		lastPlayerDir = Direction.RIGHT;
-		timeUntilNextBullet = BULLET_COOLDOWN;
 		interactables = new ArrayList<Interactable>();
 		
 		collisionManager = new CollisionManager(this);
@@ -43,7 +36,24 @@ public class Game {
 		collisionManager.registerCollisionHandler(new BulletNPCCollisionHandler());
 		collisionManager.registerCollisionHandler(new NPCPlayerCharacterCollisionHandler());
 		
-		tilemap = new Tilemap("/tilemap.txt");
+		overlays = new ArrayList<Overlay>();
+		
+		gameLogic = new MyGameLogic();
+		gameLogic.setGame(this);
+		gameLogic.init();
+		tilemap = gameLogic.getTilemap();
+	}
+	
+	public void addOverlay(Overlay overlay) {
+		overlays.add(overlay);
+	}
+	
+	public void addSprite(Sprite sprite) {
+		sprites.add(sprite);
+	}
+	
+	public void addSprites(Collection<? extends Sprite> spriteCollection) {
+		sprites.addAll(spriteCollection);
 	}
 	
 	public List<Sprite> getSpriteList() {
@@ -59,25 +69,18 @@ public class Game {
 		bufferGraphics.setColor(Color.white);
 		bufferGraphics.fillRect(0, 0, GamePanel.PANEL_WIDTH, GamePanel.PANEL_HEIGHT);
 		
-		int cameraX = playerChar.getX() - (GamePanel.PANEL_WIDTH / 2) + (playerChar.getWidth() / 2);
-		int cameraY = playerChar.getY() - (GamePanel.PANEL_HEIGHT / 2) + (playerChar.getHeight() / 2);
+		int cameraX = gameLogic.getCameraX() - (GamePanel.PANEL_WIDTH / 2);
+		int cameraY = gameLogic.getCameraY() - (GamePanel.PANEL_HEIGHT / 2);
 		
 		//draw background
 		tilemap.draw(bufferGraphics, cameraX, cameraY);
 	
 		//draw sprites
-		playerChar.draw(bufferGraphics, cameraX, cameraY);
 		for (Sprite s : sprites) {
 			s.draw(bufferGraphics, cameraX, cameraY);
 		}
 		
 		//draw overlay
-		bufferGraphics.setColor(Color.black);
-		bufferGraphics.drawRect(0, 0, 80, 40);
-		bufferGraphics.setColor(Color.white);
-		bufferGraphics.fillRect(1, 1, 79, 39);
-		bufferGraphics.setColor(Color.black);
-		bufferGraphics.drawString("HP: " + playerChar.getHp(), 10, 20);
 		
 		//draw interaction message
 		if (interactables.size() > 0) {
@@ -103,17 +106,18 @@ public class Game {
 		else {
 			interactables.clear();
 			
-			Direction dir = keyboard.getArrowKeyDirection();
-			if (keyboard.keyIsDown(KeyEvent.VK_A) && timeUntilNextBullet <= 0) {
-				shootBullet(dir);
-			}
+			gameLogic.update(keyboard);
 			
+			// Call individual Sprite update methods.
 			for (Sprite sprite : sprites) {
 				sprite.update(keyboard, collisionManager);
 			}
+			
+			// Process collisions.
 			collisionManager.processCollisions();
 			collisionManager.processProximityEvents();
 			
+			// Process Interactable interactions.
 			if (interactables.size() > 0) {
 				if (keyboard.keyPressed(KeyEvent.VK_ENTER)) {
 					Interactable interactable = chooseInteractable();
@@ -122,24 +126,24 @@ public class Game {
 				}
 			}
 			
+			//Remove destroyed sprites.
 			List<Sprite> newSpriteList = new ArrayList<Sprite>();
 			for (Sprite sprite : sprites) {
 				if (!sprite.isDestroyed()) {
 					newSpriteList.add(sprite);
 				}
 			}
-			if (playerChar.isDestroyed()) {
-				nextState = GameState.GAME_OVER;
-			}
 			sprites = newSpriteList;
-			if (dir != Direction.NONE) {
-				lastPlayerDir = dir;
-			}
-			if (timeUntilNextBullet > 0) {
-				timeUntilNextBullet--;
+			
+			if (isGameOver) {
+				nextState = GameState.GAME_OVER;
 			}
 		}
 		return nextState;
+	}
+	
+	public void endGame() {
+		isGameOver = true;
 	}
 	
 	/**
@@ -162,30 +166,5 @@ public class Game {
 		else {
 			return null;
 		}
-	}
-	
-	public void shootBullet(Direction dir) {
-		int offsetX = 0;
-		int offsetY = 0;
-		Direction bulletDir = dir;
-		if (bulletDir == Direction.NONE) {
-			bulletDir = lastPlayerDir;
-		}
-		bulletDir = DirectionUtils.getComponentDirections(bulletDir).get(0);
-		if (bulletDir == Direction.LEFT) {
-			offsetX = -(playerChar.getWidth() / 2) - Bullet.BULLET_WIDTH;
-		}
-		else if (bulletDir == Direction.RIGHT) {
-			offsetX = (playerChar.getWidth() / 2) + Bullet.BULLET_WIDTH;
-		}
-		else if (bulletDir == Direction.UP) {
-			offsetY = -(playerChar.getHeight() / 2) - Bullet.BULLET_HEIGHT;
-		}
-		else if (bulletDir == Direction.DOWN) {
-			offsetY = (playerChar.getHeight() / 2) + Bullet.BULLET_HEIGHT;
-		}
-		Bullet bullet = new Bullet(playerChar.getX() + offsetX, playerChar.getY() + offsetY, bulletDir);
-		sprites.add(bullet);
-		timeUntilNextBullet = BULLET_COOLDOWN;
 	}
 }
