@@ -1,4 +1,4 @@
-package niellebeck.game;
+package niellebeck.game.sprites;
 
 import java.util.List;
 import java.util.Random;

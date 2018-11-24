@@ -1,7 +1,7 @@
 package niellebeck.game.collisionhandlers;
 
-import niellebeck.game.Bullet;
-import niellebeck.game.NPC;
+import niellebeck.game.sprites.Bullet;
+import niellebeck.game.sprites.NPC;
 import niellebeck.gameengine.CollisionHandler;
 
 public class BulletNPCCollisionHandler extends CollisionHandler<Bullet, NPC> {

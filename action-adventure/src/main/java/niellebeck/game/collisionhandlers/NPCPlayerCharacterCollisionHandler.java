@@ -1,7 +1,7 @@
 package niellebeck.game.collisionhandlers;
 
-import niellebeck.game.NPC;
-import niellebeck.game.PlayerCharacter;
+import niellebeck.game.sprites.NPC;
+import niellebeck.game.sprites.PlayerCharacter;
 import niellebeck.gameengine.CollisionHandler;
 import niellebeck.gameengine.GameEngine;
 

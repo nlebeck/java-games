@@ -1,5 +1,6 @@
-package niellebeck.game;
+package niellebeck.game.sprites;
 
+import niellebeck.game.MyGameLogic;
 import niellebeck.game.dialogues.EnemiesDefeatedDialogue;
 import niellebeck.game.dialogues.InitialDialogue;
 import niellebeck.gameengine.CollisionManager;

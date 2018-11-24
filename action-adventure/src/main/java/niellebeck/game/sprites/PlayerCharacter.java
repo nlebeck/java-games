@@ -1,4 +1,4 @@
-package niellebeck.game;
+package niellebeck.game.sprites;
 
 import java.awt.Image;
 import java.util.HashMap;
