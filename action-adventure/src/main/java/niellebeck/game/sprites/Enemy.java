@@ -25,7 +25,7 @@ public class Enemy extends Sprite {
 	}
 	
 	@Override
-	public void update(KeyboardInput keyboard, CollisionManager collisionManager) {
+	public void update(KeyboardInput keyboard) {
 		movementTime += 1;
 		if (movementTime >= movementDuration) {
 			Random random = new Random();
@@ -41,7 +41,7 @@ public class Enemy extends Sprite {
 			}
 		}
 		
-		this.move(currentDir, SPEED, collisionManager);
+		this.move(currentDir, SPEED);
 	}
 	
 	

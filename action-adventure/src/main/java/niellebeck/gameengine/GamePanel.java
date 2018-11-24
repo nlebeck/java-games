@@ -43,7 +43,7 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		keyboard = new KeyboardInput(this);
 		menu = new Menu();
-		game = new GameEngine(gameLogic);
+		game = GameEngine.createGameEngine(gameLogic);
 		
 		this.setFocusTraversalKeysEnabled(false);
 	}

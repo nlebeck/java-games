@@ -51,10 +51,10 @@ public class PlayerCharacter extends AnimatedSprite {
 	}
 	
 	@Override
-	public void update(KeyboardInput keyboard, CollisionManager collisionManager) {
+	public void update(KeyboardInput keyboard) {
 		Direction moveDir = keyboard.getArrowKeyDirection();
 		if (moveDir != Direction.NONE) {
-			move(moveDir, SPEED, collisionManager);
+			move(moveDir, SPEED);
 		}
 		
 		if (hp <= 0) {

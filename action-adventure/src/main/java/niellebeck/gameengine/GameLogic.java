@@ -3,18 +3,19 @@ package niellebeck.gameengine;
 public abstract class GameLogic {
 	private GameEngine gameEngine;
 	
+	/**
+	 * Convenience wrapper for GameEngine.getGameEngine() to cut down
+	 * on code verbosity.
+	 */
 	protected GameEngine getGameEngine() {
-		return gameEngine;
-	}
-	
-	public void setGameEngine(GameEngine game) {
-		this.gameEngine = game;
+		return GameEngine.getGameEngine();
 	}
 	
 	/**
 	 * The place where a GameLogic subclass should initialize its state
-	 * and register it with its Game instance. Guaranteed to be called
-	 * after a Game is bound to this GameLogic with setGame().
+	 * and register it with the GameEngine. Guaranteed to be called
+	 * after the GameEngine has been created and its state has been
+	 * initialized.
 	 */
 	public abstract void init();
 	

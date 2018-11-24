@@ -63,12 +63,13 @@ public abstract class Sprite {
 		return new Rectangle(posX - (width / 2), posY - (height / 2), width, height);
 	}
 	
-	public void move(Direction dir, int distance, CollisionManager collisionManager) {
+	public void move(Direction dir, int distance) {
 		int lastPosX = posX;
 		int lastPosY = posY;
 		
 		tempMove(dir, distance);
 		
+		CollisionManager collisionManager = GameEngine.getGameEngine().getCollisionManager();
 		boolean collision = collisionManager.testAndAddCollisions(this);
 		if (collision) {
 			posX = lastPosX;
@@ -119,7 +120,7 @@ public abstract class Sprite {
 		}
 	}
 
-	public abstract void update(KeyboardInput keyboard, CollisionManager collisionManager);
+	public abstract void update(KeyboardInput keyboard);
 	
 	public abstract void onCollideTilemap();
 }

@@ -18,7 +18,7 @@ public class NPC extends Sprite implements Interactable {
 	}
 
 	@Override
-	public void update(KeyboardInput keyboard, CollisionManager collisionManager) {
+	public void update(KeyboardInput keyboard) {
 		// TODO Auto-generated method stub
 
 	}

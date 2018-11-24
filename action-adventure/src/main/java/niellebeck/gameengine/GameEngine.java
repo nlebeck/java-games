@@ -9,6 +9,8 @@ import java.util.List;
 
 public class GameEngine {
 	
+	private static GameEngine singleton;
+	
 	GameLogic gameLogic;
 	boolean isGameOver;
 	List<Sprite> sprites;
@@ -19,7 +21,23 @@ public class GameEngine {
 	Tilemap tilemap;
 	List<Overlay> overlays;
 	
-	public GameEngine(GameLogic gameLogic) {
+	public static GameEngine getGameEngine() {
+		if (singleton == null) {
+			throw new RuntimeException("The GameEngine has not yet been created.");
+		}
+		return singleton;
+	}
+	
+	public static GameEngine createGameEngine(GameLogic gameLogic) {
+		if (singleton != null) {
+			throw new RuntimeException("The GameEngine has already been created.");
+		}
+		singleton = new GameEngine();
+		singleton.initGameLogic(gameLogic);
+		return singleton;
+	}
+	
+	public GameEngine() {
 		isGameOver = false;
 		sprites = new ArrayList<Sprite>();
 		interactables = new ArrayList<Interactable>();
@@ -27,9 +45,10 @@ public class GameEngine {
 		collisionManager = new CollisionManager(this);
 		
 		overlays = new ArrayList<Overlay>();
-		
+	}
+	
+	private void initGameLogic(GameLogic gameLogic) {
 		this.gameLogic = gameLogic;
-		this.gameLogic.setGameEngine(this);
 		this.gameLogic.init();
 		tilemap = this.gameLogic.getTilemap();
 	}
@@ -40,6 +59,10 @@ public class GameEngine {
 	
 	public void registerCollisionHandler(CollisionHandler<? extends Sprite, ? extends Sprite> collisionHandler) {
 		collisionManager.registerCollisionHandler(collisionHandler);
+	}
+	
+	public CollisionManager getCollisionManager() {
+		return collisionManager;
 	}
 	
 	public void addSprite(Sprite sprite) {
@@ -107,7 +130,7 @@ public class GameEngine {
 			
 			// Call individual Sprite update methods.
 			for (Sprite sprite : sprites) {
-				sprite.update(keyboard, collisionManager);
+				sprite.update(keyboard);
 			}
 			
 			// Process collisions.
