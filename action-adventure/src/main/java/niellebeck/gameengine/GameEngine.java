@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import niellebeck.game.MyGameLogic;
-
 public class GameEngine {
 	
 	GameLogic gameLogic;
@@ -21,7 +19,7 @@ public class GameEngine {
 	Tilemap tilemap;
 	List<Overlay> overlays;
 	
-	public GameEngine() {
+	public GameEngine(GameLogic gameLogic) {
 		isGameOver = false;
 		sprites = new ArrayList<Sprite>();
 		interactables = new ArrayList<Interactable>();
@@ -30,10 +28,10 @@ public class GameEngine {
 		
 		overlays = new ArrayList<Overlay>();
 		
-		gameLogic = new MyGameLogic();
-		gameLogic.setGameEngine(this);
-		gameLogic.init();
-		tilemap = gameLogic.getTilemap();
+		this.gameLogic = gameLogic;
+		this.gameLogic.setGameEngine(this);
+		this.gameLogic.init();
+		tilemap = this.gameLogic.getTilemap();
 	}
 	
 	public void addOverlay(Overlay overlay) {

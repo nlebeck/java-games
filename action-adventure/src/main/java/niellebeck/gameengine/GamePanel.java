@@ -10,23 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 
-public class Main {
-
-	public static void main(String[] args) {
-		createWindow();
-	}
-	
-	private static void createWindow() {
-		JFrame f = new JFrame("Game Window");
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setSize(640, 480);
-		f.add(new GamePanel());
-		f.pack();
-		f.setVisible(true);
-	}
-}
-
-class GamePanel extends JPanel implements Runnable {
+public class GamePanel extends JPanel implements Runnable {
 	public static final int PANEL_WIDTH = 640;
 	public static final int PANEL_HEIGHT = 480;
 	public static final int RENDER_PERIOD_MS = 17;
@@ -42,7 +26,16 @@ class GamePanel extends JPanel implements Runnable {
 	Menu menu;
 	GameEngine game;
 	
-	public GamePanel() {
+	public static void createWindow(GameLogic gameLogic) {
+		JFrame f = new JFrame("Game Window");
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setSize(640, 480);
+		f.add(new GamePanel(gameLogic));
+		f.pack();
+		f.setVisible(true);
+	}
+	
+	private GamePanel(GameLogic gameLogic) {
 		setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
 		setFocusable(true);
 				
@@ -50,7 +43,7 @@ class GamePanel extends JPanel implements Runnable {
 		
 		keyboard = new KeyboardInput(this);
 		menu = new Menu();
-		game = new GameEngine();
+		game = new GameEngine(gameLogic);
 		
 		this.setFocusTraversalKeysEnabled(false);
 	}
