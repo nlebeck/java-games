@@ -2,7 +2,8 @@ package niellebeck.gameengine;
 
 /**
  * The base class for collision handlers for specific pairs of Sprite
- * subclasses.
+ * subclasses. Subclasses of this class currently define the methods to handle
+ * both collision events and proximity events for their Sprite subclass pairs.
  * <p>
  * The point of this class is to make it easy to both define the collision
  * logic for a pair of Sprite subclasses in one place and execute that

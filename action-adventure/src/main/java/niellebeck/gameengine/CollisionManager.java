@@ -7,6 +7,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * This class is responsible for handling both collision events and proximity
+ * events. A collision event occurs when one Sprite attempts to move into the
+ * space occupied by another Sprite, while a proximity event occurs when two
+ * Sprites are within a certain distance of each other. When either a collision
+ * event or a proximity event is detected for a pair of Sprites, the
+ * CollisionManager invokes the appropriate method in the CollisionHandler
+ * corresponding to the specific subclasses of the two Sprites.
+ */
 public class CollisionManager {
 	
 	/**
