@@ -1,8 +1,6 @@
 package niellebeck.gameengine;
 
 public abstract class GameLogic {
-	private GameEngine gameEngine;
-	
 	/**
 	 * Convenience wrapper for GameEngine.getGameEngine() to cut down
 	 * on code verbosity.
@@ -19,11 +17,13 @@ public abstract class GameLogic {
 	 */
 	public abstract void init();
 	
-	public abstract int getCameraX();
-	
-	public abstract int getCameraY();
-	
-	public abstract Tilemap getTilemap();
+	public abstract Scene getFirstScene();
 	
 	public abstract void update(KeyboardInput keyboard);
+	
+	/**
+	 * The place where a GameLogic subclass should perform any resetting or
+	 * modifying of its state in response to a Scene change.
+	 */
+	public abstract void onChangeScene();
 }

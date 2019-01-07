@@ -1,23 +1,22 @@
 package niellebeck.game;
 
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 import niellebeck.game.collisionhandlers.BulletEnemyCollisionHandler;
 import niellebeck.game.collisionhandlers.BulletNPCCollisionHandler;
 import niellebeck.game.collisionhandlers.EnemyPlayerCharacterCollisionHandler;
 import niellebeck.game.collisionhandlers.NPCPlayerCharacterCollisionHandler;
 import niellebeck.game.overlays.HpOverlay;
+import niellebeck.game.scenes.BaseGameScene;
+import niellebeck.game.scenes.GameOverScene;
+import niellebeck.game.scenes.StartScene;
 import niellebeck.game.sprites.Bullet;
-import niellebeck.game.sprites.Enemy;
-import niellebeck.game.sprites.NPC;
 import niellebeck.game.sprites.PlayerCharacter;
 import niellebeck.gameengine.Direction;
 import niellebeck.gameengine.DirectionUtils;
 import niellebeck.gameengine.GameLogic;
 import niellebeck.gameengine.KeyboardInput;
-import niellebeck.gameengine.Tilemap;
+import niellebeck.gameengine.Scene;
 
 /**
  * A concrete GameLogic implementation for my action-adventure game.
@@ -26,25 +25,11 @@ public class MyGameLogic extends GameLogic {
 	
 	private static final int BULLET_COOLDOWN = 10; //in frames
 	
-	private PlayerCharacter playerChar;
-	private NPC npc;
-	private List<Enemy> enemies;
-	
 	Direction lastPlayerDir;
 	int timeUntilNextBullet;
 	
 	@Override
 	public void init() {
-		playerChar = new PlayerCharacter(300, 220);
-		npc = new NPC(80, 350);
-		enemies = new ArrayList<Enemy>();
-		enemies.add(new Enemy(400, 400));
-		enemies.add(new Enemy(320, 100));
-		
-		getGameEngine().addSprite(playerChar);
-		getGameEngine().addSprite(npc);
-		getGameEngine().addSprites(enemies);
-		
 		getGameEngine().registerCollisionHandler(new BulletEnemyCollisionHandler());
 		getGameEngine().registerCollisionHandler(new EnemyPlayerCharacterCollisionHandler());
 		getGameEngine().registerCollisionHandler(new BulletNPCCollisionHandler());
@@ -52,29 +37,27 @@ public class MyGameLogic extends GameLogic {
 		
 		getGameEngine().addOverlay(new HpOverlay());
 		
+		resetState();
+	}
+	
+	private void resetState() {
 		lastPlayerDir = Direction.RIGHT;
 		timeUntilNextBullet = BULLET_COOLDOWN;
 	}
 	
-	@Override
-	public int getCameraX() {
-		return playerChar.getX() + (playerChar.getWidth() / 2);
+	private BaseGameScene getCurrentGameScene() {
+		Scene scene = getGameEngine().getCurrentScene();
+		return (BaseGameScene)scene;
 	}
 	
-	@Override
-	public int getCameraY() {
-		return playerChar.getY() + (playerChar.getHeight() / 2);
-	}
-	
-	@Override
-	public Tilemap getTilemap() {
-		return new Tilemap("/tilemap.txt");
+	private PlayerCharacter getPlayerCharacter() {
+		return getCurrentGameScene().getPlayerCharacter();
 	}
 	
 	@Override
 	public void update(KeyboardInput keyboard) {
-		if (playerChar.isDestroyed()) {
-			getGameEngine().endGame();
+		if (getPlayerCharacter().isDestroyed()) {
+			getGameEngine().changeScene(new GameOverScene());
 			return;
 		}
 		
@@ -90,23 +73,13 @@ public class MyGameLogic extends GameLogic {
 			timeUntilNextBullet--;
 		}
 	}
-
-	
-	public boolean allEnemiesDestroyed() {
-		boolean allDestroyed = true;
-		for (Enemy enemy : enemies) {
-			if (!enemy.isDestroyed()) {
-				allDestroyed = false;
-			}
-		}
-		return allDestroyed;
-	}
 	
 	public int getPlayerHp() {
-		return playerChar.getHp();
+		return getPlayerCharacter().getHp();
 	}
 	
 	public void shootBullet(Direction dir) {
+		PlayerCharacter playerChar = getPlayerCharacter();
 		int offsetX = 0;
 		int offsetY = 0;
 		Direction bulletDir = dir;
@@ -129,5 +102,15 @@ public class MyGameLogic extends GameLogic {
 		Bullet bullet = new Bullet(playerChar.getX() + offsetX, playerChar.getY() + offsetY, bulletDir);
 		getGameEngine().addSprite(bullet);
 		timeUntilNextBullet = BULLET_COOLDOWN;
+	}
+
+	@Override
+	public Scene getFirstScene() {
+		return new StartScene();
+	}
+
+	@Override
+	public void onChangeScene() {
+		resetState();
 	}
 }

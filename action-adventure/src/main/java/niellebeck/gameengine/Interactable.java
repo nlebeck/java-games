@@ -2,5 +2,5 @@ package niellebeck.gameengine;
 
 public interface Interactable {
 	String getInteractionMessage();
-	void interact(GameLogic gameLogic);
+	void interact(GameLogic gameLogic, GameScene gameScene);
 }

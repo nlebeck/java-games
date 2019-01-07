@@ -11,8 +11,11 @@ public class GameEngine {
 	
 	private static GameEngine singleton;
 	
+	Menu menu;
+	
 	GameLogic gameLogic;
-	boolean isGameOver;
+	Scene currentScene;
+	GameState gameState;
 	List<Sprite> sprites;
 	List<Interactable> interactables;
 	CollisionManager collisionManager;
@@ -38,19 +41,35 @@ public class GameEngine {
 	}
 	
 	public GameEngine() {
-		isGameOver = false;
 		sprites = new ArrayList<Sprite>();
 		interactables = new ArrayList<Interactable>();
 		
 		collisionManager = new CollisionManager(this);
 		
 		overlays = new ArrayList<Overlay>();
+		
+		menu = new Menu();
 	}
 	
 	private void initGameLogic(GameLogic gameLogic) {
 		this.gameLogic = gameLogic;
 		this.gameLogic.init();
-		tilemap = this.gameLogic.getTilemap();
+		changeScene(this.gameLogic.getFirstScene());
+	}
+	
+	public void changeScene(Scene scene) {
+		sprites.clear();
+		this.currentScene = scene;
+		if (this.currentScene instanceof GameScene) {
+			GameScene gameScene = (GameScene)this.currentScene;
+			gameScene.init();
+			this.tilemap = gameScene.getTilemap();
+			this.gameState = GameState.PLAYING;
+		}
+	}
+	
+	public Scene getCurrentScene() {
+		return currentScene;
 	}
 	
 	public void addOverlay(Overlay overlay) {
@@ -82,12 +101,36 @@ public class GameEngine {
 	}
 	
 	public void draw(Graphics bufferGraphics) {
+		if (currentScene instanceof GameScene) {
+			drawGameScene(bufferGraphics, (GameScene)currentScene);
+		}
+		else if (currentScene instanceof SelfDrawingScene) {
+			SelfDrawingScene selfDrawingScene = (SelfDrawingScene)currentScene;
+			selfDrawingScene.draw(bufferGraphics, GamePanel.PANEL_WIDTH, GamePanel.PANEL_HEIGHT);
+		}
+	}
+	
+	public void drawGameScene(Graphics bufferGraphics, GameScene gameScene) {
+		if (gameState == GameState.PLAYING) {
+			drawSpritesAndTilemap(bufferGraphics, gameScene);
+		}
+		else if (gameState == GameState.MENU) {
+			drawSpritesAndTilemap(bufferGraphics, gameScene);
+			menu.draw(bufferGraphics);
+		}
+		else if (gameState == GameState.DIALOGUE) {
+			drawSpritesAndTilemap(bufferGraphics, gameScene);
+			DialogueManager.getInstance().draw(bufferGraphics);
+		}
+	}
+	
+	public void drawSpritesAndTilemap(Graphics bufferGraphics, GameScene gameScene) {
 		//clear buffer
 		bufferGraphics.setColor(Color.white);
 		bufferGraphics.fillRect(0, 0, GamePanel.PANEL_WIDTH, GamePanel.PANEL_HEIGHT);
 		
-		int cameraX = gameLogic.getCameraX() - (GamePanel.PANEL_WIDTH / 2);
-		int cameraY = gameLogic.getCameraY() - (GamePanel.PANEL_HEIGHT / 2);
+		int cameraX = gameScene.getCameraX() - (GamePanel.PANEL_WIDTH / 2);
+		int cameraY = gameScene.getCameraY() - (GamePanel.PANEL_HEIGHT / 2);
 		
 		//draw background
 		tilemap.draw(bufferGraphics, cameraX, cameraY);
@@ -115,7 +158,29 @@ public class GameEngine {
 		}
 	}
 	
-	public GameState update(KeyboardInput keyboard) {
+	public void update(KeyboardInput keyboard) {
+		if (currentScene instanceof GameScene) {
+			updateActiveComponent(keyboard, (GameScene)currentScene);
+		}
+		else if (currentScene instanceof SelfDrawingScene) {
+			SelfDrawingScene selfDrawingScene = (SelfDrawingScene)currentScene;
+			selfDrawingScene.update(keyboard);
+		}
+	}
+	
+	public void updateActiveComponent(KeyboardInput keyboard, GameScene gameScene) {
+		if (gameState == GameState.PLAYING) {
+			gameState = updateGameScene(keyboard, gameScene);
+		}
+		else if (gameState == GameState.MENU) {
+			gameState = menu.update(keyboard);
+		}
+		else if (gameState == GameState.DIALOGUE) {
+			gameState = DialogueManager.getInstance().update(keyboard);
+		}
+	}
+	
+	public GameState updateGameScene(KeyboardInput keyboard, GameScene gameScene) {
 		GameState nextState = GameState.PLAYING;
 		if (keyboard.keyPressed(KeyEvent.VK_TAB)) {
 			nextState = GameState.MENU;
@@ -127,6 +192,7 @@ public class GameEngine {
 			interactables.clear();
 			
 			gameLogic.update(keyboard);
+			gameScene.update(keyboard);
 			
 			// Call individual Sprite update methods.
 			for (Sprite sprite : sprites) {
@@ -141,7 +207,7 @@ public class GameEngine {
 			if (interactables.size() > 0) {
 				if (keyboard.keyPressed(KeyEvent.VK_ENTER)) {
 					Interactable interactable = chooseInteractable();
-					interactable.interact(gameLogic);
+					interactable.interact(gameLogic, gameScene);
 					interactables.clear();
 				}
 			}
@@ -154,16 +220,8 @@ public class GameEngine {
 				}
 			}
 			sprites = newSpriteList;
-			
-			if (isGameOver) {
-				nextState = GameState.GAME_OVER;
-			}
 		}
 		return nextState;
-	}
-	
-	public void endGame() {
-		isGameOver = true;
 	}
 	
 	/**

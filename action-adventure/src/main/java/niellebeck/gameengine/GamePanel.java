@@ -1,10 +1,8 @@
 package niellebeck.gameengine;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -21,9 +19,7 @@ public class GamePanel extends JPanel implements Runnable {
 	private Graphics bufferGraphics;
 	private Image bufferImage = null;
 	
-	GameState gameState;
 	KeyboardInput keyboard;
-	Menu menu;
 	GameEngine game;
 	
 	public static void createWindow(GameLogic gameLogic) {
@@ -38,11 +34,8 @@ public class GamePanel extends JPanel implements Runnable {
 	private GamePanel(GameLogic gameLogic) {
 		setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
 		setFocusable(true);
-				
-		gameState = GameState.START_MENU;
 		
 		keyboard = new KeyboardInput(this);
-		menu = new Menu();
 		game = GameEngine.createGameEngine(gameLogic);
 		
 		this.setFocusTraversalKeysEnabled(false);
@@ -66,48 +59,7 @@ public class GamePanel extends JPanel implements Runnable {
 			bufferGraphics = bufferImage.getGraphics();
 		}
 		
-		if (gameState == GameState.PLAYING) {
-			game.draw(bufferGraphics);
-		}
-		else if (gameState == GameState.MENU) {
-			game.draw(bufferGraphics);
-			menu.draw(bufferGraphics);
-		}
-		else if (gameState == GameState.DIALOGUE) {
-			game.draw(bufferGraphics);
-			DialogueManager.getInstance().draw(bufferGraphics);
-		}
-		else if (gameState == GameState.START_MENU) {
-			bufferGraphics.setColor(Color.white);
-			bufferGraphics.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
-			bufferGraphics.setColor(Color.black);
-			bufferGraphics.drawString("Niel's awesome action-adventure game", PANEL_WIDTH / 2 - 80, PANEL_HEIGHT / 2 - 40);
-			bufferGraphics.drawString("Press A to begin", PANEL_WIDTH / 2 - 20, PANEL_HEIGHT / 2 - 10);
-			bufferGraphics.drawString("Controls: arrow keys move, A shoots", PANEL_WIDTH / 2 - 80, PANEL_HEIGHT / 2 + 20);
-		}
-		else if (gameState == GameState.GAME_OVER) {
-			bufferGraphics.setColor(Color.white);
-			bufferGraphics.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
-			bufferGraphics.setColor(Color.black);
-			bufferGraphics.drawString("Game over", PANEL_WIDTH / 2 - 60, PANEL_HEIGHT / 2 - 40);
-		}
-	}
-	
-	public void updateGameState() {
-		if (gameState == GameState.PLAYING) {
-			gameState = game.update(keyboard);
-		}
-		else if (gameState == GameState.MENU) {
-			gameState = menu.update(keyboard);
-		}
-		else if (gameState == GameState.DIALOGUE) {
-			gameState = DialogueManager.getInstance().update(keyboard);
-		}
-		else if (gameState == GameState.START_MENU) {
-			if (keyboard.keyPressed(KeyEvent.VK_A)) {
-				gameState = GameState.PLAYING;
-			}
-		}
+		game.draw(bufferGraphics);
 	}
 	
 	public void paintScreen() {
@@ -130,7 +82,7 @@ public class GamePanel extends JPanel implements Runnable {
 		long beforeTimeNs = System.nanoTime();
 		
 		while (running) {
-			updateGameState();
+			game.update(keyboard);
 			render();
 			paintScreen();
 			
