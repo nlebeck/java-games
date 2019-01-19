@@ -21,18 +21,21 @@ public class LevelOneScene extends BaseGameScene {
 
 	private PlayerCharacter playerChar;
 	private NPC npc;
+	private NPC anotherNpc;
 	private List<Enemy> enemies;
 	
 	@Override
 	public void init() {
 		playerChar = new PlayerCharacter(300, 220);
 		npc = new NPC(80, 350);
+		anotherNpc = new NPC(500, 250);
 		enemies = new ArrayList<Enemy>();
 		enemies.add(new Enemy(400, 400));
 		enemies.add(new Enemy(320, 100));
 		
 		getGameEngine().addSprite(playerChar);
 		getGameEngine().addSprite(npc);
+		getGameEngine().addSprite(anotherNpc);
 		getGameEngine().addSprites(enemies);
 		
 		npc.setInteractionHandler(new InteractionHandler() {
@@ -50,6 +53,24 @@ public class LevelOneScene extends BaseGameScene {
 				DialogueManager.getInstance().startDialogue(dialogue);
 			}
 			
+			@Override
+			public String getInteractionMessage() {
+				return "talk with NPC";
+			}
+			
+		});
+		
+		anotherNpc.setInteractionHandler(new InteractionHandler() {
+
+			@Override
+			public void interact(GameLogic gameLogic, GameScene gameScene) {
+				Dialogue dialogue = new Dialogue(new String[] {
+						"Hello!",
+						"I am another NPC."
+				});
+				DialogueManager.getInstance().startDialogue(dialogue);
+			}
+
 			@Override
 			public String getInteractionMessage() {
 				return "talk with NPC";

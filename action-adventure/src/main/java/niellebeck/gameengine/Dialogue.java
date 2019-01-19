@@ -1,6 +1,6 @@
 package niellebeck.gameengine;
 
-public abstract class Dialogue {
+public class Dialogue {
 	private String[] lines;
 	private int currentIndex = 0;
 	
