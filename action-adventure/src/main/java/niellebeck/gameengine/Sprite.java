@@ -14,6 +14,8 @@ public abstract class Sprite {
 	protected int width;
 	protected int height;
 	protected Image img;
+	
+	private InteractionHandler interactionHandler;
 		
 	public Sprite(int initX, int initY, int initWidth, int initHeight, String imagePath) {
 		this(initX, initY, initWidth, initHeight);
@@ -27,6 +29,7 @@ public abstract class Sprite {
 		height = initHeight;
 		destroyed = false;
 		img = null;
+		interactionHandler = null;
 	}
 	
 	public boolean isDestroyed() {
@@ -51,6 +54,18 @@ public abstract class Sprite {
 	
 	public int getHeight() {
 		return height;
+	}
+	
+	public boolean isInteractable() {
+		return (interactionHandler != null);
+	}
+	
+	public InteractionHandler getInteractionHandler() {
+		return interactionHandler;
+	}
+	
+	public void setInteractionHandler(InteractionHandler handler) {
+		interactionHandler = handler;
 	}
 	
 	public void draw(Graphics g, int cameraX, int cameraY) {

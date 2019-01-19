@@ -1,6 +1,6 @@
 package niellebeck.gameengine;
 
-public interface Interactable {
-	String getInteractionMessage();
+public interface InteractionHandler {
 	void interact(GameLogic gameLogic, GameScene gameScene);
+	String getInteractionMessage();
 }

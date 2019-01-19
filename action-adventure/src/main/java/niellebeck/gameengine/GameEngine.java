@@ -17,7 +17,7 @@ public class GameEngine {
 	Scene currentScene;
 	GameState gameState;
 	List<Sprite> sprites;
-	List<Interactable> interactables;
+	List<Sprite> interactables;
 	CollisionManager collisionManager;
 	
 	//graphics state
@@ -42,7 +42,7 @@ public class GameEngine {
 	
 	public GameEngine() {
 		sprites = new ArrayList<Sprite>();
-		interactables = new ArrayList<Interactable>();
+		interactables = new ArrayList<Sprite>();
 		
 		collisionManager = new CollisionManager(this);
 		
@@ -147,8 +147,8 @@ public class GameEngine {
 		
 		//draw interaction message
 		if (interactables.size() > 0) {
-			Interactable interactable = chooseInteractable();
-			String message = interactable.getInteractionMessage();
+			Sprite interactable = chooseInteractable();
+			String message = interactable.getInteractionHandler().getInteractionMessage();
 			bufferGraphics.setColor(Color.black);
 			bufferGraphics.drawRect(GamePanel.PANEL_WIDTH / 4, 0, GamePanel.PANEL_WIDTH / 2, 40);
 			bufferGraphics.setColor(Color.white);
@@ -206,8 +206,8 @@ public class GameEngine {
 			// Process Interactable interactions.
 			if (interactables.size() > 0) {
 				if (keyboard.keyPressed(KeyEvent.VK_ENTER)) {
-					Interactable interactable = chooseInteractable();
-					interactable.interact(gameLogic, gameScene);
+					Sprite interactable = chooseInteractable();
+					interactable.getInteractionHandler().interact(gameLogic, gameScene);
 					interactables.clear();
 				}
 			}
@@ -225,19 +225,23 @@ public class GameEngine {
 	}
 	
 	/**
-	 * Make the given Interactable available for the player character to
+	 * Make the given Sprite available for the player character to
 	 * interact with by this frame pressing the Enter key.
 	 */
-	public void registerInteractable(Interactable interactable) {
-		interactables.add(interactable);
+	public void registerInteractable(Sprite sprite) {
+		if (!sprite.isInteractable()) {
+			Logger.info("Attempted to register a non-interactable sprite.");
+			return;
+		}
+		interactables.add(sprite);
 	}
 	
 	/**
-	 * Select a single Interactable that will be used this frame. If the Enter
-	 * key is pressed this frame, the player will interact with this
-	 * Interactable; otherwise, an interaction message will be displayed.
+	 * Select a single interactable Sprite that will be used this frame. If
+	 * the Enter key is pressed this frame, the player will interact with this
+	 * Sprite; otherwise, an interaction message will be displayed.
 	 */
-	private Interactable chooseInteractable() {
+	private Sprite chooseInteractable() {
 		if (interactables.size() > 0) {
 			return interactables.get(0);
 		}

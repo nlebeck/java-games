@@ -3,9 +3,17 @@ package niellebeck.game.scenes;
 import java.util.ArrayList;
 import java.util.List;
 
+import niellebeck.game.MyGameLogic;
+import niellebeck.game.dialogues.EnemiesDefeatedDialogue;
+import niellebeck.game.dialogues.InitialDialogue;
 import niellebeck.game.sprites.Enemy;
 import niellebeck.game.sprites.NPC;
 import niellebeck.game.sprites.PlayerCharacter;
+import niellebeck.gameengine.Dialogue;
+import niellebeck.gameengine.DialogueManager;
+import niellebeck.gameengine.GameLogic;
+import niellebeck.gameengine.GameScene;
+import niellebeck.gameengine.InteractionHandler;
 import niellebeck.gameengine.KeyboardInput;
 import niellebeck.gameengine.Tilemap;
 
@@ -26,6 +34,28 @@ public class LevelOneScene extends BaseGameScene {
 		getGameEngine().addSprite(playerChar);
 		getGameEngine().addSprite(npc);
 		getGameEngine().addSprites(enemies);
+		
+		npc.setInteractionHandler(new InteractionHandler() {
+			
+			@Override
+			public void interact(GameLogic gameLogic, GameScene gameScene) {
+				BaseGameScene baseGameScene = (BaseGameScene)gameScene;
+				Dialogue dialogue = null;
+				if (baseGameScene.allEnemiesDestroyed()) {
+					dialogue = new EnemiesDefeatedDialogue();
+				}
+				else {
+					dialogue = new InitialDialogue();
+				}
+				DialogueManager.getInstance().startDialogue(dialogue);
+			}
+			
+			@Override
+			public String getInteractionMessage() {
+				return "talk with NPC";
+			}
+			
+		});
 	}
 	
 	@Override
