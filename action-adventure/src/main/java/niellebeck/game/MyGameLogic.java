@@ -6,7 +6,6 @@ import niellebeck.game.collisionhandlers.BulletEnemyCollisionHandler;
 import niellebeck.game.collisionhandlers.BulletNPCCollisionHandler;
 import niellebeck.game.collisionhandlers.EnemyPlayerCharacterCollisionHandler;
 import niellebeck.game.overlays.HpOverlay;
-import niellebeck.game.scenes.BaseGameScene;
 import niellebeck.game.scenes.GameOverScene;
 import niellebeck.game.scenes.StartScene;
 import niellebeck.game.sprites.Bullet;
@@ -14,6 +13,7 @@ import niellebeck.game.sprites.PlayerCharacter;
 import niellebeck.gameengine.Direction;
 import niellebeck.gameengine.DirectionUtils;
 import niellebeck.gameengine.GameLogic;
+import niellebeck.gameengine.GameScene;
 import niellebeck.gameengine.KeyboardInput;
 import niellebeck.gameengine.Scene;
 
@@ -43,13 +43,9 @@ public class MyGameLogic extends GameLogic {
 		timeUntilNextBullet = BULLET_COOLDOWN;
 	}
 	
-	private BaseGameScene getCurrentGameScene() {
-		Scene scene = getGameEngine().getCurrentScene();
-		return (BaseGameScene)scene;
-	}
-	
 	private PlayerCharacter getPlayerCharacter() {
-		return (PlayerCharacter)getCurrentGameScene().getPlayerCharacter();
+		GameScene currentScene = (GameScene)getGameEngine().getCurrentScene();
+		return (PlayerCharacter)currentScene.getPlayerCharacter();
 	}
 	
 	@Override

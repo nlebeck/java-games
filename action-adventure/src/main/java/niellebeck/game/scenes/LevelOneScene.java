@@ -17,7 +17,7 @@ import niellebeck.gameengine.InteractionHandler;
 import niellebeck.gameengine.KeyboardInput;
 import niellebeck.gameengine.Tilemap;
 
-public class LevelOneScene extends BaseGameScene {
+public class LevelOneScene extends GameScene {
 
 	private PlayerCharacter playerChar;
 	private NPC npc;
@@ -42,9 +42,9 @@ public class LevelOneScene extends BaseGameScene {
 			
 			@Override
 			public void interact(GameLogic gameLogic, GameScene gameScene) {
-				BaseGameScene baseGameScene = (BaseGameScene)gameScene;
+				LevelOneScene levelOneScene = (LevelOneScene)gameScene;
 				Dialogue dialogue = null;
-				if (baseGameScene.allEnemiesDestroyed()) {
+				if (levelOneScene.allEnemiesDestroyed()) {
 					dialogue = new EnemiesDefeatedDialogue();
 				}
 				else {
@@ -87,7 +87,6 @@ public class LevelOneScene extends BaseGameScene {
 		});
 	}
 	
-	@Override
 	public boolean allEnemiesDestroyed() {
 		boolean allDestroyed = true;
 		for (Enemy enemy : enemies) {
