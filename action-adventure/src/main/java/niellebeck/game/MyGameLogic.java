@@ -5,7 +5,6 @@ import java.awt.event.KeyEvent;
 import niellebeck.game.collisionhandlers.BulletEnemyCollisionHandler;
 import niellebeck.game.collisionhandlers.BulletNPCCollisionHandler;
 import niellebeck.game.collisionhandlers.EnemyPlayerCharacterCollisionHandler;
-import niellebeck.game.collisionhandlers.NPCPlayerCharacterCollisionHandler;
 import niellebeck.game.overlays.HpOverlay;
 import niellebeck.game.scenes.BaseGameScene;
 import niellebeck.game.scenes.GameOverScene;
@@ -33,7 +32,6 @@ public class MyGameLogic extends GameLogic {
 		getGameEngine().registerCollisionHandler(new BulletEnemyCollisionHandler());
 		getGameEngine().registerCollisionHandler(new EnemyPlayerCharacterCollisionHandler());
 		getGameEngine().registerCollisionHandler(new BulletNPCCollisionHandler());
-		getGameEngine().registerCollisionHandler(new NPCPlayerCharacterCollisionHandler());
 		
 		getGameEngine().addOverlay(new HpOverlay());
 		
@@ -51,7 +49,7 @@ public class MyGameLogic extends GameLogic {
 	}
 	
 	private PlayerCharacter getPlayerCharacter() {
-		return getCurrentGameScene().getPlayerCharacter();
+		return (PlayerCharacter)getCurrentGameScene().getPlayerCharacter();
 	}
 	
 	@Override

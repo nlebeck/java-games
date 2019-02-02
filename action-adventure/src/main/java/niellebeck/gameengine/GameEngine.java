@@ -199,11 +199,12 @@ public class GameEngine {
 				sprite.update(keyboard);
 			}
 			
-			// Process collisions.
+			// Process the different kinds of events.
 			collisionManager.processCollisions();
 			collisionManager.processProximityEvents();
+			collisionManager.registerInteractableSprites(gameScene);
 			
-			// Process Interactable interactions.
+			// Process interactions.
 			if (interactables.size() > 0) {
 				if (keyboard.keyPressed(KeyEvent.VK_ENTER)) {
 					Sprite interactable = chooseInteractable();

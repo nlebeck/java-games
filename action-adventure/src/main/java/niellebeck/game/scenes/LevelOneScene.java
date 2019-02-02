@@ -58,6 +58,10 @@ public class LevelOneScene extends BaseGameScene {
 				return "talk with NPC";
 			}
 			
+			@Override
+			public double getInteractionDistance() {
+				return 56.6;
+			}
 		});
 		
 		anotherNpc.setInteractionHandler(new InteractionHandler() {
@@ -76,6 +80,10 @@ public class LevelOneScene extends BaseGameScene {
 				return "talk with NPC";
 			}
 			
+			@Override
+			public double getInteractionDistance() {
+				return 56.6;
+			}
 		});
 	}
 	

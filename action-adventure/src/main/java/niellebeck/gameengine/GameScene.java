@@ -19,4 +19,6 @@ public abstract class GameScene extends Scene {
 	public abstract Tilemap getTilemap();
 	
 	public abstract void update(KeyboardInput keyboard);
+	
+	public abstract Sprite getPlayerCharacter();
 }
