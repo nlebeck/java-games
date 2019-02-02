@@ -129,8 +129,9 @@ public class GameEngine {
 		bufferGraphics.setColor(Color.white);
 		bufferGraphics.fillRect(0, 0, GamePanel.PANEL_WIDTH, GamePanel.PANEL_HEIGHT);
 		
-		int cameraX = gameScene.getCameraX() - (GamePanel.PANEL_WIDTH / 2);
-		int cameraY = gameScene.getCameraY() - (GamePanel.PANEL_HEIGHT / 2);
+		//center camera on player character
+		int cameraX = gameScene.getPlayerCharacter().getX() - (GamePanel.PANEL_WIDTH / 2);
+		int cameraY = gameScene.getPlayerCharacter().getY() - (GamePanel.PANEL_HEIGHT / 2);
 		
 		//draw background
 		tilemap.draw(bufferGraphics, cameraX, cameraY);

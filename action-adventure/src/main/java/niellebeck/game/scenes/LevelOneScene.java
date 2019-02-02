@@ -97,16 +97,6 @@ public class LevelOneScene extends BaseGameScene {
 		}
 		return allDestroyed;
 	}
-	
-	@Override
-	public int getCameraX() {
-		return playerChar.getX() + (playerChar.getWidth() / 2);
-	}
-	
-	@Override
-	public int getCameraY() {
-		return playerChar.getY() + (playerChar.getHeight() / 2);
-	}
 
 	@Override
 	public Tilemap getTilemap() {

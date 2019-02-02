@@ -12,10 +12,6 @@ public abstract class GameScene extends Scene {
 	 */
 	public abstract void init();
 	
-	public abstract int getCameraX();
-	
-	public abstract int getCameraY();
-	
 	public abstract Tilemap getTilemap();
 	
 	public abstract void update(KeyboardInput keyboard);
