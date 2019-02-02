@@ -42,4 +42,30 @@ what's happening in a given bottom-level class's update method. If this
 principle seems to work well, maybe I'll promote it to being a bullet in the
 list above.
 
+## Collisions, proximity events, and interactions
+
+Currently, this game engine supports three different kinds of events.
+
+* *Collisions* occur when one Sprite attempts to move into the space occupied
+by another Sprite. The game engine stops the Sprite from moving and calls the
+CollisionHandler registered for the pair of Sprite subclasses.
+
+* *Proximity events* occur when one Sprite is within a certain distance from
+another Sprite (as measured between their center points). Currently, proximity
+events are defined between pairs of Sprite subclasses alongside of collisions
+in the corresponding CollisionHandler class.
+
+* *Interactions* occur when the player character is next to a Sprite and
+presses the "interact button" (currently the Enter key). Currently,
+interactions are defined by a per-Sprite InteractionHandler, and the game logic
+must "register" the Sprite as "interactable" each frame using a proximity
+event.
+
+The current setup, with collisions and proximity events being defined per-class
+and interactions being defined per-object, is not ideal. In particular, it is
+ugly to require the game logic to use a per-class proximity event to register a
+Sprite as interactable when interactions are per-object. I am actively thinking
+about how to clean up these event definitions. I also want to make the
+registration of interactable Sprites each frame automatic.
+
 Niel Lebeck
