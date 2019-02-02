@@ -57,15 +57,13 @@ in the corresponding CollisionHandler class.
 
 * *Interactions* occur when the player character is next to a Sprite and
 presses the "interact button" (currently the Enter key). Currently,
-interactions are defined by a per-Sprite InteractionHandler, and the game logic
-must "register" the Sprite as "interactable" each frame using a proximity
-event.
+interactions are defined by a per-Sprite InteractionHandler.
 
 The current setup, with collisions and proximity events being defined per-class
-and interactions being defined per-object, is not ideal. In particular, it is
-ugly to require the game logic to use a per-class proximity event to register a
-Sprite as interactable when interactions are per-object. I am actively thinking
-about how to clean up these event definitions. I also want to make the
-registration of interactable Sprites each frame automatic.
+and interactions being defined per-object, is not ideal. My current plan is to
+add per-class interactions and per-object pair collisions and proximity events,
+so that you can write either per-class or per-object logic for all three event
+types. I might also add support for collisions and proximity events defined
+between an object and a class, if it ends up being useful.
 
 Niel Lebeck
