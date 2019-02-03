@@ -23,9 +23,11 @@ import niellebeck.gameengine.Scene;
 public class MyGameLogic extends GameLogic {
 	
 	private static final int BULLET_COOLDOWN = 10; //in frames
+	private static final int MAX_PLAYER_HP = 20;
 	
 	Direction lastPlayerDir;
 	int timeUntilNextBullet;
+	int playerHp;
 	
 	@Override
 	public void init() {
@@ -34,6 +36,8 @@ public class MyGameLogic extends GameLogic {
 		getGameEngine().registerCollisionHandler(new BulletNPCCollisionHandler());
 		
 		getGameEngine().addOverlay(new HpOverlay());
+		
+		playerHp = MAX_PLAYER_HP;
 		
 		resetState();
 	}
@@ -50,7 +54,7 @@ public class MyGameLogic extends GameLogic {
 	
 	@Override
 	public void update(KeyboardInput keyboard) {
-		if (getPlayerCharacter().isDestroyed()) {
+		if (playerHp <= 0) {
 			getGameEngine().changeScene(new GameOverScene());
 			return;
 		}
@@ -69,7 +73,11 @@ public class MyGameLogic extends GameLogic {
 	}
 	
 	public int getPlayerHp() {
-		return getPlayerCharacter().getHp();
+		return playerHp;
+	}
+	
+	public void damagePlayer() {
+		playerHp = (playerHp - 1 >= 0) ? playerHp - 1 : 0;
 	}
 	
 	public void shootBullet(Direction dir) {

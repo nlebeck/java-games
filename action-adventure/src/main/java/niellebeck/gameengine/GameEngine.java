@@ -72,6 +72,10 @@ public class GameEngine {
 		return currentScene;
 	}
 	
+	public GameLogic getGameLogic() {
+		return gameLogic;
+	}
+	
 	public void addOverlay(Overlay overlay) {
 		overlays.add(overlay);
 	}
