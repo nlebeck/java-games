@@ -17,7 +17,7 @@ import niellebeck.gameengine.InteractionHandler;
 import niellebeck.gameengine.KeyboardInput;
 import niellebeck.gameengine.Tilemap;
 
-public class LevelOneScene extends BaseGameScene {
+public class LevelOneScene extends GameScene {
 
 	private PlayerCharacter playerChar;
 	private NPC npc;
@@ -42,9 +42,9 @@ public class LevelOneScene extends BaseGameScene {
 			
 			@Override
 			public void interact(GameLogic gameLogic, GameScene gameScene) {
-				BaseGameScene baseGameScene = (BaseGameScene)gameScene;
+				LevelOneScene levelOneScene = (LevelOneScene)gameScene;
 				Dialogue dialogue = null;
-				if (baseGameScene.allEnemiesDestroyed()) {
+				if (levelOneScene.allEnemiesDestroyed()) {
 					dialogue = new EnemiesDefeatedDialogue();
 				}
 				else {
@@ -58,6 +58,10 @@ public class LevelOneScene extends BaseGameScene {
 				return "talk with NPC";
 			}
 			
+			@Override
+			public double getInteractionDistance() {
+				return 56.6;
+			}
 		});
 		
 		anotherNpc.setInteractionHandler(new InteractionHandler() {
@@ -76,10 +80,13 @@ public class LevelOneScene extends BaseGameScene {
 				return "talk with NPC";
 			}
 			
+			@Override
+			public double getInteractionDistance() {
+				return 56.6;
+			}
 		});
 	}
 	
-	@Override
 	public boolean allEnemiesDestroyed() {
 		boolean allDestroyed = true;
 		for (Enemy enemy : enemies) {
@@ -88,16 +95,6 @@ public class LevelOneScene extends BaseGameScene {
 			}
 		}
 		return allDestroyed;
-	}
-	
-	@Override
-	public int getCameraX() {
-		return playerChar.getX() + (playerChar.getWidth() / 2);
-	}
-	
-	@Override
-	public int getCameraY() {
-		return playerChar.getY() + (playerChar.getHeight() / 2);
 	}
 
 	@Override

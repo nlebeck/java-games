@@ -8,13 +8,18 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * This class is responsible for handling both collision events and proximity
- * events. A collision event occurs when one Sprite attempts to move into the
- * space occupied by another Sprite, while a proximity event occurs when two
- * Sprites are within a certain distance of each other. When either a collision
- * event or a proximity event is detected for a pair of Sprites, the
+ * This class is responsible for handling collision events and proximity events
+ * as well as registering interactable Sprites. A collision event occurs when
+ * one Sprite attempts to move into the space occupied by another Sprite. A
+ * proximity event occurs when two Sprites are within a certain distance of
+ * each other. An interactable Sprite is a Sprite within a certain distance of
+ * the player character with an InteractionHandler attached. When either a
+ * collision event or a proximity event is detected for a pair of Sprites, the
  * CollisionManager invokes the appropriate method in the CollisionHandler
- * corresponding to the specific subclasses of the two Sprites.
+ * corresponding to the specific subclasses of the two Sprites. When an
+ * interactable Sprite is detected, the CollisionManager registers the
+ * interactable Sprite with the game engine, so that the player can interact
+ * with it by pressing the appropriate button.
  */
 public class CollisionManager {
 	
@@ -109,7 +114,7 @@ public class CollisionManager {
 			Sprite spriteA = game.getSpriteList().get(i);
 			for (int j = i + 1; j < game.getSpriteList().size(); j++) {
 				Sprite spriteB = game.getSpriteList().get(j);
-				double distance = Math.sqrt(Math.pow(spriteB.posX - spriteA.posX, 2) + Math.pow(spriteB.posY - spriteA.posY, 2));
+				double distance = getDistance(spriteA, spriteB);
 				Class<? extends Sprite> classA = spriteA.getClass();
 				Class<? extends Sprite> classB = spriteB.getClass();
 				CollisionHandler<? extends Sprite, ? extends Sprite> collisionHandler = getCollisionHandler(classA, classB);
@@ -118,6 +123,21 @@ public class CollisionManager {
 				}
 			}
 		}
+	}
+	
+	public void registerInteractableSprites(GameScene gameScene) {
+		for (Sprite sprite : game.getSpriteList()) {
+			if (sprite.isInteractable()) {
+				double distance = getDistance(gameScene.getPlayerCharacter(), sprite);
+				if (distance < sprite.getInteractionHandler().getInteractionDistance()) {
+					game.registerInteractable(sprite);
+				}
+			}
+		}
+	}
+	
+	private double getDistance(Sprite spriteA, Sprite spriteB) {
+		return Math.sqrt(Math.pow(spriteB.posX - spriteA.posX, 2) + Math.pow(spriteB.posY - spriteA.posY, 2));
 	}
 	
 	public void registerCollisionHandler(CollisionHandler<? extends Sprite, ? extends Sprite> collisionHandler) {

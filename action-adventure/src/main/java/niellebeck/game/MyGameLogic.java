@@ -5,9 +5,7 @@ import java.awt.event.KeyEvent;
 import niellebeck.game.collisionhandlers.BulletEnemyCollisionHandler;
 import niellebeck.game.collisionhandlers.BulletNPCCollisionHandler;
 import niellebeck.game.collisionhandlers.EnemyPlayerCharacterCollisionHandler;
-import niellebeck.game.collisionhandlers.NPCPlayerCharacterCollisionHandler;
 import niellebeck.game.overlays.HpOverlay;
-import niellebeck.game.scenes.BaseGameScene;
 import niellebeck.game.scenes.GameOverScene;
 import niellebeck.game.scenes.StartScene;
 import niellebeck.game.sprites.Bullet;
@@ -15,6 +13,7 @@ import niellebeck.game.sprites.PlayerCharacter;
 import niellebeck.gameengine.Direction;
 import niellebeck.gameengine.DirectionUtils;
 import niellebeck.gameengine.GameLogic;
+import niellebeck.gameengine.GameScene;
 import niellebeck.gameengine.KeyboardInput;
 import niellebeck.gameengine.Scene;
 
@@ -24,18 +23,21 @@ import niellebeck.gameengine.Scene;
 public class MyGameLogic extends GameLogic {
 	
 	private static final int BULLET_COOLDOWN = 10; //in frames
+	private static final int MAX_PLAYER_HP = 20;
 	
 	Direction lastPlayerDir;
 	int timeUntilNextBullet;
+	int playerHp;
 	
 	@Override
 	public void init() {
 		getGameEngine().registerCollisionHandler(new BulletEnemyCollisionHandler());
 		getGameEngine().registerCollisionHandler(new EnemyPlayerCharacterCollisionHandler());
 		getGameEngine().registerCollisionHandler(new BulletNPCCollisionHandler());
-		getGameEngine().registerCollisionHandler(new NPCPlayerCharacterCollisionHandler());
 		
 		getGameEngine().addOverlay(new HpOverlay());
+		
+		playerHp = MAX_PLAYER_HP;
 		
 		resetState();
 	}
@@ -45,18 +47,14 @@ public class MyGameLogic extends GameLogic {
 		timeUntilNextBullet = BULLET_COOLDOWN;
 	}
 	
-	private BaseGameScene getCurrentGameScene() {
-		Scene scene = getGameEngine().getCurrentScene();
-		return (BaseGameScene)scene;
-	}
-	
 	private PlayerCharacter getPlayerCharacter() {
-		return getCurrentGameScene().getPlayerCharacter();
+		GameScene currentScene = (GameScene)getGameEngine().getCurrentScene();
+		return (PlayerCharacter)currentScene.getPlayerCharacter();
 	}
 	
 	@Override
 	public void update(KeyboardInput keyboard) {
-		if (getPlayerCharacter().isDestroyed()) {
+		if (playerHp <= 0) {
 			getGameEngine().changeScene(new GameOverScene());
 			return;
 		}
@@ -75,7 +73,11 @@ public class MyGameLogic extends GameLogic {
 	}
 	
 	public int getPlayerHp() {
-		return getPlayerCharacter().getHp();
+		return playerHp;
+	}
+	
+	public void damagePlayer() {
+		playerHp = (playerHp - 1 >= 0) ? playerHp - 1 : 0;
 	}
 	
 	public void shootBullet(Direction dir) {

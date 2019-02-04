@@ -72,6 +72,10 @@ public class GameEngine {
 		return currentScene;
 	}
 	
+	public GameLogic getGameLogic() {
+		return gameLogic;
+	}
+	
 	public void addOverlay(Overlay overlay) {
 		overlays.add(overlay);
 	}
@@ -129,8 +133,9 @@ public class GameEngine {
 		bufferGraphics.setColor(Color.white);
 		bufferGraphics.fillRect(0, 0, GamePanel.PANEL_WIDTH, GamePanel.PANEL_HEIGHT);
 		
-		int cameraX = gameScene.getCameraX() - (GamePanel.PANEL_WIDTH / 2);
-		int cameraY = gameScene.getCameraY() - (GamePanel.PANEL_HEIGHT / 2);
+		//center camera on player character
+		int cameraX = gameScene.getPlayerCharacter().getX() - (GamePanel.PANEL_WIDTH / 2);
+		int cameraY = gameScene.getPlayerCharacter().getY() - (GamePanel.PANEL_HEIGHT / 2);
 		
 		//draw background
 		tilemap.draw(bufferGraphics, cameraX, cameraY);
@@ -199,11 +204,12 @@ public class GameEngine {
 				sprite.update(keyboard);
 			}
 			
-			// Process collisions.
+			// Process the different kinds of events.
 			collisionManager.processCollisions();
 			collisionManager.processProximityEvents();
+			collisionManager.registerInteractableSprites(gameScene);
 			
-			// Process Interactable interactions.
+			// Process interactions.
 			if (interactables.size() > 0) {
 				if (keyboard.keyPressed(KeyEvent.VK_ENTER)) {
 					Sprite interactable = chooseInteractable();

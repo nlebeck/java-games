@@ -5,10 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import niellebeck.game.MyGameLogic;
 import niellebeck.gameengine.AnimatedSprite;
 import niellebeck.gameengine.Animation;
 import niellebeck.gameengine.CollisionManager;
 import niellebeck.gameengine.Direction;
+import niellebeck.gameengine.GameEngine;
 import niellebeck.gameengine.KeyboardInput;
 
 public class PlayerCharacter extends AnimatedSprite {
@@ -17,7 +19,6 @@ public class PlayerCharacter extends AnimatedSprite {
 	private static final int PLAYER_HEIGHT = 40;
 	
 	private static final int SPEED = 4;
-	private static final int MAX_HP = 20;
 	private static final int INVULNERABLE_TIME = 30;
 	
 	private static final int ANIMATION_STATE_STANDING = 0;
@@ -26,13 +27,11 @@ public class PlayerCharacter extends AnimatedSprite {
 	private static final int ANIMATION_STATE_MOVING_UP = 3;
 	private static final int ANIMATION_STATE_MOVING_DOWN = 4;
 	
-	private int hp;
 	private int invulnerableTimer;
 	private boolean invulnerable;
 	
 	public PlayerCharacter(int initX, int initY) {
 		super(initX, initY, PLAYER_WIDTH, PLAYER_HEIGHT);
-		hp = MAX_HP;
 		invulnerableTimer = INVULNERABLE_TIME;
 		invulnerable = false;
 		
@@ -55,10 +54,6 @@ public class PlayerCharacter extends AnimatedSprite {
 		Direction moveDir = keyboard.getArrowKeyDirection();
 		if (moveDir != Direction.NONE) {
 			move(moveDir, SPEED);
-		}
-		
-		if (hp <= 0) {
-			this.destroy();
 		}
 		
 		if (invulnerable) {
@@ -85,13 +80,10 @@ public class PlayerCharacter extends AnimatedSprite {
 	@Override
 	public void onCollideTilemap() { }
 	
-	public int getHp() {
-		return hp;
-	}
-	
 	public void onEnemyHit() {
 		if (!invulnerable) {
-			hp = (hp - 1 >= 0) ? hp - 1 : 0;
+			MyGameLogic gameLogic = (MyGameLogic)GameEngine.getGameEngine().getGameLogic();
+			gameLogic.damagePlayer();
 			invulnerable = true;
 		}
 	}
