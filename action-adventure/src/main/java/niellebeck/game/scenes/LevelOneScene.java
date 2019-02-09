@@ -6,6 +6,7 @@ import java.util.List;
 import niellebeck.game.MyGameLogic;
 import niellebeck.game.dialogues.EnemiesDefeatedDialogue;
 import niellebeck.game.dialogues.InitialDialogue;
+import niellebeck.game.sprites.Door;
 import niellebeck.game.sprites.Enemy;
 import niellebeck.game.sprites.NPC;
 import niellebeck.game.sprites.PlayerCharacter;
@@ -22,6 +23,7 @@ public class LevelOneScene extends GameScene {
 	private PlayerCharacter playerChar;
 	private NPC npc;
 	private NPC anotherNpc;
+	private Door door;
 	private List<Enemy> enemies;
 	
 	@Override
@@ -29,6 +31,7 @@ public class LevelOneScene extends GameScene {
 		playerChar = new PlayerCharacter(300, 220);
 		npc = new NPC(80, 350);
 		anotherNpc = new NPC(500, 250);
+		door = new Door(320, 60);
 		enemies = new ArrayList<Enemy>();
 		enemies.add(new Enemy(400, 400));
 		enemies.add(new Enemy(320, 100));
@@ -46,6 +49,7 @@ public class LevelOneScene extends GameScene {
 				Dialogue dialogue = null;
 				if (levelOneScene.allEnemiesDestroyed()) {
 					dialogue = new EnemiesDefeatedDialogue();
+					getGameEngine().addSprite(door);
 				}
 				else {
 					dialogue = new InitialDialogue();
@@ -84,6 +88,25 @@ public class LevelOneScene extends GameScene {
 			public double getInteractionDistance() {
 				return 56.6;
 			}
+		});
+		
+		door.setInteractionHandler(new InteractionHandler() {
+
+			@Override
+			public void interact(GameLogic gameLogic, GameScene gameScene) {
+				getGameEngine().changeScene(new LevelTwoScene());
+			}
+
+			@Override
+			public String getInteractionMessage() {
+				return "enter door";
+			}
+
+			@Override
+			public double getInteractionDistance() {
+				return 56.6;
+			}
+			
 		});
 	}
 	

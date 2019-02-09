@@ -2,6 +2,7 @@ package niellebeck.game;
 
 import java.awt.event.KeyEvent;
 
+import niellebeck.game.collisionhandlers.BulletDoorCollisionHandler;
 import niellebeck.game.collisionhandlers.BulletEnemyCollisionHandler;
 import niellebeck.game.collisionhandlers.BulletNPCCollisionHandler;
 import niellebeck.game.collisionhandlers.EnemyPlayerCharacterCollisionHandler;
@@ -34,6 +35,7 @@ public class MyGameLogic extends GameLogic {
 		getGameEngine().registerCollisionHandler(new BulletEnemyCollisionHandler());
 		getGameEngine().registerCollisionHandler(new EnemyPlayerCharacterCollisionHandler());
 		getGameEngine().registerCollisionHandler(new BulletNPCCollisionHandler());
+		getGameEngine().registerCollisionHandler(new BulletDoorCollisionHandler());
 		
 		getGameEngine().addOverlay(new HpOverlay());
 		
