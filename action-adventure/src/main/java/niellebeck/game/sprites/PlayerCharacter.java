@@ -8,7 +8,7 @@ import java.util.Map;
 import niellebeck.game.MyGameLogic;
 import niellebeck.gameengine.AnimatedSprite;
 import niellebeck.gameengine.Animation;
-import niellebeck.gameengine.CollisionManager;
+import niellebeck.gameengine.EventManager;
 import niellebeck.gameengine.Direction;
 import niellebeck.gameengine.GameEngine;
 import niellebeck.gameengine.KeyboardInput;

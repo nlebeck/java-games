@@ -3,7 +3,7 @@ package niellebeck.game.sprites;
 import java.util.List;
 import java.util.Random;
 
-import niellebeck.gameengine.CollisionManager;
+import niellebeck.gameengine.EventManager;
 import niellebeck.gameengine.Direction;
 import niellebeck.gameengine.DirectionUtils;
 import niellebeck.gameengine.KeyboardInput;

@@ -84,7 +84,7 @@ public abstract class Sprite {
 		
 		tempMove(dir, distance);
 		
-		CollisionManager collisionManager = GameEngine.getGameEngine().getCollisionManager();
+		EventManager collisionManager = GameEngine.getGameEngine().getEventManager();
 		boolean collision = collisionManager.testAndAddCollisions(this);
 		if (collision) {
 			posX = lastPosX;

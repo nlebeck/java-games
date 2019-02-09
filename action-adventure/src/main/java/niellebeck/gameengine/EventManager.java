@@ -15,13 +15,13 @@ import java.util.Set;
  * each other. An interactable Sprite is a Sprite within a certain distance of
  * the player character with an InteractionHandler attached. When either a
  * collision event or a proximity event is detected for a pair of Sprites, the
- * CollisionManager invokes the appropriate method in the CollisionHandler
- * corresponding to the specific subclasses of the two Sprites. When an
- * interactable Sprite is detected, the CollisionManager registers the
- * interactable Sprite with the game engine, so that the player can interact
- * with it by pressing the appropriate button.
+ * EventManager invokes the handleEvent() method in the appropriate event
+ * handler corresponding to the specific subclasses of the two Sprites. When an
+ * interactable Sprite is detected, the EventManager registers the interactable
+ * Sprite with the game engine, so that the player can interact with it by
+ * pressing the appropriate button.
  */
-public class CollisionManager {
+public class EventManager {
 	
 	/**
 	 * An unordered pair of Sprites that have collided during this update step.
@@ -64,13 +64,15 @@ public class CollisionManager {
 	private GameEngine game;
 	private Set<CollisionPair> collisionPairs;
 	private Set<Sprite> tilemapCollisions;
-	private Map<ClassPair, CollisionHandler<?,?>> collisionHandlers;
+	private Map<ClassPair, ClassPairCollisionHandler<?,?>> classPairCollisionHandlers;
+	private Map<ClassPair, ClassPairProximityEventHandler<?,?>> classPairProximityEventHandlers;
 	
-	public CollisionManager (GameEngine game) {
+	public EventManager (GameEngine game) {
 		this.game = game;
 		collisionPairs = new HashSet<CollisionPair>();
 		tilemapCollisions = new HashSet<Sprite>();
-		collisionHandlers = new HashMap<ClassPair, CollisionHandler<?,?>>();
+		classPairCollisionHandlers = new HashMap<ClassPair, ClassPairCollisionHandler<?,?>>();
+		classPairProximityEventHandlers = new HashMap<ClassPair, ClassPairProximityEventHandler<?,?>>();
 	}
 	
 	public boolean testAndAddCollisions(Sprite sprite) {
@@ -117,9 +119,9 @@ public class CollisionManager {
 				double distance = getDistance(spriteA, spriteB);
 				Class<? extends Sprite> classA = spriteA.getClass();
 				Class<? extends Sprite> classB = spriteB.getClass();
-				CollisionHandler<? extends Sprite, ? extends Sprite> collisionHandler = getCollisionHandler(classA, classB);
-				if (collisionHandler != null && collisionHandler.getProximityDistance() >= distance) {
-					collisionHandler.castObjectsAndHandleProximityEvent(game, spriteA, spriteB);
+				ClassPairProximityEventHandler<? extends Sprite, ? extends Sprite> eventHandler = getClassPairProximityEventHandler(classA, classB);
+				if (eventHandler != null && eventHandler.getProximityDistance() >= distance) {
+					eventHandler.castObjectsAndHandleEvent(spriteA, spriteB);
 				}
 			}
 		}
@@ -140,16 +142,28 @@ public class CollisionManager {
 		return Math.sqrt(Math.pow(spriteB.posX - spriteA.posX, 2) + Math.pow(spriteB.posY - spriteA.posY, 2));
 	}
 	
-	public void registerCollisionHandler(CollisionHandler<? extends Sprite, ? extends Sprite> collisionHandler) {
-		if (collisionHandlers.containsKey(collisionHandler.getClassPair())) {
-			throw new IllegalStateException("This CollisionManager already has a CollisionHandler registered for the given pair of Sprite subclasses.");
+	public void registerClassPairCollisionHandler(ClassPairCollisionHandler<? extends Sprite, ? extends Sprite> collisionHandler) {
+		if (classPairCollisionHandlers.containsKey(collisionHandler.getClassPair())) {
+			throw new IllegalStateException("This CollisionManager already has a ClassPairCollisionHandler registered for the given pair of Sprite subclasses.");
 		}
-		collisionHandlers.put(collisionHandler.getClassPair(), collisionHandler);
+		classPairCollisionHandlers.put(collisionHandler.getClassPair(), collisionHandler);
 	}
 	
-	private CollisionHandler<? extends Sprite, ? extends Sprite> getCollisionHandler(Class<? extends Sprite> classA, Class<? extends Sprite> classB) {
+	public void registerClassPairProximityEventHandler(ClassPairProximityEventHandler<? extends Sprite, ? extends Sprite> eventHandler) {
+		if (classPairProximityEventHandlers.containsKey(eventHandler.getClassPair())) {
+			throw new IllegalStateException("This CollisionManager already has a ClassPairProximityEventHandler registered for the given pair of Sprite subclasses.");
+		}
+		classPairProximityEventHandlers.put(eventHandler.getClassPair(), eventHandler);
+	}
+	
+	private ClassPairCollisionHandler<? extends Sprite, ? extends Sprite> getClassPairCollisionHandler(Class<? extends Sprite> classA, Class<? extends Sprite> classB) {
 		ClassPair classPair = new ClassPair(classA, classB);
-		return collisionHandlers.get(classPair);
+		return classPairCollisionHandlers.get(classPair);
+	}
+	
+	private ClassPairProximityEventHandler<? extends Sprite, ? extends Sprite> getClassPairProximityEventHandler(Class<? extends Sprite> classA, Class<? extends Sprite> classB) {
+		ClassPair classPair = new ClassPair(classA, classB);
+		return classPairProximityEventHandlers.get(classPair);
 	}
 	
 	private void invokeCollisionHandler(CollisionPair pair) {
@@ -157,9 +171,9 @@ public class CollisionManager {
 		Sprite spriteB = pair.getSpriteB();
 		Class<? extends Sprite> classA = spriteA.getClass();
 		Class<? extends Sprite> classB = spriteB.getClass();
-		CollisionHandler<? extends Sprite, ? extends Sprite> collisionHandler = getCollisionHandler(classA, classB);
+		ClassPairCollisionHandler<? extends Sprite, ? extends Sprite> collisionHandler = getClassPairCollisionHandler(classA, classB);
 		if (collisionHandler != null) {
-			collisionHandler.castObjectsAndHandleCollision(spriteA, spriteB);
+			collisionHandler.castObjectsAndHandleEvent(spriteA, spriteB);
 		}
 	}
 }

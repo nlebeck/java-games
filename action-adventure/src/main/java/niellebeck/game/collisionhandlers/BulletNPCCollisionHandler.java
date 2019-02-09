@@ -2,16 +2,16 @@ package niellebeck.game.collisionhandlers;
 
 import niellebeck.game.sprites.Bullet;
 import niellebeck.game.sprites.NPC;
-import niellebeck.gameengine.CollisionHandler;
+import niellebeck.gameengine.ClassPairCollisionHandler;
 
-public class BulletNPCCollisionHandler extends CollisionHandler<Bullet, NPC> {
+public class BulletNPCCollisionHandler extends ClassPairCollisionHandler<Bullet, NPC> {
 
 	public BulletNPCCollisionHandler() {
 		super(Bullet.class, NPC.class);
 	}
 
 	@Override
-	public void handleCollision(Bullet bullet, NPC npc) {
+	public void handleEvent(Bullet bullet, NPC npc) {
 		bullet.destroy();
 	}
 

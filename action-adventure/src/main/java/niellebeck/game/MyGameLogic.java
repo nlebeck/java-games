@@ -32,10 +32,10 @@ public class MyGameLogic extends GameLogic {
 	
 	@Override
 	public void init() {
-		getGameEngine().registerCollisionHandler(new BulletEnemyCollisionHandler());
-		getGameEngine().registerCollisionHandler(new EnemyPlayerCharacterCollisionHandler());
-		getGameEngine().registerCollisionHandler(new BulletNPCCollisionHandler());
-		getGameEngine().registerCollisionHandler(new BulletDoorCollisionHandler());
+		getGameEngine().registerClassPairCollisionHandler(new BulletEnemyCollisionHandler());
+		getGameEngine().registerClassPairCollisionHandler(new EnemyPlayerCharacterCollisionHandler());
+		getGameEngine().registerClassPairCollisionHandler(new BulletNPCCollisionHandler());
+		getGameEngine().registerClassPairCollisionHandler(new BulletDoorCollisionHandler());
 		
 		getGameEngine().addOverlay(new HpOverlay());
 		

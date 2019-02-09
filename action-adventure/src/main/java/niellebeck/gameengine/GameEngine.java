@@ -18,7 +18,7 @@ public class GameEngine {
 	GameState gameState;
 	List<Sprite> sprites;
 	List<Sprite> interactables;
-	CollisionManager collisionManager;
+	EventManager eventManager;
 	
 	//graphics state
 	Tilemap tilemap;
@@ -44,7 +44,7 @@ public class GameEngine {
 		sprites = new ArrayList<Sprite>();
 		interactables = new ArrayList<Sprite>();
 		
-		collisionManager = new CollisionManager(this);
+		eventManager = new EventManager(this);
 		
 		overlays = new ArrayList<Overlay>();
 		
@@ -80,12 +80,16 @@ public class GameEngine {
 		overlays.add(overlay);
 	}
 	
-	public void registerCollisionHandler(CollisionHandler<? extends Sprite, ? extends Sprite> collisionHandler) {
-		collisionManager.registerCollisionHandler(collisionHandler);
+	public void registerClassPairCollisionHandler(ClassPairCollisionHandler<? extends Sprite, ? extends Sprite> collisionHandler) {
+		eventManager.registerClassPairCollisionHandler(collisionHandler);
 	}
 	
-	public CollisionManager getCollisionManager() {
-		return collisionManager;
+	public void registerClassPairProximityEventHandler(ClassPairProximityEventHandler<? extends Sprite, ? extends Sprite> eventHandler) {
+		eventManager.registerClassPairProximityEventHandler(eventHandler);
+	}
+	
+	public EventManager getEventManager() {
+		return eventManager;
 	}
 	
 	public void addSprite(Sprite sprite) {
@@ -205,9 +209,9 @@ public class GameEngine {
 			}
 			
 			// Process the different kinds of events.
-			collisionManager.processCollisions();
-			collisionManager.processProximityEvents();
-			collisionManager.registerInteractableSprites(gameScene);
+			eventManager.processCollisions();
+			eventManager.processProximityEvents();
+			eventManager.registerInteractableSprites(gameScene);
 			
 			// Process interactions.
 			if (interactables.size() > 0) {
