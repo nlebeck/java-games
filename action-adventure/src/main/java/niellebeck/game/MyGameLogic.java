@@ -2,9 +2,11 @@ package niellebeck.game;
 
 import java.awt.event.KeyEvent;
 
+import niellebeck.game.collisionhandlers.BulletBulletCollisionHandler;
 import niellebeck.game.collisionhandlers.BulletDoorCollisionHandler;
 import niellebeck.game.collisionhandlers.BulletEnemyCollisionHandler;
 import niellebeck.game.collisionhandlers.BulletNPCCollisionHandler;
+import niellebeck.game.collisionhandlers.BulletPlayerCharacterCollisionHandler;
 import niellebeck.game.collisionhandlers.EnemyPlayerCharacterCollisionHandler;
 import niellebeck.game.overlays.HpOverlay;
 import niellebeck.game.scenes.GameOverScene;
@@ -36,6 +38,8 @@ public class MyGameLogic extends GameLogic {
 		getGameEngine().registerClassPairCollisionHandler(new EnemyPlayerCharacterCollisionHandler());
 		getGameEngine().registerClassPairCollisionHandler(new BulletNPCCollisionHandler());
 		getGameEngine().registerClassPairCollisionHandler(new BulletDoorCollisionHandler());
+		getGameEngine().registerClassPairCollisionHandler(new BulletBulletCollisionHandler());
+		getGameEngine().registerClassPairCollisionHandler(new BulletPlayerCharacterCollisionHandler());
 		
 		getGameEngine().addOverlay(new HpOverlay());
 		
@@ -92,16 +96,16 @@ public class MyGameLogic extends GameLogic {
 		}
 		bulletDir = DirectionUtils.getComponentDirections(bulletDir).get(0);
 		if (bulletDir == Direction.LEFT) {
-			offsetX = -(playerChar.getWidth() / 2) - Bullet.BULLET_WIDTH;
+			offsetX = -(playerChar.getWidth()) - Bullet.BULLET_WIDTH;
 		}
 		else if (bulletDir == Direction.RIGHT) {
-			offsetX = (playerChar.getWidth() / 2) + Bullet.BULLET_WIDTH;
+			offsetX = (playerChar.getWidth()) + Bullet.BULLET_WIDTH;
 		}
 		else if (bulletDir == Direction.UP) {
-			offsetY = -(playerChar.getHeight() / 2) - Bullet.BULLET_HEIGHT;
+			offsetY = -(playerChar.getHeight()) - Bullet.BULLET_HEIGHT;
 		}
 		else if (bulletDir == Direction.DOWN) {
-			offsetY = (playerChar.getHeight() / 2) + Bullet.BULLET_HEIGHT;
+			offsetY = (playerChar.getHeight()) + Bullet.BULLET_HEIGHT;
 		}
 		Bullet bullet = new Bullet(playerChar.getX() + offsetX, playerChar.getY() + offsetY, bulletDir);
 		getGameEngine().addSprite(bullet);
