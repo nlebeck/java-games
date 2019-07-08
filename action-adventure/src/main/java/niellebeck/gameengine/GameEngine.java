@@ -17,6 +17,7 @@ public class GameEngine {
 	Scene currentScene;
 	GameState gameState;
 	List<Sprite> sprites;
+	List<Sprite> newlyCreatedSprites;
 	List<Sprite> interactables;
 	EventManager eventManager;
 	
@@ -42,6 +43,7 @@ public class GameEngine {
 	
 	public GameEngine() {
 		sprites = new ArrayList<Sprite>();
+		newlyCreatedSprites = new ArrayList<Sprite>();
 		interactables = new ArrayList<Sprite>();
 		
 		eventManager = new EventManager(this);
@@ -93,11 +95,11 @@ public class GameEngine {
 	}
 	
 	public void addSprite(Sprite sprite) {
-		sprites.add(sprite);
+		newlyCreatedSprites.add(sprite);
 	}
 	
 	public void addSprites(Collection<? extends Sprite> spriteCollection) {
-		sprites.addAll(spriteCollection);
+		newlyCreatedSprites.addAll(spriteCollection);
 	}
 	
 	public List<Sprite> getSpriteList() {
@@ -222,14 +224,18 @@ public class GameEngine {
 				}
 			}
 			
-			//Remove destroyed sprites.
+			// Remove destroyed sprites and add newly created sprites.
 			List<Sprite> newSpriteList = new ArrayList<Sprite>();
 			for (Sprite sprite : sprites) {
 				if (!sprite.isDestroyed()) {
 					newSpriteList.add(sprite);
 				}
 			}
+			for (Sprite sprite : newlyCreatedSprites) {
+				newSpriteList.add(sprite);
+			}
 			sprites = newSpriteList;
+			newlyCreatedSprites.clear();
 		}
 		return nextState;
 	}
