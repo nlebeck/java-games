@@ -14,8 +14,8 @@ that, I'm mostly just figuring things out on my own.
 ## Roadmap
 
 Although my rate of progress on this game isn't very fast, I'm hoping to
-continue poking away at it over the next several months. These are the
-high-level things I plan to work on:
+continue poking away at it over time. These are the high-level things I plan
+to work on:
 
 1. *Building out a "vertical slice" of the game.* My first priority is to add
 some more locations, objects, and behaviors to the game.
@@ -39,6 +39,17 @@ system? Is it fine to continue using the concrete Sprite subclasses as
 essentially tags for collision-handling? Can I just push enough functionality
 into the game engine and have the actual Sprite subclasses be so small that it
 doesn't really matter how they're organized?
+
+4. *Thinking about `GameLogic` and `GameScene` organization.* Right now, if
+you have logic that accesses the current `GameScene` inside of a component that
+is reusable across multiple scenes (e.g., a collision handler or a sprite's
+`update()` method), you need to get the `GameScene` and then cast it to the
+right subclass. It's definitely not ideal to read off the type of the current
+`GameScene` and handle different subclasses on a case-by-case basis. Is it okay
+to define a common interface that must be implemented by each possible
+`GameScene` that could contain the component, and then cast to that common
+type? Or is there a better design that would avoid the need to perform casts
+entirely?
 
 ## Sprite class organization
 
