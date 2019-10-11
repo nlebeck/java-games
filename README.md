@@ -11,14 +11,39 @@ I based the main game loop in my Java game on the game loop from the online
 draft of "Killer Game Programming in Java" by Andrew Davison, but aside from
 that, I'm mostly just figuring things out on my own.
 
+## Roadmap
+
+Although my rate of progress on this game isn't very fast, I'm hoping to
+continue poking away at it over the next several months. These are the
+high-level things I plan to work on:
+
+1. *Building out a "vertical slice" of the game.* My first priority is to add
+some more locations, objects, and behaviors to the game.
+
+2. *Thinking about what belongs in the game engine vs. the game.* I've split
+the code into a generic game engine and the specific code implementing my game.
+It's hard to tell exactly what functionality belongs in the game engine, and
+how high- or low-level that functionality should be, so I'm hoping that as I
+add more functionality to the game, I'll get a better sense for what should go
+where.
+
+3. *Rethinking the Sprite class organization.* When I initially came up with
+the Sprite class organization described below, I was inspired by the
+object-oriented programming I had learned growing up, when Java was the hot new
+programming language and inheritance was the law of the land. Now, it seems
+like the consensus is that composition is superior to inheritance in most
+circumstances. Once my game has more Sprites, I'd like to take a step back and
+think about whether and how to change the Sprite class organization. Is it
+better to switch from an inheritance-based system to a composition-based
+system? Is it fine to continue using the concrete Sprite subclasses as
+essentially tags for collision-handling? Can I just push enough functionality
+into the game engine and have the actual Sprite subclasses be so small that it
+doesn't really matter how they're organized?
+
 ## Sprite class organization
 
-In a real game engine, there are lots of interesting questions about how to
-design a system for defining different types of "game objects" in a way that
-is flexible and can be easily extended. These questions include whether to use
-composition or inheritance for defining new game objects, and things like that.
-Because my ambitions are modest for now, I'm hoping to sidestep those questions
-with the following simple system:
+These are the current principles for how a game should define types
+representing its different "game objects:"
 
 * All game objects ultimately inherit from the Sprite class.
 
