@@ -219,7 +219,7 @@ public class GameEngine {
 			if (interactables.size() > 0) {
 				if (keyboard.keyPressed(KeyEvent.VK_ENTER)) {
 					Sprite interactable = chooseInteractable();
-					interactable.getInteractionHandler().interact(gameLogic, gameScene);
+					interactable.getInteractionHandler().interact();
 					interactables.clear();
 				}
 			}

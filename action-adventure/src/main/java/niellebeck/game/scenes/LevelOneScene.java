@@ -3,7 +3,6 @@ package niellebeck.game.scenes;
 import java.util.ArrayList;
 import java.util.List;
 
-import niellebeck.game.MyGameLogic;
 import niellebeck.game.dialogues.EnemiesDefeatedDialogue;
 import niellebeck.game.dialogues.InitialDialogue;
 import niellebeck.game.sprites.Door;
@@ -12,7 +11,6 @@ import niellebeck.game.sprites.NPC;
 import niellebeck.game.sprites.PlayerCharacter;
 import niellebeck.gameengine.Dialogue;
 import niellebeck.gameengine.DialogueManager;
-import niellebeck.gameengine.GameLogic;
 import niellebeck.gameengine.GameScene;
 import niellebeck.gameengine.InteractionHandler;
 import niellebeck.gameengine.KeyboardInput;
@@ -44,10 +42,9 @@ public class LevelOneScene extends GameScene {
 		npc.setInteractionHandler(new InteractionHandler() {
 			
 			@Override
-			public void interact(GameLogic gameLogic, GameScene gameScene) {
-				LevelOneScene levelOneScene = (LevelOneScene)gameScene;
+			public void interact() {
 				Dialogue dialogue = null;
-				if (levelOneScene.allEnemiesDestroyed()) {
+				if (allEnemiesDestroyed()) {
 					dialogue = new EnemiesDefeatedDialogue();
 					getGameEngine().addSprite(door);
 				}
@@ -71,7 +68,7 @@ public class LevelOneScene extends GameScene {
 		anotherNpc.setInteractionHandler(new InteractionHandler() {
 
 			@Override
-			public void interact(GameLogic gameLogic, GameScene gameScene) {
+			public void interact() {
 				Dialogue dialogue = new Dialogue(new String[] {
 						"Hello!",
 						"I am another NPC."
@@ -93,7 +90,7 @@ public class LevelOneScene extends GameScene {
 		door.setInteractionHandler(new InteractionHandler() {
 
 			@Override
-			public void interact(GameLogic gameLogic, GameScene gameScene) {
+			public void interact() {
 				getGameEngine().changeScene(new LevelTwoScene());
 			}
 

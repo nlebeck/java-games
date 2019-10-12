@@ -1,7 +1,7 @@
 package niellebeck.gameengine;
 
 public interface InteractionHandler {
-	void interact(GameLogic gameLogic, GameScene gameScene);
+	void interact();
 	String getInteractionMessage();
 	double getInteractionDistance();
 }
