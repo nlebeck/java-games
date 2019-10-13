@@ -28,9 +28,11 @@ public class MyGameLogic extends GameLogic {
 	private static final int BULLET_COOLDOWN = 10; //in frames
 	private static final int MAX_PLAYER_HP = 20;
 	
-	Direction lastPlayerDir;
-	int timeUntilNextBullet;
-	int playerHp;
+	private Direction lastPlayerDir;
+	private int timeUntilNextBullet;
+	
+	private int playerHp;
+	private boolean levelOneDoorIsOpen;
 	
 	@Override
 	public void init() {
@@ -44,6 +46,7 @@ public class MyGameLogic extends GameLogic {
 		getGameEngine().addOverlay(new HpOverlay());
 		
 		playerHp = MAX_PLAYER_HP;
+		levelOneDoorIsOpen = false;
 		
 		resetState();
 	}
@@ -84,6 +87,14 @@ public class MyGameLogic extends GameLogic {
 	
 	public void damagePlayer() {
 		playerHp = (playerHp - 1 >= 0) ? playerHp - 1 : 0;
+	}
+	
+	public void openLevelOneDoor() {
+		levelOneDoorIsOpen = true;
+	}
+	
+	public boolean levelOneDoorIsOpen() {
+		return levelOneDoorIsOpen;
 	}
 	
 	public void shootBullet(Direction dir) {

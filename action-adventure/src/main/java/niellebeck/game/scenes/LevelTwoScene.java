@@ -3,6 +3,7 @@ package niellebeck.game.scenes;
 import niellebeck.game.sprites.Door;
 import niellebeck.game.sprites.PlayerCharacter;
 import niellebeck.gameengine.GameScene;
+import niellebeck.gameengine.InteractionHandler;
 import niellebeck.gameengine.KeyboardInput;
 import niellebeck.gameengine.Sprite;
 import niellebeck.gameengine.Tilemap;
@@ -19,6 +20,23 @@ public class LevelTwoScene extends GameScene {
 		
 		getGameEngine().addSprite(playerChar);
 		getGameEngine().addSprite(door);
+		
+		door.setInteractionHandler(new InteractionHandler() {
+			@Override
+			public void interact() {
+				getGameEngine().changeScene(new LevelOneScene());
+			}
+			
+			@Override
+			public String getInteractionMessage() {
+				return "enter door";
+			}
+			
+			@Override
+			public double getInteractionDistance() {
+				return 56.6;
+			}
+		});
 	}
 
 	@Override

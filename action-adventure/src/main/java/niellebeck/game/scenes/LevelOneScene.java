@@ -3,6 +3,7 @@ package niellebeck.game.scenes;
 import java.util.ArrayList;
 import java.util.List;
 
+import niellebeck.game.MyGameLogic;
 import niellebeck.game.dialogues.EnemiesDefeatedDialogue;
 import niellebeck.game.dialogues.InitialDialogue;
 import niellebeck.game.sprites.Door;
@@ -19,34 +20,48 @@ import niellebeck.gameengine.Tilemap;
 public class LevelOneScene extends GameScene {
 
 	private PlayerCharacter playerChar;
-	private NPC npc;
-	private NPC anotherNpc;
 	private Door door;
 	private List<Enemy> enemies;
 	
 	@Override
 	public void init() {
-		playerChar = new PlayerCharacter(300, 220);
-		npc = new NPC(80, 350);
-		anotherNpc = new NPC(500, 250);
+		MyGameLogic myGameLogic = (MyGameLogic)getGameEngine().getGameLogic();
+		
+		NPC npc = new NPC(80, 350);
+		NPC anotherNpc = new NPC(500, 250);
 		door = new Door(320, 60);
 		enemies = new ArrayList<Enemy>();
 		enemies.add(new Enemy(400, 400));
-		enemies.add(new Enemy(320, 100));
+		enemies.add(new Enemy(160, 60));
+		if (myGameLogic.levelOneDoorIsOpen()) {
+			playerChar = new PlayerCharacter(320, 100);
+		}
+		else {
+			playerChar = new PlayerCharacter(300, 220);
+		}
 		
 		getGameEngine().addSprite(playerChar);
 		getGameEngine().addSprite(npc);
 		getGameEngine().addSprite(anotherNpc);
 		getGameEngine().addSprites(enemies);
+		if (myGameLogic.levelOneDoorIsOpen()) {
+			getGameEngine().addSprite(door);
+		}
 		
 		npc.setInteractionHandler(new InteractionHandler() {
 			
 			@Override
 			public void interact() {
 				Dialogue dialogue = null;
-				if (allEnemiesDestroyed()) {
+				if (myGameLogic.levelOneDoorIsOpen()) {
+					dialogue = new Dialogue(new String[] {
+							"A door has opened in the north."
+					});
+				}
+				else if (allEnemiesDestroyed()) {
 					dialogue = new EnemiesDefeatedDialogue();
 					getGameEngine().addSprite(door);
+					myGameLogic.openLevelOneDoor();
 				}
 				else {
 					dialogue = new InitialDialogue();
