@@ -32,6 +32,31 @@ public class DirectionUtils {
 		return result;
 	}
 	
+	public static Direction getOppositeDirection(Direction dir) {
+		switch(dir) {
+		case UP:
+			return Direction.DOWN;
+		case DOWN:
+			return Direction.UP;
+		case LEFT:
+			return Direction.RIGHT;
+		case RIGHT:
+			return Direction.LEFT;
+		case UP_RIGHT:
+			return Direction.DOWN_LEFT;
+		case DOWN_RIGHT:
+			return Direction.UP_LEFT;
+		case UP_LEFT:
+			return Direction.DOWN_RIGHT;
+		case DOWN_LEFT:
+			return Direction.UP_RIGHT;
+		case NONE:
+			return Direction.NONE;
+		default:
+			return Direction.NONE;
+		}
+	}
+	
 	public static Direction getRandomCardinalDirection() {
 		if (random == null) {
 			random = new Random();
