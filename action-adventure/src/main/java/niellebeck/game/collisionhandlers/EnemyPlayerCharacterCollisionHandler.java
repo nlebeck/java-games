@@ -11,6 +11,6 @@ public class EnemyPlayerCharacterCollisionHandler extends ClassPairCollisionHand
 
 	@Override
 	public void handleEvent(Enemy enemy, PlayerCharacter playerCharacter) {
-		playerCharacter.onEnemyHit();
+		playerCharacter.onEnemyHit(enemy);
 	}
 }

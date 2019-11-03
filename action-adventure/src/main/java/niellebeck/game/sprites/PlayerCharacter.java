@@ -10,8 +10,10 @@ import niellebeck.gameengine.AnimatedSprite;
 import niellebeck.gameengine.Animation;
 import niellebeck.gameengine.EventManager;
 import niellebeck.gameengine.Direction;
+import niellebeck.gameengine.DirectionUtils;
 import niellebeck.gameengine.GameEngine;
 import niellebeck.gameengine.KeyboardInput;
+import niellebeck.gameengine.Sprite;
 
 public class PlayerCharacter extends AnimatedSprite {
 	
@@ -19,7 +21,11 @@ public class PlayerCharacter extends AnimatedSprite {
 	private static final int PLAYER_HEIGHT = 40;
 	
 	private static final int SPEED = 4;
+	private static final int RECOIL_SPEED = 8;
+	
+	// INVULNERABLE_TIME should be greater than or equal to RECOIL_TIME
 	private static final int INVULNERABLE_TIME = 30;
+	private static final int RECOIL_TIME = 5;
 	
 	private static final int ANIMATION_STATE_STANDING = 0;
 	private static final int ANIMATION_STATE_MOVING_LEFT = 1;
@@ -29,11 +35,13 @@ public class PlayerCharacter extends AnimatedSprite {
 	
 	private int invulnerableTimer;
 	private boolean invulnerable;
+	private Direction hitDir;
 	
 	public PlayerCharacter(int initX, int initY) {
 		super(initX, initY, PLAYER_WIDTH, PLAYER_HEIGHT);
 		invulnerableTimer = INVULNERABLE_TIME;
 		invulnerable = false;
+		hitDir = Direction.NONE;
 		
 		Animation leftRightAnimation = new Animation(5,
 				"/sprites/stickfigure/standing.png",
@@ -52,9 +60,7 @@ public class PlayerCharacter extends AnimatedSprite {
 	@Override
 	public void update(KeyboardInput keyboard) {
 		Direction moveDir = keyboard.getArrowKeyDirection();
-		if (moveDir != Direction.NONE) {
-			move(moveDir, SPEED);
-		}
+		int moveSpeed = SPEED;
 		
 		if (invulnerable) {
 			invulnerableTimer--;
@@ -62,6 +68,14 @@ public class PlayerCharacter extends AnimatedSprite {
 				invulnerable = false;
 				invulnerableTimer = INVULNERABLE_TIME;
 			}
+			else if (invulnerableTimer >= INVULNERABLE_TIME - RECOIL_TIME) {
+				moveDir = hitDir;
+				moveSpeed = RECOIL_SPEED;
+			}
+		}
+		
+		if (moveDir != Direction.NONE) {
+			move(moveDir, moveSpeed);
 		}
 		
 		if (moveDir == Direction.LEFT || moveDir == Direction.UP_LEFT || moveDir == Direction.DOWN_LEFT) {
@@ -80,11 +94,12 @@ public class PlayerCharacter extends AnimatedSprite {
 	@Override
 	public void onCollideTilemap() { }
 	
-	public void onEnemyHit() {
+	public void onEnemyHit(Sprite hitter) {
 		if (!invulnerable) {
 			MyGameLogic gameLogic = (MyGameLogic)GameEngine.getGameEngine().getGameLogic();
 			gameLogic.damagePlayer();
 			invulnerable = true;
+			hitDir = DirectionUtils.getDirectionBetween(hitter, this, true);
 		}
 	}
 }

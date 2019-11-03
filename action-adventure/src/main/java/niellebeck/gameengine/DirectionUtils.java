@@ -57,6 +57,48 @@ public class DirectionUtils {
 		}
 	}
 	
+	public static Direction getDirectionBetween(Sprite fromSprite, Sprite toSprite, boolean cardinalOnly) {
+		int xDiff = toSprite.getX() - fromSprite.getX();
+		int yDiff = toSprite.getY() - fromSprite.getY();
+		
+		if (cardinalOnly) {
+			if (Math.abs(xDiff) > Math.abs(yDiff)) {
+				yDiff = 0;
+			}
+			else {
+				xDiff = 0;
+			}
+		}
+		
+		if (xDiff > 0 && yDiff > 0) {
+			return Direction.DOWN_RIGHT;
+		}
+		else if (xDiff > 0 && yDiff < 0) {
+			return Direction.UP_RIGHT;
+		}
+		else if (xDiff < 0 && yDiff > 0) {
+			return Direction.DOWN_LEFT;
+		}
+		else if (xDiff < 0 && yDiff < 0) {
+			return Direction.UP_LEFT;
+		}
+		else if (xDiff > 0 && yDiff == 0) {
+			return Direction.RIGHT;
+		}
+		else if (xDiff < 0 && yDiff == 0) {
+			return Direction.LEFT;
+		}
+		else if (xDiff == 0 && yDiff > 0) {
+			return Direction.DOWN;
+		}
+		else if (xDiff == 0 && yDiff < 0) {
+			return Direction.UP;
+		}
+		else { // xDiff == 0 && yDiff == 0
+			return Direction.NONE;
+		}
+	}
+	
 	public static Direction getRandomCardinalDirection() {
 		if (random == null) {
 			random = new Random();
