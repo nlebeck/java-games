@@ -9,17 +9,19 @@ import java.util.Set;
 
 /**
  * This class is responsible for handling collision events and proximity events
- * as well as registering interactable Sprites. A collision event occurs when
- * one Sprite attempts to move into the space occupied by another Sprite. A
- * proximity event occurs when two Sprites are within a certain distance of
- * each other. An interactable Sprite is a Sprite within a certain distance of
- * the player character with an InteractionHandler attached. When either a
- * collision event or a proximity event is detected for a pair of Sprites, the
- * EventManager invokes the handleEvent() method in the appropriate event
- * handler corresponding to the specific subclasses of the two Sprites. When an
- * interactable Sprite is detected, the EventManager registers the interactable
- * Sprite with the game engine, so that the player can interact with it by
- * pressing the appropriate button.
+ * as well as registering interactable Sprites.
+ * <p>
+ * A collision event occurs when one Sprite attempts to move into the space
+ * occupied by another Sprite. A proximity event occurs when two Sprites are
+ * within a certain distance of each other. An interactable Sprite is a Sprite
+ * next to the player character with an InteractionHandler attached.
+ * <p>
+ * When either a collision event or a proximity event is detected for a pair
+ * of Sprites, the EventManager invokes the handleEvent() method in the
+ * appropriate event handler corresponding to the specific subclasses of the
+ * two Sprites. When an interactable Sprite is detected, the EventManager
+ * registers the interactable Sprite with the game engine, so that the player
+ * can interact with it by pressing the appropriate button.
  */
 public class EventManager {
 	
@@ -127,11 +129,27 @@ public class EventManager {
 		}
 	}
 	
+	/**
+	 * Identifies all Sprites that are interactable and next to the player
+	 * character.
+	 * <p>
+	 * This method currently considers a Sprite "next to" the player character
+	 * if the distance between the two is at most the player character's speed
+	 * (as determined by querying the GameScene). The idea is that the player
+	 * character is next to a Sprite if moving in the Sprite's direction would
+	 * cause them to collide that frame.
+	 * <p>
+	 * Both this definition and its implementation are brittle. If I can think
+	 * of a more elegant way of defining and implementing the same high-level
+	 * design, I will.
+	 */
 	public void registerInteractableSprites(GameScene gameScene) {
 		for (Sprite sprite : game.getSpriteList()) {
 			if (sprite.isInteractable()) {
-				double distance = getDistance(gameScene.getPlayerCharacter(), sprite);
-				if (distance < sprite.getInteractionHandler().getInteractionDistance()) {
+				if (RectangleUtils.areAdjacent(
+						gameScene.getPlayerCharacter().getBoundingBox(),
+						sprite.getBoundingBox(),
+						gameScene.getPlayerCharacterSpeed())) {
 					game.registerInteractable(sprite);
 				}
 			}

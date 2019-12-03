@@ -73,11 +73,6 @@ public class LevelOneScene extends GameScene {
 			public String getInteractionMessage() {
 				return "talk with NPC";
 			}
-			
-			@Override
-			public double getInteractionDistance() {
-				return 56.6;
-			}
 		});
 		
 		anotherNpc.setInteractionHandler(new InteractionHandler() {
@@ -95,11 +90,6 @@ public class LevelOneScene extends GameScene {
 			public String getInteractionMessage() {
 				return "talk with NPC";
 			}
-			
-			@Override
-			public double getInteractionDistance() {
-				return 56.6;
-			}
 		});
 		
 		door.setInteractionHandler(new InteractionHandler() {
@@ -113,12 +103,6 @@ public class LevelOneScene extends GameScene {
 			public String getInteractionMessage() {
 				return "enter door";
 			}
-
-			@Override
-			public double getInteractionDistance() {
-				return 56.6;
-			}
-			
 		});
 	}
 	
@@ -145,6 +129,11 @@ public class LevelOneScene extends GameScene {
 	@Override
 	public PlayerCharacter getPlayerCharacter() {
 		return playerChar;
+	}
+	
+	@Override
+	public int getPlayerCharacterSpeed() {
+		return PlayerCharacter.SPEED;
 	}
 
 }

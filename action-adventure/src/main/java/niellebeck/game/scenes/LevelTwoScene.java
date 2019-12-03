@@ -31,11 +31,6 @@ public class LevelTwoScene extends GameScene {
 			public String getInteractionMessage() {
 				return "enter door";
 			}
-			
-			@Override
-			public double getInteractionDistance() {
-				return 56.6;
-			}
 		});
 	}
 
@@ -52,6 +47,11 @@ public class LevelTwoScene extends GameScene {
 	@Override
 	public Sprite getPlayerCharacter() {
 		return playerChar;
+	}
+	
+	@Override
+	public int getPlayerCharacterSpeed() {
+		return PlayerCharacter.SPEED;
 	}
 
 }

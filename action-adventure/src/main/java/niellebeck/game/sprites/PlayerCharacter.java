@@ -20,7 +20,7 @@ public class PlayerCharacter extends AnimatedSprite {
 	private static final int PLAYER_WIDTH = 40;
 	private static final int PLAYER_HEIGHT = 40;
 	
-	private static final int SPEED = 4;
+	public static final int SPEED = 4;
 	private static final int RECOIL_SPEED = 8;
 	
 	// INVULNERABLE_TIME should be greater than or equal to RECOIL_TIME
