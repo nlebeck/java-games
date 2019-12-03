@@ -78,6 +78,10 @@ public class Tilemap {
 		}
 	}
 	
+	/**
+	 * Returns true if the given sprite overlaps with any collidable tiles,
+	 * or if any part of the sprite lies outside of the tilemap.
+	 */
 	public boolean collidesWithSprite(Sprite sprite) {
 		Rectangle boundingBox = sprite.getBoundingBox();
 		
@@ -85,6 +89,13 @@ public class Tilemap {
 		int rightmostTileCol = (boundingBox.x + boundingBox.width) / tileWidth + 1;
 		int uppermostTileRow = boundingBox.y / tileWidth;
 		int lowermostTileRow = (boundingBox.y + boundingBox.height) / tileWidth + 1;
+		
+		if (leftmostTileCol < 0
+				|| rightmostTileCol > numCols
+				|| uppermostTileRow < 0
+				|| lowermostTileRow > numRows) {
+			return true;
+		}
 		
 		for (int i = leftmostTileCol; i < rightmostTileCol; i++) {
 			for (int j = uppermostTileRow; j < lowermostTileRow; j++) {
