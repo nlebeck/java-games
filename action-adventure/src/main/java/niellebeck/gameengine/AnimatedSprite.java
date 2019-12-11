@@ -2,11 +2,12 @@ package niellebeck.gameengine;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public abstract class AnimatedSprite extends Sprite {
 
-	private int animationState = -1;
-	private Map<Integer, Animation> animationMap = new HashMap<Integer, Animation>();
+	private UUID animationState = null;
+	private Map<UUID, Animation> animationMap = new HashMap<UUID, Animation>();
 	
 	private boolean isFlickering = false;
 	private int flickerCounter = 0;
@@ -16,13 +17,13 @@ public abstract class AnimatedSprite extends Sprite {
 	}
 	
 	public void animate() {
-		if (animationState < 0) {
+		if (animationState == null) {
 			return;
 		}
 		
-		int prevAnimationState = animationState;
+		UUID prevAnimationState = animationState;
 		
-		if (prevAnimationState != animationState) {
+		if (!prevAnimationState.equals(animationState)) {
 			animationMap.get(animationState).reset();
 		}
 		
@@ -36,12 +37,14 @@ public abstract class AnimatedSprite extends Sprite {
 		}
 	}
 	
-	public void setAnimationState(int animationState) {
+	public void setAnimationState(UUID animationState) {
 		this.animationState = animationState;
 	}
 	
-	public void registerAnimationState(int animationState, Animation animation) {
+	public UUID registerAnimationState(Animation animation) {
+		UUID animationState = UUID.randomUUID();
 		animationMap.put(animationState, animation);
+		return animationState;
 	}
 	
 	public void setFlickering(boolean isFlickering) {
