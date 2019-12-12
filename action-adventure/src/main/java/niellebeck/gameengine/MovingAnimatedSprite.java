@@ -66,7 +66,12 @@ public abstract class MovingAnimatedSprite extends AnimatedSprite {
 	 * animation state will actually be defined.
 	 */
 	public void initializeMovingAnimation() {
-		setAnimationState(standingAnimationState);
+		if (standingAnimationState == null) {
+			Logger.warning("Missing standing animation");
+		}
+		else {
+			setAnimationState(standingAnimationState);
+		}
 	}
 	
 	private void setMovingAnimation(Direction dir) {
@@ -92,7 +97,10 @@ public abstract class MovingAnimatedSprite extends AnimatedSprite {
 		default:
 			targetState = standingAnimationState;
 		}
-		if (targetState != null) {
+		if (targetState == null) {
+			Logger.warning("Missing animation for Direction " + componentDir);
+		}
+		else {
 			setAnimationState(targetState);
 		}
 	}
