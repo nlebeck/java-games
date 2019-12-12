@@ -43,7 +43,7 @@ public abstract class MovingAnimatedSprite extends AnimatedSprite {
 		override = true;
 	}
 	
-	public void clearOverride() {
+	public void clearAnimationStateOverride() {
 		override = false;
 	}
 	
