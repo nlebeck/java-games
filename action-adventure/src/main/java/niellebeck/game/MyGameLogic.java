@@ -120,6 +120,7 @@ public class MyGameLogic extends GameLogic {
 		}
 		Bullet bullet = new Bullet(playerChar.getX() + offsetX, playerChar.getY() + offsetY, bulletDir);
 		getGameEngine().addSprite(bullet);
+		playerChar.animateShooting(bulletDir);
 		timeUntilNextBullet = BULLET_COOLDOWN;
 	}
 
