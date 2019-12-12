@@ -17,16 +17,25 @@ public abstract class MovingAnimatedSprite extends AnimatedSprite {
 	private UUID standingAnimationState;
 	
 	private boolean override;
+	private Direction moveDir;
 	
 	public MovingAnimatedSprite(int x, int y, int width, int height) {
 		super(x, y, width, height);
 		override = false;
+		moveDir = Direction.NONE;
 	}
 	
 	@Override
 	public void move(Direction dir, int distance) {
 		super.move(dir, distance);
-		setMovingAnimation(dir);
+		moveDir = dir;
+	}
+	
+	@Override
+	public void animate() {
+		setMovingAnimation(moveDir);
+		super.animate();
+		moveDir = Direction.NONE;
 	}
 	
 	public void overrideAnimationState(UUID animationState) {
