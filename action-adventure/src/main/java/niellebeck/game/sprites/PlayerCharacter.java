@@ -56,6 +56,9 @@ public class PlayerCharacter extends MovingAnimatedSprite {
 				"/sprites/stickfigure/standing.png",
 				"/sprites/stickfigure/walking0.png",
 				"/sprites/stickfigure/walking1.png");
+		Animation upDownAnimation = new Animation(10,
+				"/sprites/stickfigure/walking-vertical-0.png",
+				"/sprites/stickfigure/walking-vertical-1.png");
 		Animation standingAnimation = new Animation(1, "/sprites/stickfigure/standing.png");
 		Animation shootingLeftAnimation = new Animation(1, "/sprites/stickfigure/shooting-left.png");
 		Animation shootingRightAnimation = new Animation(1, "/sprites/stickfigure/shooting-right.png");
@@ -65,8 +68,8 @@ public class PlayerCharacter extends MovingAnimatedSprite {
 		registerMovingLeftAnimationState(leftRightAnimation);
 		registerMovingRightAnimationState(leftRightAnimation);
 		registerStandingAnimationState(standingAnimation);
-		registerMovingUpAnimationState(standingAnimation);
-		registerMovingDownAnimationState(standingAnimation);
+		registerMovingUpAnimationState(upDownAnimation);
+		registerMovingDownAnimationState(upDownAnimation);
 		
 		shootingLeftAnimationState = registerAnimationState(shootingLeftAnimation);
 		shootingRightAnimationState = registerAnimationState(shootingRightAnimation);
