@@ -15,6 +15,7 @@ import niellebeck.gameengine.KeyboardInput;
 import niellebeck.gameengine.Logger;
 import niellebeck.gameengine.MovingAnimatedSprite;
 import niellebeck.gameengine.Sprite;
+import niellebeck.gameengine.TimedAnimation;
 
 public class PlayerCharacter extends MovingAnimatedSprite {
 	
@@ -28,28 +29,22 @@ public class PlayerCharacter extends MovingAnimatedSprite {
 	private static final int INVULNERABLE_TIME = 30;
 	private static final int RECOIL_TIME = 5;
 	
-	private static final int SHOOTING_ANIMATION_TIME = 10;
+	private static final int SHOOTING_ANIM_TIME = 10;
 	
-	private final Animation shootingLeftAnimation;
-	private final Animation shootingRightAnimation;
-	private final Animation shootingUpAnimation;
-	private final Animation shootingDownAnimation;
+	private final TimedAnimation shootingLeftAnimation;
+	private final TimedAnimation shootingRightAnimation;
+	private final TimedAnimation shootingUpAnimation;
+	private final TimedAnimation shootingDownAnimation;
 	
 	private int invulnerableTimer;
 	private boolean invulnerable;
 	private Direction hitDir;
-	
-	private int shootingTimer;
-	private boolean shooting;
 	
 	public PlayerCharacter(int initX, int initY) {
 		super(initX, initY, PLAYER_WIDTH, PLAYER_HEIGHT);
 		invulnerableTimer = INVULNERABLE_TIME;
 		invulnerable = false;
 		hitDir = Direction.NONE;
-		
-		shootingTimer = SHOOTING_ANIMATION_TIME;
-		shooting = false;
 		
 		Animation leftRightAnimation = new Animation(5,
 				"/sprites/stickfigure/standing.png",
@@ -59,10 +54,10 @@ public class PlayerCharacter extends MovingAnimatedSprite {
 				"/sprites/stickfigure/walking-vertical-0.png",
 				"/sprites/stickfigure/walking-vertical-1.png");
 		Animation standingAnimation = new Animation(1, "/sprites/stickfigure/standing.png");
-		shootingLeftAnimation = new Animation(1, "/sprites/stickfigure/shooting-left.png");
-		shootingRightAnimation = new Animation(1, "/sprites/stickfigure/shooting-right.png");
-		shootingUpAnimation = new Animation(1, "/sprites/stickfigure/shooting-up.png");
-		shootingDownAnimation = new Animation(1, "/sprites/stickfigure/shooting-down.png");
+		shootingLeftAnimation = new TimedAnimation(SHOOTING_ANIM_TIME, 1, "/sprites/stickfigure/shooting-left.png");
+		shootingRightAnimation = new TimedAnimation(SHOOTING_ANIM_TIME, 1, "/sprites/stickfigure/shooting-right.png");
+		shootingUpAnimation = new TimedAnimation(SHOOTING_ANIM_TIME, 1, "/sprites/stickfigure/shooting-up.png");
+		shootingDownAnimation = new TimedAnimation(SHOOTING_ANIM_TIME, 1, "/sprites/stickfigure/shooting-down.png");
 
 		registerMovingLeftAnimation(leftRightAnimation);
 		registerMovingRightAnimation(leftRightAnimation);
@@ -90,15 +85,6 @@ public class PlayerCharacter extends MovingAnimatedSprite {
 			}
 		}
 		
-		if (shooting) {
-			shootingTimer--;
-			if (shootingTimer <= 0) {
-				shooting = false;
-				shootingTimer = SHOOTING_ANIMATION_TIME;
-				clearAnimationOverride();
-			}
-		}
-		
 		if (moveDir != Direction.NONE) {
 			move(moveDir, moveSpeed);
 		}
@@ -108,7 +94,7 @@ public class PlayerCharacter extends MovingAnimatedSprite {
 	}
 	
 	public void animateShooting(Direction dir) {
-		Animation animation = null;
+		TimedAnimation animation = null;
 		switch (dir) {
 		case LEFT:
 			animation = shootingLeftAnimation;
@@ -125,8 +111,7 @@ public class PlayerCharacter extends MovingAnimatedSprite {
 		default:
 			Logger.warning("Tried to animate shooting in invalid direction " + dir);
 		}
-		overrideAnimation(animation);
-		shooting = true;
+		setTimedAnimation(animation);
 	}
 	
 	@Override

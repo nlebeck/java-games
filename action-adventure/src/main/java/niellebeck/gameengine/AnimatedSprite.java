@@ -3,6 +3,7 @@ package niellebeck.gameengine;
 public abstract class AnimatedSprite extends Sprite {
 
 	private Animation curAnimation = null;
+	private TimedAnimation timedAnimation = null;
 	private boolean isFlickering = false;
 	private int flickerCounter = 0;
 	
@@ -11,7 +12,17 @@ public abstract class AnimatedSprite extends Sprite {
 	}
 	
 	public void animate() {
-		img = curAnimation.animate();
+		Animation animation = curAnimation;
+		if (timedAnimation != null) {
+			if (timedAnimation.done()) {
+				timedAnimation = null;
+			}
+			else {
+				animation = timedAnimation;
+			}
+		}
+		
+		img = animation.animate();
 		
 		if (isFlickering) {
 			if (flickerCounter % 2 == 0) {
@@ -23,6 +34,11 @@ public abstract class AnimatedSprite extends Sprite {
 	
 	public void setAnimation(Animation animation) {
 		curAnimation = animation;
+	}
+	
+	public void setTimedAnimation(TimedAnimation animation) {
+		timedAnimation = animation;
+		timedAnimation.reset();
 	}
 	
 	public void setFlickering(boolean isFlickering) {
