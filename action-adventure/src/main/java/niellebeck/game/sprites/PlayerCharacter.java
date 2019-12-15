@@ -4,7 +4,6 @@ import java.awt.Image;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import niellebeck.game.MyGameLogic;
 import niellebeck.gameengine.Animation;
@@ -31,10 +30,10 @@ public class PlayerCharacter extends MovingAnimatedSprite {
 	
 	private static final int SHOOTING_ANIMATION_TIME = 10;
 	
-	private final UUID shootingLeftAnimationState;
-	private final UUID shootingRightAnimationState;
-	private final UUID shootingUpAnimationState;
-	private final UUID shootingDownAnimationState;
+	private final Animation shootingLeftAnimation;
+	private final Animation shootingRightAnimation;
+	private final Animation shootingUpAnimation;
+	private final Animation shootingDownAnimation;
 	
 	private int invulnerableTimer;
 	private boolean invulnerable;
@@ -60,21 +59,16 @@ public class PlayerCharacter extends MovingAnimatedSprite {
 				"/sprites/stickfigure/walking-vertical-0.png",
 				"/sprites/stickfigure/walking-vertical-1.png");
 		Animation standingAnimation = new Animation(1, "/sprites/stickfigure/standing.png");
-		Animation shootingLeftAnimation = new Animation(1, "/sprites/stickfigure/shooting-left.png");
-		Animation shootingRightAnimation = new Animation(1, "/sprites/stickfigure/shooting-right.png");
-		Animation shootingUpAnimation = new Animation(1, "/sprites/stickfigure/shooting-up.png");
-		Animation shootingDownAnimation = new Animation(1, "/sprites/stickfigure/shooting-down.png");
+		shootingLeftAnimation = new Animation(1, "/sprites/stickfigure/shooting-left.png");
+		shootingRightAnimation = new Animation(1, "/sprites/stickfigure/shooting-right.png");
+		shootingUpAnimation = new Animation(1, "/sprites/stickfigure/shooting-up.png");
+		shootingDownAnimation = new Animation(1, "/sprites/stickfigure/shooting-down.png");
 
-		registerMovingLeftAnimationState(leftRightAnimation);
-		registerMovingRightAnimationState(leftRightAnimation);
-		registerStandingAnimationState(standingAnimation);
-		registerMovingUpAnimationState(upDownAnimation);
-		registerMovingDownAnimationState(upDownAnimation);
-		
-		shootingLeftAnimationState = registerAnimationState(shootingLeftAnimation);
-		shootingRightAnimationState = registerAnimationState(shootingRightAnimation);
-		shootingUpAnimationState = registerAnimationState(shootingUpAnimation);
-		shootingDownAnimationState = registerAnimationState(shootingDownAnimation);
+		registerMovingLeftAnimation(leftRightAnimation);
+		registerMovingRightAnimation(leftRightAnimation);
+		registerStandingAnimation(standingAnimation);
+		registerMovingUpAnimation(upDownAnimation);
+		registerMovingDownAnimation(upDownAnimation);
 		
 		initializeMovingAnimation();
 	}
@@ -101,7 +95,7 @@ public class PlayerCharacter extends MovingAnimatedSprite {
 			if (shootingTimer <= 0) {
 				shooting = false;
 				shootingTimer = SHOOTING_ANIMATION_TIME;
-				clearAnimationStateOverride();
+				clearAnimationOverride();
 			}
 		}
 		
@@ -114,24 +108,24 @@ public class PlayerCharacter extends MovingAnimatedSprite {
 	}
 	
 	public void animateShooting(Direction dir) {
-		UUID animationState = null;
+		Animation animation = null;
 		switch (dir) {
 		case LEFT:
-			animationState = shootingLeftAnimationState;
+			animation = shootingLeftAnimation;
 			break;
 		case RIGHT:
-			animationState = shootingRightAnimationState;
+			animation = shootingRightAnimation;
 			break;
 		case UP:
-			animationState = shootingUpAnimationState;
+			animation = shootingUpAnimation;
 			break;
 		case DOWN:
-			animationState = shootingDownAnimationState;
+			animation = shootingDownAnimation;
 			break;
 		default:
 			Logger.warning("Tried to animate shooting in invalid direction " + dir);
 		}
-		overrideAnimationState(animationState);
+		overrideAnimation(animation);
 		shooting = true;
 	}
 	

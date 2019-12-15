@@ -1,7 +1,5 @@
 package niellebeck.gameengine;
 
-import java.util.UUID;
-
 /**
  * A special type of AnimatedSprite that supports five animation states
  * corresponding to standing still and moving in the four cardinal directions.
@@ -10,11 +8,11 @@ import java.util.UUID;
  */
 public abstract class MovingAnimatedSprite extends AnimatedSprite {
 
-	private UUID movingLeftAnimationState;
-	private UUID movingRightAnimationState;
-	private UUID movingUpAnimationState;
-	private UUID movingDownAnimationState;
-	private UUID standingAnimationState;
+	private Animation movingLeftAnimation;
+	private Animation movingRightAnimation;
+	private Animation movingUpAnimation;
+	private Animation movingDownAnimation;
+	private Animation standingAnimation;
 	
 	private boolean override;
 	private Direction moveDir;
@@ -38,33 +36,33 @@ public abstract class MovingAnimatedSprite extends AnimatedSprite {
 		moveDir = Direction.NONE;
 	}
 	
-	public void overrideAnimationState(UUID animationState) {
-		setAnimationState(animationState);
+	public void overrideAnimation(Animation animation) {
+		setAnimation(animation);
 		override = true;
 	}
 	
-	public void clearAnimationStateOverride() {
+	public void clearAnimationOverride() {
 		override = false;
 	}
 	
-	public void registerMovingLeftAnimationState(Animation animation) {
-		movingLeftAnimationState = registerAnimationState(animation);
+	public void registerMovingLeftAnimation(Animation animation) {
+		movingLeftAnimation = animation;
 	}
 	
-	public void registerMovingRightAnimationState(Animation animation) {
-		movingRightAnimationState = registerAnimationState(animation);
+	public void registerMovingRightAnimation(Animation animation) {
+		movingRightAnimation = animation;
 	}
 	
-	public void registerMovingUpAnimationState(Animation animation) {
-		movingUpAnimationState = registerAnimationState(animation);
+	public void registerMovingUpAnimation(Animation animation) {
+		movingUpAnimation = animation;
 	}
 	
-	public void registerMovingDownAnimationState(Animation animation) {
-		movingDownAnimationState = registerAnimationState(animation);
+	public void registerMovingDownAnimation(Animation animation) {
+		movingDownAnimation = animation;
 	}
 	
-	public void registerStandingAnimationState(Animation animation) {
-		standingAnimationState = registerAnimationState(animation);
+	public void registerStandingAnimation(Animation animation) {
+		standingAnimation = animation;
 	}
 	
 	/**
@@ -75,11 +73,11 @@ public abstract class MovingAnimatedSprite extends AnimatedSprite {
 	 * animation state will actually be defined.
 	 */
 	public void initializeMovingAnimation() {
-		if (standingAnimationState == null) {
+		if (standingAnimation == null) {
 			Logger.warning("Missing standing animation");
 		}
 		else {
-			setAnimationState(standingAnimationState);
+			setAnimation(standingAnimation);
 		}
 	}
 	
@@ -89,28 +87,28 @@ public abstract class MovingAnimatedSprite extends AnimatedSprite {
 		}
 		
 		Direction componentDir = DirectionUtils.getComponentDirections(dir).get(0);
-		UUID targetState = null;
+		Animation targetAnimation = null;
 		switch (componentDir) {
 		case LEFT:
-			targetState = movingLeftAnimationState;
+			targetAnimation = movingLeftAnimation;
 			break;
 		case RIGHT:
-			targetState = movingRightAnimationState;
+			targetAnimation = movingRightAnimation;
 			break;
 		case UP:
-			targetState = movingUpAnimationState;
+			targetAnimation = movingUpAnimation;
 			break;
 		case DOWN:
-			targetState = movingDownAnimationState;
+			targetAnimation = movingDownAnimation;
 			break;
 		default:
-			targetState = standingAnimationState;
+			targetAnimation = standingAnimation;
 		}
-		if (targetState == null) {
+		if (targetAnimation == null) {
 			Logger.warning("Missing animation for Direction " + componentDir);
 		}
 		else {
-			setAnimationState(targetState);
+			setAnimation(targetAnimation);
 		}
 	}
 
