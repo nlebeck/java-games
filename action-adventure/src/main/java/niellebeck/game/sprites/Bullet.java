@@ -2,9 +2,7 @@ package niellebeck.game.sprites;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.List;
 
-import niellebeck.gameengine.EventManager;
 import niellebeck.gameengine.Direction;
 import niellebeck.gameengine.KeyboardInput;
 import niellebeck.gameengine.Sprite;

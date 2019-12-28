@@ -1,9 +1,7 @@
 package niellebeck.game.sprites;
 
-import java.util.List;
 import java.util.Random;
 
-import niellebeck.gameengine.EventManager;
 import niellebeck.gameengine.GameEngine;
 import niellebeck.gameengine.Direction;
 import niellebeck.gameengine.DirectionUtils;
@@ -11,14 +9,14 @@ import niellebeck.gameengine.KeyboardInput;
 import niellebeck.gameengine.Sprite;
 
 public class Enemy extends Sprite {
-	final int SPEED = 1;
-	final int ATTACK_INTERVAL = 100;
+	private final int SPEED = 1;
+	private final int ATTACK_INTERVAL = 100;
 	
-	Random random;
-	Direction currentDir;
-	int movementTime;
-	int movementDuration;
-	int attackCounter;
+	private Random random;
+	private Direction currentDir;
+	private int movementTime;
+	private int movementDuration;
+	private int attackCounter;
 	
 	public Enemy(int initX, int initY) {
 		super(initX, initY, 40, 40, "/sprites/enemy/enemy.png");
@@ -66,9 +64,7 @@ public class Enemy extends Sprite {
 		GameEngine.getGameEngine().addSprite(rightBullet);
 		GameEngine.getGameEngine().addSprite(topBullet);
 		GameEngine.getGameEngine().addSprite(bottomBullet);
-
 	}
-	
 	
 	@Override
 	public void onCollideTilemap() { }

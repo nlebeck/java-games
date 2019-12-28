@@ -1,13 +1,7 @@
 package niellebeck.game.sprites;
 
-import java.awt.Image;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import niellebeck.game.MyGameLogic;
 import niellebeck.gameengine.Animation;
-import niellebeck.gameengine.EventManager;
 import niellebeck.gameengine.Direction;
 import niellebeck.gameengine.DirectionUtils;
 import niellebeck.gameengine.GameEngine;
