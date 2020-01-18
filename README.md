@@ -11,6 +11,32 @@ I based the main game loop in my Java game on the game loop from the online
 draft of "Killer Game Programming in Java" by Andrew Davison, but aside from
 that, I'm mostly just figuring things out on my own.
 
+## Compiling and running the action-adventure game
+
+The game engine and action-adventure game are in separate Maven repositories.
+To compile the action-adventure game on the command line, run these commands
+(they work on Windows and should work on Unix too):
+
+    cd game-engine
+    mvn install
+    cd ..
+    cd action-adventure
+    mvn package
+
+After that, you can run the game using the JAR
+`action-adventure-1.0-SNAPSHOT-jar-with-dependencies` in the `target`
+directory.
+
+You can also compile and run the game in Eclipse, which is the IDE that I use
+to work on it. After importing the two Maven projects, run the commands above
+once, and after that, you should be able to just click the "run" button in
+Eclipse to compile and run the game.
+
+I found that after changing code in the game engine project, I can just run
+the game in Eclipse, and it will automatically reflect the game engine
+changes without updating the version installed in the local Maven repository.
+That behavior is perfect for development, but I don't fully understand it.
+
 ## Roadmap
 
 Although my rate of progress on this game isn't very fast, I'm hoping to
