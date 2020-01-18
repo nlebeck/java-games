@@ -5,6 +5,15 @@ package niellebeck.gameengine;
  * corresponding to standing still and moving in the four cardinal directions.
  * It automatically changes its animation state when it starts or stops moving
  * unless the animation state is explicitly overridden.
+ * <p>
+ * MovingAnimatedSprites have the following animation precedence order,
+ * from highest to lowest precedence:
+ * <p>
+ * 1. Current active TimedAnimation (if any)
+ * <br>
+ * 2. Current active override Animation (if any)
+ * <br>
+ * 3. Current moving Animation
  */
 public abstract class MovingAnimatedSprite extends AnimatedSprite {
 

@@ -1,5 +1,16 @@
 package niellebeck.gameengine;
 
+/**
+ * A Sprite whose appearance is determined by an Animation. Concrete
+ * instances of this class should call {@link #animate()} in their
+ * {@link #update(KeyboardInput)} method.
+ * <p>
+ * An AnimatedSprite supports both normal Animations, which continue to
+ * play indefinitely, and TimedAnimations, which play for a fixed
+ * number of frames and then stop. Each AnimatedSprite has one active
+ * Animation and at most one active TimedAnimation. If both types are
+ * active, the TimedAnimation takes precedence.
+ */
 public abstract class AnimatedSprite extends Sprite {
 
 	private Animation curAnimation = null;
