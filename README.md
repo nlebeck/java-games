@@ -24,7 +24,7 @@ To compile the action-adventure game on the command line, run these commands
     mvn package
 
 After that, you can run the game using the JAR
-`action-adventure-1.0-SNAPSHOT-jar-with-dependencies` in the `target`
+`action-adventure-1.0-SNAPSHOT-jar-with-dependencies.jar` in the `target`
 directory.
 
 You can also compile and run the game in Eclipse, which is the IDE that I use
