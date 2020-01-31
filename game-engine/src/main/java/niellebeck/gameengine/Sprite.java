@@ -16,6 +16,8 @@ public abstract class Sprite {
 	protected Image img;
 	
 	private InteractionHandler interactionHandler;
+	private Direction moveDir;
+	private int moveDistance;
 		
 	public Sprite(int initX, int initY, int initWidth, int initHeight, String imagePath) {
 		this(initX, initY, initWidth, initHeight);
@@ -30,6 +32,8 @@ public abstract class Sprite {
 		destroyed = false;
 		img = null;
 		interactionHandler = null;
+		moveDir = Direction.NONE;
+		moveDistance = 0;
 	}
 	
 	public boolean isDestroyed() {
@@ -78,11 +82,29 @@ public abstract class Sprite {
 		return new Rectangle(posX - (width / 2), posY - (height / 2), width, height);
 	}
 	
-	public void move(Direction dir, int distance) {
+	/**
+	 * Set the direction and distance that this Sprite will move this
+	 * frame.
+	 */
+	public void setMove(Direction dir, int distance) {
+		moveDir = dir;
+		moveDistance = distance;
+	}
+	
+	/**
+	 * Move the Sprite according to the direction and distance set in
+	 * {@link #setMove(Direction, int)}. This method should only be
+	 * called by the game engine.
+	 */
+	public void move() {
+		if (moveDir == Direction.NONE) {
+			return;
+		}
+		
 		int lastPosX = posX;
 		int lastPosY = posY;
 		
-		tempMove(dir, distance);
+		tempMove(moveDir, moveDistance);
 		
 		EventManager collisionManager = GameEngine.getGameEngine().getEventManager();
 		boolean collision = collisionManager.testAndAddCollisions(this);
@@ -90,9 +112,9 @@ public abstract class Sprite {
 			posX = lastPosX;
 			posY = lastPosY;
 			
-			List<Direction> componentDirs = DirectionUtils.getComponentDirections(dir);
+			List<Direction> componentDirs = DirectionUtils.getComponentDirections(moveDir);
 			for (Direction componentDir : componentDirs) {
-				tempMove(componentDir, distance);
+				tempMove(componentDir, moveDistance);
 				collision = collisionManager.testAndAddCollisions(this);
 				if (collision) {
 					posX = lastPosX;
@@ -103,6 +125,9 @@ public abstract class Sprite {
 				}
 			}
 		}
+		
+		moveDir = Direction.NONE;
+		moveDistance = 0;
 	}
 	
 	public Set<Sprite> getCollisionSet(List<Sprite> spriteList) {
@@ -116,7 +141,7 @@ public abstract class Sprite {
 		return collisionSet;
 	}
 		
-	public void tempMove(Direction dir, int distance) {
+	private void tempMove(Direction dir, int distance) {
 		if (dir == Direction.LEFT || dir == Direction.UP_LEFT
 				|| dir == Direction.DOWN_LEFT) {
 			posX -= distance;

@@ -33,8 +33,8 @@ public abstract class MovingAnimatedSprite extends AnimatedSprite {
 	}
 	
 	@Override
-	public void move(Direction dir, int distance) {
-		super.move(dir, distance);
+	public void setMove(Direction dir, int distance) {
+		super.setMove(dir, distance);
 		moveDir = dir;
 	}
 	

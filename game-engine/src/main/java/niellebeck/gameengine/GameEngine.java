@@ -210,6 +210,11 @@ public class GameEngine {
 				sprite.update(keyboard);
 			}
 			
+			// Move Sprites
+			for (Sprite sprite : sprites) {
+				sprite.move();
+			}
+			
 			// Process the different kinds of events.
 			eventManager.processCollisions();
 			eventManager.processProximityEvents();

@@ -80,7 +80,7 @@ public class PlayerCharacter extends MovingAnimatedSprite {
 		}
 		
 		if (moveDir != Direction.NONE) {
-			move(moveDir, moveSpeed);
+			setMove(moveDir, moveSpeed);
 		}
 		
 		setFlickering(invulnerable);
