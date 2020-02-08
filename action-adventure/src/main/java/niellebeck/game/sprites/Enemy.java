@@ -43,7 +43,7 @@ public class Enemy extends Sprite {
 			}
 		}
 		
-		this.move(currentDir, SPEED);
+		this.setMove(currentDir, SPEED);
 		
 		attackCounter++;
 		if (attackCounter >= ATTACK_INTERVAL) {
