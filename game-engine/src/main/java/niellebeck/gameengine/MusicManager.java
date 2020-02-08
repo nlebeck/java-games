@@ -36,7 +36,8 @@ public class MusicManager {
 			AudioInputStream audioStream = AudioSystem.getAudioInputStream(stream);
 			Clip clip = AudioSystem.getClip();
 			clip.open(audioStream);
-			clip.start();
+			clip.setLoopPoints(0, -1);
+			clip.loop(Clip.LOOP_CONTINUOUSLY);
 		} catch (IOException e) {
 			Logger.info("I/O exception when opening music file: " + e);
 		} catch (UnsupportedAudioFileException e) {
