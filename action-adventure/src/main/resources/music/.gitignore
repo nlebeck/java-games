@@ -1,0 +1,4 @@
+# For now, I'm going to store music files separately from the Git repo,
+# since I'm not sure how to best store large media files in a Git project.
+
+*.wav

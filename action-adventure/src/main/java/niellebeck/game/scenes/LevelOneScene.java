@@ -27,6 +27,8 @@ public class LevelOneScene extends GameScene {
 	public void init() {
 		MyGameLogic myGameLogic = (MyGameLogic)getGameEngine().getGameLogic();
 		
+		getGameEngine().getMusicManager().changeMusicTrack("/music/riff_A.wav");
+		
 		NPC npc = new NPC(80, 350);
 		NPC anotherNpc = new NPC(500, 250);
 		door = new Door(320, 60);

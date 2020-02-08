@@ -25,6 +25,8 @@ public class GameEngine {
 	Tilemap tilemap;
 	List<Overlay> overlays;
 	
+	private MusicManager musicManager;
+	
 	public static GameEngine getGameEngine() {
 		if (singleton == null) {
 			throw new RuntimeException("The GameEngine has not yet been created.");
@@ -51,6 +53,8 @@ public class GameEngine {
 		overlays = new ArrayList<Overlay>();
 		
 		menu = new Menu();
+		
+		musicManager = new MusicManager();
 	}
 	
 	private void initGameLogic(GameLogic gameLogic) {
@@ -76,6 +80,10 @@ public class GameEngine {
 	
 	public GameLogic getGameLogic() {
 		return gameLogic;
+	}
+	
+	public MusicManager getMusicManager() {
+		return musicManager;
 	}
 	
 	public void addOverlay(Overlay overlay) {
