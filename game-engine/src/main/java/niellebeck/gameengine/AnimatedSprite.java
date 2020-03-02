@@ -33,7 +33,13 @@ public abstract class AnimatedSprite extends Sprite {
 			}
 		}
 		
-		img = animation.animate();
+		if (animation == null) {
+			Logger.warning("A Sprite's current animation is null");
+			img = null;
+		}
+		else {
+			img = animation.animate();
+		}
 		
 		if (isFlickering) {
 			if (flickerCounter % 2 == 0) {

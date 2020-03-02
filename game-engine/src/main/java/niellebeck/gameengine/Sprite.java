@@ -73,7 +73,12 @@ public abstract class Sprite {
 	}
 	
 	public void draw(Graphics g, int cameraX, int cameraY) {
-		if (img != null) {
+		if (img == null) {
+			Logger.warning("A Sprite's current image is null");
+			g.setColor(java.awt.Color.RED);
+			g.drawRect(posX - (width / 2) - cameraX, posY - (height / 2) - cameraY, width, height);
+		}
+		else {
 			g.drawImage(img, posX - (width / 2) - cameraX, posY - (height / 2) - cameraY, width, height, null);
 		}
 	}
