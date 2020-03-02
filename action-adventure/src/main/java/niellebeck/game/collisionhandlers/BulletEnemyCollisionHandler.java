@@ -12,6 +12,6 @@ public class BulletEnemyCollisionHandler extends ClassPairCollisionHandler<Bulle
 	@Override
 	public void handleEvent(Bullet bullet, Enemy enemy) {
 		bullet.destroy();
-		enemy.destroy();
+		enemy.damage(bullet);
 	}
 }
