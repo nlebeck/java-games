@@ -33,16 +33,14 @@ public abstract class MovingAnimatedSprite extends AnimatedSprite {
 	}
 	
 	@Override
-	public void setMove(Direction dir, int distance) {
-		super.setMove(dir, distance);
-		moveDir = dir;
-	}
-	
-	@Override
 	public void animate() {
+		Direction moveDir = Direction.NONE;
+		MoveBehavior moveBehavior = getActiveMoveBehavior();
+		if (moveBehavior != null && moveBehavior.shouldAnimate()) {
+			moveDir = moveBehavior.getMoveDirection();
+		}
 		setMovingAnimation(moveDir);
 		super.animate();
-		moveDir = Direction.NONE;
 	}
 	
 	public void overrideAnimation(Animation animation) {

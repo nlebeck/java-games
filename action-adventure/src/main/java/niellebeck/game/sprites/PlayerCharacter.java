@@ -1,6 +1,8 @@
 package niellebeck.game.sprites;
 
 import niellebeck.game.MyGameLogic;
+import niellebeck.game.sprites.movebehaviors.ConstantMoveBehavior;
+import niellebeck.game.sprites.movebehaviors.KeyboardMoveBehavior;
 import niellebeck.gameengine.Animation;
 import niellebeck.gameengine.Direction;
 import niellebeck.gameengine.DirectionUtils;
@@ -32,13 +34,13 @@ public class PlayerCharacter extends MovingAnimatedSprite {
 	
 	private int invulnerableTimer;
 	private boolean invulnerable;
-	private Direction hitDir;
 	
 	public PlayerCharacter(int initX, int initY) {
 		super(initX, initY, PLAYER_WIDTH, PLAYER_HEIGHT);
 		invulnerableTimer = INVULNERABLE_TIME;
 		invulnerable = false;
-		hitDir = Direction.NONE;
+		
+		setStaticMoveBehavior(new KeyboardMoveBehavior(SPEED));
 		
 		Animation leftRightAnimation = new Animation(5,
 				"/sprites/stickfigure/standing.png",
@@ -64,23 +66,12 @@ public class PlayerCharacter extends MovingAnimatedSprite {
 	
 	@Override
 	public void update(KeyboardInput keyboard) {
-		Direction moveDir = keyboard.getArrowKeyDirection();
-		int moveSpeed = SPEED;
-		
 		if (invulnerable) {
 			invulnerableTimer--;
 			if (invulnerableTimer <= 0) {
 				invulnerable = false;
 				invulnerableTimer = INVULNERABLE_TIME;
 			}
-			else if (invulnerableTimer >= INVULNERABLE_TIME - RECOIL_TIME) {
-				moveDir = hitDir;
-				moveSpeed = RECOIL_SPEED;
-			}
-		}
-		
-		if (moveDir != Direction.NONE) {
-			setMove(moveDir, moveSpeed);
 		}
 		
 		setFlickering(invulnerable);
@@ -116,7 +107,8 @@ public class PlayerCharacter extends MovingAnimatedSprite {
 			MyGameLogic gameLogic = (MyGameLogic)GameEngine.getGameEngine().getGameLogic();
 			gameLogic.damagePlayer();
 			invulnerable = true;
-			hitDir = DirectionUtils.getDirectionBetween(hitter, this, true);
+			Direction hitDir = DirectionUtils.getDirectionBetween(hitter, this, true);
+			this.setTimedMoveBehavior(new ConstantMoveBehavior(hitDir, RECOIL_SPEED, RECOIL_TIME));
 		}
 	}
 }

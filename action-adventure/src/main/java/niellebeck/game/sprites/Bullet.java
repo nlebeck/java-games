@@ -3,6 +3,7 @@ package niellebeck.game.sprites;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import niellebeck.game.sprites.movebehaviors.ConstantMoveBehavior;
 import niellebeck.gameengine.Direction;
 import niellebeck.gameengine.KeyboardInput;
 import niellebeck.gameengine.Sprite;
@@ -22,6 +23,8 @@ public class Bullet extends Sprite {
 		this.dir = initDir;
 		this.startingX = initX;
 		this.startingY = initY;
+		
+		this.setStaticMoveBehavior(new ConstantMoveBehavior(initDir, SPEED));
 	}
 	
 	@Override
@@ -36,7 +39,6 @@ public class Bullet extends Sprite {
 	
 	@Override
 	public void update(KeyboardInput keyboard) {
-		this.setMove(dir, SPEED);
 		if (Math.abs(this.posX - this.startingX) > MAX_DISTANCE || Math.abs(this.posY - this.startingY) > MAX_DISTANCE) {
 			this.destroy();
 		}

@@ -3,6 +3,8 @@ package niellebeck.game.sprites;
 import java.util.Random;
 
 import niellebeck.gameengine.GameEngine;
+import niellebeck.game.sprites.movebehaviors.ConstantMoveBehavior;
+import niellebeck.game.sprites.movebehaviors.RandomMoveBehavior;
 import niellebeck.gameengine.AnimatedSprite;
 import niellebeck.gameengine.Animation;
 import niellebeck.gameengine.Direction;
@@ -15,74 +17,45 @@ public class Enemy extends AnimatedSprite {
 	private static final int ATTACK_INTERVAL = 100;
 	private static final int MAX_HP = 3;
 	
-	// TODO: Cut down on duplicated code with PlayerCharacter
 	private static final int INVULNERABLE_TIME = 30;
 	private static final int RECOIL_TIME = 5;
 	private static final int RECOIL_SPEED = 8;
 	
 	private Random random;
-	private Direction currentDir;
-	private int movementTime;
-	private int movementDuration;
 	private int attackCounter;
 	private int hp;
 	
 	private static final String ENEMY_IMAGE = "/sprites/enemy/enemy.png";
 	
-	// TODO: Cut down on duplicated code with PlayerCharacter
+	// TODO: Cut down on duplicated code with PlayerCharacter?
 	private int invulnerableTimer;
 	private boolean invulnerable;
-	private Direction hitDir;
 	
 	public Enemy(int initX, int initY) {
 		super(initX, initY, 40, 40);
 		
 		random = new Random();
-		currentDir = Direction.NONE;
-		movementTime = 0;
-		movementDuration = 60;
 		attackCounter = random.nextInt(ATTACK_INTERVAL);
 		hp = MAX_HP;
 		
 		invulnerableTimer = INVULNERABLE_TIME;
 		invulnerable = false;
-		hitDir = Direction.NONE;
+		
+		setStaticMoveBehavior(new RandomMoveBehavior(SPEED));
 		
 		setAnimation(new Animation(1, ENEMY_IMAGE));
 	}
 	
 	@Override
 	public void update(KeyboardInput keyboard) {
-		movementTime += 1;
-		if (movementTime >= movementDuration) {
-			movementTime = 0;
-			movementDuration = random.nextInt(60) + 60;
-			
-			if (currentDir == Direction.NONE) {
-				currentDir = DirectionUtils.getRandomCardinalDirection();
-			}
-			else {
-				currentDir = Direction.NONE;
-			}
-		}
-		
-		Direction moveDir = currentDir;
-		int moveSpeed = SPEED;
-		
-		// TODO: Cut down on duplicated code with PlayerCharacter
+		// TODO: Cut down on duplicated code with PlayerCharacter?
 		if (invulnerable) {
 			invulnerableTimer--;
 			if (invulnerableTimer <= 0) {
 				invulnerable = false;
 				invulnerableTimer = INVULNERABLE_TIME;
 			}
-			else if (invulnerableTimer >= INVULNERABLE_TIME - RECOIL_TIME) {
-				moveDir = hitDir;
-				moveSpeed = RECOIL_SPEED;
-			}
 		}
-		
-		this.setMove(moveDir, moveSpeed);
 		
 		attackCounter++;
 		if (attackCounter >= ATTACK_INTERVAL) {
@@ -115,9 +88,9 @@ public class Enemy extends AnimatedSprite {
 				this.destroy();
 			}
 			
-			// TODO: Cut down on duplicated code with PlayerCharacter
 			invulnerable = true;
-			hitDir = DirectionUtils.getDirectionBetween(hitter, this, true);
+			Direction hitDir = DirectionUtils.getDirectionBetween(hitter, this, true);
+			this.setTimedMoveBehavior(new ConstantMoveBehavior(hitDir, RECOIL_SPEED, RECOIL_TIME));
 		}
 	}
 	

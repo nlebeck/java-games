@@ -16,8 +16,9 @@ public abstract class Sprite {
 	protected Image img;
 	
 	private InteractionHandler interactionHandler;
-	private Direction moveDir;
-	private int moveDistance;
+	
+	private MoveBehavior staticMoveBehavior;
+	private TimedMoveBehavior timedMoveBehavior;
 		
 	public Sprite(int initX, int initY, int initWidth, int initHeight, String imagePath) {
 		this(initX, initY, initWidth, initHeight);
@@ -32,8 +33,9 @@ public abstract class Sprite {
 		destroyed = false;
 		img = null;
 		interactionHandler = null;
-		moveDir = Direction.NONE;
-		moveDistance = 0;
+		
+		staticMoveBehavior = null;
+		timedMoveBehavior = null;
 	}
 	
 	public boolean isDestroyed() {
@@ -87,21 +89,54 @@ public abstract class Sprite {
 		return new Rectangle(posX - (width / 2), posY - (height / 2), width, height);
 	}
 	
-	/**
-	 * Set the direction and distance that this Sprite will move this
-	 * frame.
-	 */
-	public void setMove(Direction dir, int distance) {
-		moveDir = dir;
-		moveDistance = distance;
+	public void setStaticMoveBehavior(MoveBehavior mb) {
+		staticMoveBehavior = mb;
+	}
+	
+	public MoveBehavior getStaticMoveBehavior() {
+		return staticMoveBehavior;
+	}
+	
+	public void setTimedMoveBehavior(TimedMoveBehavior tmb) {
+		timedMoveBehavior = tmb;
+	}
+	
+	public MoveBehavior getTimedMoveBehavior() {
+		return timedMoveBehavior;
+	}
+	
+	public MoveBehavior getActiveMoveBehavior() {
+		if (timedMoveBehavior != null && !timedMoveBehavior.isDone()) {
+			return timedMoveBehavior;
+		}
+		return staticMoveBehavior;
 	}
 	
 	/**
-	 * Move the Sprite according to the direction and distance set in
-	 * {@link #setMove(Direction, int)}. This method should only be
-	 * called by the game engine.
+	 * Move the Sprite according to the direction and distance
+	 * specified by its MoveBehavior. If this Sprite has both a timed
+	 * and a static MoveBehavior, the timed MoveBehavior takes
+	 * precedence. This method should only be called by the game
+	 * engine.
 	 */
 	public void move() {
+		Direction moveDir = Direction.NONE;
+		int moveDistance = 0;
+		MoveBehavior activeMoveBehavior = staticMoveBehavior;
+		if (timedMoveBehavior != null) {
+			if (timedMoveBehavior.isDone()) {
+				timedMoveBehavior = null;
+			}
+			else {
+				activeMoveBehavior = timedMoveBehavior;
+			}
+		}
+		
+		if (activeMoveBehavior != null) {
+			moveDir = activeMoveBehavior.getMoveDirection();
+			moveDistance = activeMoveBehavior.getMoveDistance();
+		}
+		
 		if (moveDir == Direction.NONE) {
 			return;
 		}

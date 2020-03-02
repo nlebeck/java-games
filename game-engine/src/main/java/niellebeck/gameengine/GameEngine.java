@@ -218,6 +218,16 @@ public class GameEngine {
 				sprite.update(keyboard);
 			}
 			
+			// Call Sprite MoveBehaviors' update methods.
+			for (Sprite sprite : sprites) {
+				if (sprite.getTimedMoveBehavior() != null) {
+					sprite.getTimedMoveBehavior().update(keyboard);
+				}
+				if (sprite.getStaticMoveBehavior() != null) {
+					sprite.getStaticMoveBehavior().update(keyboard);
+				}
+			}
+			
 			// Move Sprites
 			for (Sprite sprite : sprites) {
 				sprite.move();
