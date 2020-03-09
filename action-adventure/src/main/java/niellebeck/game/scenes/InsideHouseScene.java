@@ -8,61 +8,37 @@ import niellebeck.gameengine.KeyboardInput;
 import niellebeck.gameengine.Sprite;
 import niellebeck.gameengine.Tilemap;
 
-public class LevelTwoScene extends GameScene {
+public class InsideHouseScene extends GameScene {
 
 	private PlayerCharacter playerChar;
 	private Door door;
-	private Door houseDoor;
-	
-	private boolean comingFromHouse;
-	
-	public LevelTwoScene(boolean comingFromHouse) {
-		this.comingFromHouse = comingFromHouse;
-	}
 	
 	@Override
 	public void init() {
-		door = new Door(300, 300);
-		houseDoor = new Door(120, 140);
-		if (comingFromHouse) {
-			playerChar = new PlayerCharacter(120, 180);
-		}
-		else {
-			playerChar = new PlayerCharacter(300, 260);
-		}
+		playerChar = new PlayerCharacter(200, 340);
+		door = new Door(200, 380);
 		
 		getGameEngine().addSprite(playerChar);
 		getGameEngine().addSprite(door);
-		getGameEngine().addSprite(houseDoor);
 		
 		door.setInteractionHandler(new InteractionHandler() {
+
 			@Override
 			public void interact() {
-				getGameEngine().changeScene(new LevelOneScene());
+				getGameEngine().changeScene(new LevelTwoScene(true));
 			}
-			
+
 			@Override
 			public String getInteractionMessage() {
-				return "enter door";
-			}
-		});
-		
-		houseDoor.setInteractionHandler(new InteractionHandler() {
-			@Override
-			public void interact() {
-				getGameEngine().changeScene(new InsideHouseScene());
+				return "go outside";
 			}
 			
-			@Override
-			public String getInteractionMessage() {
-				return "enter house";
-			}
 		});
 	}
 
 	@Override
 	public Tilemap getTilemap() {
-		return new Tilemap("/tilemap_level_two.txt");
+		return new Tilemap("/tilemap_inside_house.txt");
 	}
 
 	@Override
@@ -74,7 +50,7 @@ public class LevelTwoScene extends GameScene {
 	public Sprite getPlayerCharacter() {
 		return playerChar;
 	}
-	
+
 	@Override
 	public int getPlayerCharacterSpeed() {
 		return PlayerCharacter.SPEED;

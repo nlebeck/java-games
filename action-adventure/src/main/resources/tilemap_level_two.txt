@@ -1,12 +1,16 @@
-tilemap 9 16 4 40 .png
+tilemap 9 16 8 40 .png
 0 /tiles/space.png
 1 /tiles/grass.png
 2 /tiles/rock.png collidable
 3 /tiles/empty.png
+4 /tiles/house-bottom-left.png collidable
+5 /tiles/house-bottom-right.png collidable
+6 /tiles/house-top-left.png collidable
+7 /tiles/house-top-right.png collidable
 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2
-2 0 0 0 0 1 0 0 0 0 0 0 0 1 0 2
-2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2
+2 0 6 7 0 1 0 0 0 0 0 0 0 1 0 2
+2 0 4 5 0 0 0 0 0 0 0 0 0 0 0 2
 2 0 0 0 0 0 0 0 0 0 2 2 2 2 2 2
 2 0 0 0 0 0 0 1 0 0 2 3 3 3 3 3
 2 0 1 0 0 0 0 0 0 0 2 3 3 3 3 3

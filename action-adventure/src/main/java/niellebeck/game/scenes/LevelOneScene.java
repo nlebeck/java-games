@@ -98,7 +98,7 @@ public class LevelOneScene extends GameScene {
 
 			@Override
 			public void interact() {
-				getGameEngine().changeScene(new LevelTwoScene());
+				getGameEngine().changeScene(new LevelTwoScene(false));
 			}
 
 			@Override
