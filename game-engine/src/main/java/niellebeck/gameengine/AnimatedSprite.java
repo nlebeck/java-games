@@ -34,7 +34,7 @@ public abstract class AnimatedSprite extends Sprite {
 		}
 		
 		if (animation == null) {
-			Logger.warning("A Sprite's current animation is null");
+			Logger.warning("An AnimatedSprite's current animation is null");
 			img = null;
 		}
 		else {

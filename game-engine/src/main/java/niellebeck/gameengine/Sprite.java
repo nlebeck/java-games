@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Set;
 
 public abstract class Sprite {
+	
+	private static final boolean HIGHLIGHT_INVISIBLE_SPRITES = false;
+	
 	protected int posX; //x- and y-coordinates of the center of the sprite
 	protected int posY;
 	protected boolean destroyed;
@@ -76,9 +79,10 @@ public abstract class Sprite {
 	
 	public void draw(Graphics g, int cameraX, int cameraY) {
 		if (img == null) {
-			Logger.warning("A Sprite's current image is null");
-			g.setColor(java.awt.Color.RED);
-			g.drawRect(posX - (width / 2) - cameraX, posY - (height / 2) - cameraY, width, height);
+			if (HIGHLIGHT_INVISIBLE_SPRITES) {
+				g.setColor(java.awt.Color.RED);
+				g.drawRect(posX - (width / 2) - cameraX, posY - (height / 2) - cameraY, width, height);
+			}
 		}
 		else {
 			g.drawImage(img, posX - (width / 2) - cameraX, posY - (height / 2) - cameraY, width, height, null);

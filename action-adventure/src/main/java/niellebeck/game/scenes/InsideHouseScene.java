@@ -1,6 +1,7 @@
 package niellebeck.game.scenes;
 
 import niellebeck.game.sprites.Door;
+import niellebeck.game.sprites.InvisibleDoor;
 import niellebeck.game.sprites.PlayerCharacter;
 import niellebeck.gameengine.GameScene;
 import niellebeck.gameengine.InteractionHandler;
@@ -11,12 +12,12 @@ import niellebeck.gameengine.Tilemap;
 public class InsideHouseScene extends GameScene {
 
 	private PlayerCharacter playerChar;
-	private Door door;
+	private InvisibleDoor door;
 	
 	@Override
 	public void init() {
 		playerChar = new PlayerCharacter(200, 340);
-		door = new Door(200, 380);
+		door = new InvisibleDoor(200, 380);
 		
 		getGameEngine().addSprite(playerChar);
 		getGameEngine().addSprite(door);

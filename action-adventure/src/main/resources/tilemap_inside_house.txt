@@ -1,6 +1,7 @@
-tilemap 10 10 2 40 .png
+tilemap 10 10 3 40 .png
 0 /tiles/wood-floor.png
 1 /tiles/wood-wall.png collidable
+2 /tiles/doormat.png
 1 1 1 1 1 1 1 1 1 1
 1 0 0 0 0 0 0 0 0 1
 1 0 0 0 0 0 0 0 0 1
@@ -9,5 +10,5 @@ tilemap 10 10 2 40 .png
 1 0 0 0 0 0 0 0 0 1
 1 0 0 0 0 0 0 0 0 1
 1 0 0 0 0 0 0 0 0 1
-1 0 0 0 0 0 0 0 0 1
+1 0 0 0 2 2 0 0 0 1
 1 1 1 1 1 1 1 1 1 1
