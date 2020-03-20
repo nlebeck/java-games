@@ -53,20 +53,7 @@ how high- or low-level that functionality should be, so I'm hoping that as I
 add more functionality to the game, I'll get a better sense for what should go
 where.
 
-3. *Rethinking the Sprite class organization.* When I initially came up with
-the Sprite class organization described below, I was inspired by the
-object-oriented programming I had learned growing up, when Java was the hot new
-programming language and inheritance was the law of the land. Now, it seems
-like the consensus is that composition is superior to inheritance in most
-circumstances. Once my game has more Sprites, I'd like to take a step back and
-think about whether and how to change the Sprite class organization. Is it
-better to switch from an inheritance-based system to a composition-based
-system? Is it fine to continue using the concrete Sprite subclasses as
-essentially tags for collision-handling? Can I just push enough functionality
-into the game engine and have the actual Sprite subclasses be so small that it
-doesn't really matter how they're organized?
-
-4. *Thinking about `GameLogic` and `GameScene` organization.* Right now, if
+3. *Thinking about `GameLogic` and `GameScene` organization.* Right now, if
 you have logic that accesses the current `GameScene` inside of a component that
 is reusable across multiple scenes (e.g., a collision handler or a sprite's
 `update()` method), you need to get the `GameScene` and then cast it to the
@@ -100,9 +87,32 @@ handlers invoke.
 For now, I'm going to try to stick to only implementing the `update()`
 method in concrete bottom-level classes and including any common update
 functionality in separate methods, in order to make it easier to reason about
-what's happening in a given bottom-level class's update method. If this
-principle seems to work well, maybe I'll promote it to being a bullet in the
-list above.
+what's happening in a given bottom-level class's update method. Also, now that
+`Behaviors` (described below) exist, I'm hoping to keep the `Sprite` class
+hierarchy pretty shallow and use `Sprite` methods mainly to manage the
+interaction between different `Behaviors`. Once I have a better sense for how
+well `Behaviors` work, I might revise the principles above or add bullets.
+
+## Behaviors and MoveBehaviors
+
+As I implemented more game logic, I started to realize that without some
+mechanism for re-using logic across different `Sprites`, there would either be
+an unwieldy `Sprite` class hierarchy or a lot of duplicated code. As a result,
+`Sprites` now contain `Behavior` and `MoveBehavior` objects. A `Behavior` is a
+little package of private state and update logic. The game engine defines an
+`update()` method for each `Behavior` and takes care of calling that method
+every frame. If multiple `Behaviors` need to interact, code for that
+interaction can go in the `Sprite`'s own `update()` method or other methods.
+The idea is that `Sprite` code will now be used mainly to manage the
+interaction between `Behaviors`.
+
+`MoveBehaviors` are a special kind of `Behavior` that determine a `Sprite`'s
+movement distance and direction each frame. Both `Behaviors` and
+`MoveBehaviors` have timed variants that the game engine will stop updating
+once they are done.
+
+This design is definitely experimental, and as I implement more different
+kinds of Sprites and game functionality, I'll see how well it works.
 
 ## GameLogic and GameScenes
 
