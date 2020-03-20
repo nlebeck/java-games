@@ -8,6 +8,24 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * An object in the game world.
+ * <p>
+ * A Sprite can specify its update logic using reusable components
+ * called Behaviors. Each Sprite supports any number of Behaviors and
+ * TimedBehaviors at any time. Once the Sprite registers its Behaviors
+ * with {@link #addBehavior(Behavior)} and
+ * {@link #addTimedBehavior(TimedBehavior)}, the game engine takes care
+ * of calling their update methods each frame.
+ * <p>
+ * Sprites also support special Behaviors called MoveBehaviors, which
+ * specify the distance and direction of the Sprite's movement each
+ * frame. Each Sprite has at most one MoveBehavior and one
+ * TimedMoveBehavior at once. If it has both, the TimedMoveBehavior
+ * takes precedence. Sprites register MoveBehaviors with
+ * {@link #setStaticMoveBehavior(MoveBehavior)} and
+ * {@link #setTimedMoveBehavior(TimedMoveBehavior)}.
+ */
 public abstract class Sprite {
 	
 	private static final boolean HIGHLIGHT_INVISIBLE_SPRITES = false;
