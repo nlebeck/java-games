@@ -3,6 +3,8 @@ package niellebeck.game.sprites;
 import java.util.Random;
 
 import niellebeck.gameengine.GameEngine;
+import niellebeck.game.sprites.behaviors.HpBehavior;
+import niellebeck.game.sprites.behaviors.Timer;
 import niellebeck.game.sprites.movebehaviors.ConstantMoveBehavior;
 import niellebeck.game.sprites.movebehaviors.RandomMoveBehavior;
 import niellebeck.gameengine.AnimatedSprite;
@@ -23,38 +25,32 @@ public class Enemy extends AnimatedSprite {
 	
 	private Random random;
 	private int attackCounter;
-	private int hp;
+	
+	private HpBehavior hpBehavior;
+	private Timer invulnerableTimer;
 	
 	private static final String ENEMY_IMAGE = "/sprites/enemy/enemy.png";
-	
-	// TODO: Cut down on duplicated code with PlayerCharacter?
-	private int invulnerableTimer;
-	private boolean invulnerable;
 	
 	public Enemy(int initX, int initY) {
 		super(initX, initY, 40, 40);
 		
 		random = new Random();
 		attackCounter = random.nextInt(ATTACK_INTERVAL);
-		hp = MAX_HP;
-		
-		invulnerableTimer = INVULNERABLE_TIME;
-		invulnerable = false;
 		
 		setStaticMoveBehavior(new RandomMoveBehavior(SPEED));
+		
+		hpBehavior = new HpBehavior(MAX_HP);
+		addBehavior(hpBehavior);
+		
+		invulnerableTimer = null;
 		
 		setAnimation(new Animation(1, ENEMY_IMAGE));
 	}
 	
 	@Override
 	public void update(KeyboardInput keyboard) {
-		// TODO: Cut down on duplicated code with PlayerCharacter?
-		if (invulnerable) {
-			invulnerableTimer--;
-			if (invulnerableTimer <= 0) {
-				invulnerable = false;
-				invulnerableTimer = INVULNERABLE_TIME;
-			}
+		if (invulnerableTimer != null && invulnerableTimer.isDone()) {
+			invulnerableTimer = null;
 		}
 		
 		attackCounter++;
@@ -63,7 +59,7 @@ public class Enemy extends AnimatedSprite {
 			attack();
 		}
 		
-		setFlickering(invulnerable);
+		setFlickering(invulnerableTimer != null);
 		animate();
 	}
 	
@@ -82,13 +78,15 @@ public class Enemy extends AnimatedSprite {
 	}
 	
 	public void damage(Sprite hitter) {
-		if (!invulnerable) {
-			hp -= 1;
-			if (hp <= 0) {
+		if (invulnerableTimer == null) {
+			hpBehavior.damage(1);
+			if (hpBehavior.isDead()) {
 				this.destroy();
 			}
 			
-			invulnerable = true;
+			invulnerableTimer = new Timer(INVULNERABLE_TIME);
+			addTimedBehavior(invulnerableTimer);
+			
 			Direction hitDir = DirectionUtils.getDirectionBetween(hitter, this, true);
 			this.setTimedMoveBehavior(new ConstantMoveBehavior(hitDir, RECOIL_SPEED, RECOIL_TIME));
 		}

@@ -228,6 +228,11 @@ public class GameEngine {
 				}
 			}
 			
+			// Update Sprite Behaviors
+			for (Sprite sprite : sprites) {
+				sprite.updateBehaviors(keyboard);
+			}
+			
 			// Move Sprites
 			for (Sprite sprite : sprites) {
 				sprite.move();

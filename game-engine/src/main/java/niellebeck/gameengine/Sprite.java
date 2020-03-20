@@ -3,6 +3,7 @@ package niellebeck.gameengine;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +23,9 @@ public abstract class Sprite {
 	
 	private MoveBehavior staticMoveBehavior;
 	private TimedMoveBehavior timedMoveBehavior;
+	
+	private List<Behavior> behaviors;
+	private List<TimedBehavior> timedBehaviors;
 		
 	public Sprite(int initX, int initY, int initWidth, int initHeight, String imagePath) {
 		this(initX, initY, initWidth, initHeight);
@@ -39,6 +43,9 @@ public abstract class Sprite {
 		
 		staticMoveBehavior = null;
 		timedMoveBehavior = null;
+		
+		behaviors = new ArrayList<Behavior>();
+		timedBehaviors = new ArrayList<TimedBehavior>();
 	}
 	
 	public boolean isDestroyed() {
@@ -114,6 +121,31 @@ public abstract class Sprite {
 			return timedMoveBehavior;
 		}
 		return staticMoveBehavior;
+	}
+	
+	public void updateBehaviors(KeyboardInput keyboard) {
+		for (Behavior behavior : behaviors) {
+			behavior.update(keyboard);
+		}
+		
+		List<TimedBehavior> removeList = new ArrayList<TimedBehavior>();
+		for (TimedBehavior timedBehavior : timedBehaviors) {
+			timedBehavior.update(keyboard);
+			if (timedBehavior.isDone()) {
+				removeList.add(timedBehavior);
+			}
+		}
+		for (TimedBehavior timedBehavior : removeList) {
+			timedBehaviors.remove(timedBehavior);
+		}
+	}
+	
+	public void addBehavior(Behavior behavior) {
+		behaviors.add(behavior);
+	}
+	
+	public void addTimedBehavior(TimedBehavior timedBehavior) {
+		timedBehaviors.add(timedBehavior);
 	}
 	
 	/**

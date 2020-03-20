@@ -1,6 +1,7 @@
 package niellebeck.game.sprites;
 
 import niellebeck.game.MyGameLogic;
+import niellebeck.game.sprites.behaviors.Timer;
 import niellebeck.game.sprites.movebehaviors.ConstantMoveBehavior;
 import niellebeck.game.sprites.movebehaviors.KeyboardMoveBehavior;
 import niellebeck.gameengine.Animation;
@@ -12,6 +13,7 @@ import niellebeck.gameengine.Logger;
 import niellebeck.gameengine.MovingAnimatedSprite;
 import niellebeck.gameengine.Sprite;
 import niellebeck.gameengine.TimedAnimation;
+import niellebeck.gameengine.TimedBehavior;
 
 public class PlayerCharacter extends MovingAnimatedSprite {
 	
@@ -32,15 +34,14 @@ public class PlayerCharacter extends MovingAnimatedSprite {
 	private final TimedAnimation shootingUpAnimation;
 	private final TimedAnimation shootingDownAnimation;
 	
-	private int invulnerableTimer;
-	private boolean invulnerable;
+	private TimedBehavior invulnerableTimer;
 	
 	public PlayerCharacter(int initX, int initY) {
 		super(initX, initY, PLAYER_WIDTH, PLAYER_HEIGHT);
-		invulnerableTimer = INVULNERABLE_TIME;
-		invulnerable = false;
 		
 		setStaticMoveBehavior(new KeyboardMoveBehavior(SPEED));
+		
+		invulnerableTimer = null;
 		
 		Animation leftRightAnimation = new Animation(5,
 				"/sprites/stickfigure/standing.png",
@@ -66,15 +67,11 @@ public class PlayerCharacter extends MovingAnimatedSprite {
 	
 	@Override
 	public void update(KeyboardInput keyboard) {
-		if (invulnerable) {
-			invulnerableTimer--;
-			if (invulnerableTimer <= 0) {
-				invulnerable = false;
-				invulnerableTimer = INVULNERABLE_TIME;
-			}
+		if (invulnerableTimer != null && invulnerableTimer.isDone()) {
+			invulnerableTimer = null;
 		}
 		
-		setFlickering(invulnerable);
+		setFlickering(invulnerableTimer != null);
 		animate();
 	}
 	
@@ -103,10 +100,11 @@ public class PlayerCharacter extends MovingAnimatedSprite {
 	public void onCollideTilemap() { }
 	
 	public void onEnemyHit(Sprite hitter) {
-		if (!invulnerable) {
+		if (invulnerableTimer == null) {
 			MyGameLogic gameLogic = (MyGameLogic)GameEngine.getGameEngine().getGameLogic();
 			gameLogic.damagePlayer();
-			invulnerable = true;
+			invulnerableTimer = new Timer(INVULNERABLE_TIME);
+			addTimedBehavior(invulnerableTimer);
 			Direction hitDir = DirectionUtils.getDirectionBetween(hitter, this, true);
 			this.setTimedMoveBehavior(new ConstantMoveBehavior(hitDir, RECOIL_SPEED, RECOIL_TIME));
 		}
