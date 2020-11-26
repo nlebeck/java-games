@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -52,7 +53,7 @@ public class GameEngine {
 		
 		overlays = new ArrayList<Overlay>();
 		
-		menu = new Menu();
+		menu = new Menu(new ArrayList<String>());
 		
 		musicManager = new MusicManager();
 	}
@@ -61,6 +62,10 @@ public class GameEngine {
 		this.gameLogic = gameLogic;
 		this.gameLogic.init();
 		changeScene(this.gameLogic.getFirstScene());
+	}
+	
+	public void setMenu(Menu menu) {
+		this.menu = menu;
 	}
 	
 	public void changeScene(Scene scene) {

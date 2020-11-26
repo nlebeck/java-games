@@ -1,6 +1,7 @@
 package niellebeck.game;
 
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 
 import niellebeck.game.collisionhandlers.BulletBulletCollisionHandler;
 import niellebeck.game.collisionhandlers.BulletDoorCollisionHandler;
@@ -18,6 +19,7 @@ import niellebeck.gameengine.DirectionUtils;
 import niellebeck.gameengine.GameLogic;
 import niellebeck.gameengine.GameScene;
 import niellebeck.gameengine.KeyboardInput;
+import niellebeck.gameengine.Menu;
 import niellebeck.gameengine.Scene;
 
 /**
@@ -44,6 +46,8 @@ public class MyGameLogic extends GameLogic {
 		getGameEngine().registerClassPairCollisionHandler(new BulletPlayerCharacterCollisionHandler());
 		
 		getGameEngine().addOverlay(new HpOverlay());
+		
+		getGameEngine().setMenu(new Menu(Arrays.asList(new String[] {"Status", "Items", "Save"})));
 		
 		playerHp = MAX_PLAYER_HP;
 		levelOneDoorIsOpen = false;

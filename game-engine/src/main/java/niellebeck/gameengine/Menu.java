@@ -10,11 +10,9 @@ public class Menu {
 	List<String> menuItems;
 	int selectedItem;
 	
-	public Menu() {
+	public Menu(List<String> items) {
 		menuItems = new ArrayList<String>();
-		menuItems.add("Status");
-		menuItems.add("Items");
-		menuItems.add("Save");
+		menuItems.addAll(items);
 		selectedItem = 0;
 	}
 	
