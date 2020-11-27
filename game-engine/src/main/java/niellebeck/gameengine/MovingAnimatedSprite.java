@@ -24,12 +24,10 @@ public abstract class MovingAnimatedSprite extends AnimatedSprite {
 	private Animation standingAnimation;
 	
 	private boolean override;
-	private Direction moveDir;
 	
 	public MovingAnimatedSprite(int x, int y, int width, int height) {
 		super(x, y, width, height);
 		override = false;
-		moveDir = Direction.NONE;
 	}
 	
 	@Override

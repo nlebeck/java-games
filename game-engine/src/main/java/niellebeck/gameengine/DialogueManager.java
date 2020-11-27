@@ -16,7 +16,6 @@ public class DialogueManager {
 	private Dialogue currentDialogue = null;
 	private String currentLine = null;
 	private boolean inDialogue = false;
-	private int debugDialogueCounter = 0;
 	
 	public static DialogueManager getInstance() {
 		if (singleton == null) {

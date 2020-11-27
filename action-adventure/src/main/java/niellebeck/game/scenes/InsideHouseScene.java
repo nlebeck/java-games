@@ -1,6 +1,5 @@
 package niellebeck.game.scenes;
 
-import niellebeck.game.sprites.Door;
 import niellebeck.game.sprites.InvisibleDoor;
 import niellebeck.game.sprites.PlayerCharacter;
 import niellebeck.gameengine.GameScene;
