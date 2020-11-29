@@ -2,14 +2,6 @@ package niellebeck.gameengine;
 
 public abstract class GameLogic {
 	/**
-	 * Convenience wrapper for GameEngine.getGameEngine() to cut down
-	 * on code verbosity.
-	 */
-	protected GameEngine getGameEngine() {
-		return GameEngine.getGameEngine();
-	}
-	
-	/**
 	 * The place where a GameLogic subclass should initialize its state
 	 * and register it with the GameEngine. Guaranteed to be called
 	 * after the GameEngine has been created and its state has been

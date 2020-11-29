@@ -1,5 +1,7 @@
 package niellebeck.game.sprites;
 
+import static niellebeck.gameengine.GameEngine.getGameEngine;
+
 import niellebeck.game.MyGameLogic;
 import niellebeck.game.sprites.behaviors.Timer;
 import niellebeck.game.sprites.movebehaviors.ConstantMoveBehavior;
@@ -7,7 +9,6 @@ import niellebeck.game.sprites.movebehaviors.KeyboardMoveBehavior;
 import niellebeck.gameengine.Animation;
 import niellebeck.gameengine.Direction;
 import niellebeck.gameengine.DirectionUtils;
-import niellebeck.gameengine.GameEngine;
 import niellebeck.gameengine.KeyboardInput;
 import niellebeck.gameengine.Logger;
 import niellebeck.gameengine.MovingAnimatedSprite;
@@ -101,7 +102,7 @@ public class PlayerCharacter extends MovingAnimatedSprite {
 	
 	public void onEnemyHit(Sprite hitter) {
 		if (invulnerableTimer == null) {
-			MyGameLogic gameLogic = (MyGameLogic)GameEngine.getGameEngine().getGameLogic();
+			MyGameLogic gameLogic = (MyGameLogic)getGameEngine().getGameLogic();
 			gameLogic.damagePlayer();
 			invulnerableTimer = new Timer(INVULNERABLE_TIME);
 			addTimedBehavior(invulnerableTimer);

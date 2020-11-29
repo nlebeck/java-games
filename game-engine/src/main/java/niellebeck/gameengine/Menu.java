@@ -1,5 +1,7 @@
 package niellebeck.gameengine;
 
+import static niellebeck.gameengine.GameEngine.getGameEngine;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
@@ -35,7 +37,7 @@ public class Menu {
 		
 		@Override
 		public void onSelect() {
-			GameEngine.getGameEngine().pushMenu(childMenu);
+			getGameEngine().pushMenu(childMenu);
 		}
 	}
 	
@@ -69,18 +71,18 @@ public class Menu {
 		if (keyboard.keyPressed(KeyEvent.VK_TAB)) {
 			// Pop the menu stack all the way back to the root menu and return
 			// to the game.
-			while (!GameEngine.getGameEngine().onRootMenu()) {
-				GameEngine.getGameEngine().popMenu();
+			while (!getGameEngine().onRootMenu()) {
+				getGameEngine().popMenu();
 			}
 			nextState = GameState.PLAYING;
 		}
 		else if (keyboard.keyPressed(KeyEvent.VK_BACK_SPACE)) {
 			// Pop the menu stack once, or return to the game if the root menu
 			// is currently active.
-			if (GameEngine.getGameEngine().onRootMenu()) {
+			if (getGameEngine().onRootMenu()) {
 				nextState = GameState.PLAYING;
 			} else {
-				GameEngine.getGameEngine().popMenu();
+				getGameEngine().popMenu();
 			}
 		}
 		else if (keyboard.keyPressed(KeyEvent.VK_UP)) {

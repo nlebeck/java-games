@@ -1,8 +1,9 @@
 package niellebeck.game.sprites;
 
+import static niellebeck.gameengine.GameEngine.getGameEngine;
+
 import java.util.Random;
 
-import niellebeck.gameengine.GameEngine;
 import niellebeck.game.sprites.behaviors.HpBehavior;
 import niellebeck.game.sprites.behaviors.Timer;
 import niellebeck.game.sprites.movebehaviors.ConstantMoveBehavior;
@@ -71,10 +72,10 @@ public class Enemy extends AnimatedSprite {
 		Bullet rightBullet = new Bullet(this.getX() + horizontalOffset, this.getY(), Direction.RIGHT);
 		Bullet topBullet = new Bullet(this.getX(), this.getY() - verticalOffset, Direction.UP);
 		Bullet bottomBullet = new Bullet(this.getX(), this.getY() + verticalOffset, Direction.DOWN);
-		GameEngine.getGameEngine().addSprite(leftBullet);
-		GameEngine.getGameEngine().addSprite(rightBullet);
-		GameEngine.getGameEngine().addSprite(topBullet);
-		GameEngine.getGameEngine().addSprite(bottomBullet);
+		getGameEngine().addSprite(leftBullet);
+		getGameEngine().addSprite(rightBullet);
+		getGameEngine().addSprite(topBullet);
+		getGameEngine().addSprite(bottomBullet);
 	}
 	
 	public void damage(Sprite hitter) {

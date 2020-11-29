@@ -1,5 +1,7 @@
 package niellebeck.game.scenes;
 
+import static niellebeck.gameengine.GameEngine.getGameEngine;
+
 import niellebeck.game.sprites.Door;
 import niellebeck.game.sprites.PlayerCharacter;
 import niellebeck.gameengine.GameScene;

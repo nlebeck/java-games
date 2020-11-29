@@ -1,5 +1,7 @@
 package niellebeck.game.scenes;
 
+import static niellebeck.gameengine.GameEngine.getGameEngine;
+
 import java.util.ArrayList;
 import java.util.List;
 

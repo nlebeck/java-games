@@ -1,5 +1,7 @@
 package niellebeck.game.scenes;
 
+import static niellebeck.gameengine.GameEngine.getGameEngine;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;

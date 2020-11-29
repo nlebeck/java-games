@@ -3,6 +3,8 @@ package niellebeck.game;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
 
+import static niellebeck.gameengine.GameEngine.getGameEngine;
+
 import niellebeck.game.collisionhandlers.BulletBulletCollisionHandler;
 import niellebeck.game.collisionhandlers.BulletDoorCollisionHandler;
 import niellebeck.game.collisionhandlers.BulletEnemyCollisionHandler;

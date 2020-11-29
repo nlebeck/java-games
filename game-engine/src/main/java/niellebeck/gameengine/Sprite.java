@@ -1,5 +1,7 @@
 package niellebeck.gameengine;
 
+import static niellebeck.gameengine.GameEngine.getGameEngine;
+
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -200,7 +202,7 @@ public abstract class Sprite {
 		
 		tempMove(moveDir, moveDistance);
 		
-		EventManager collisionManager = GameEngine.getGameEngine().getEventManager();
+		EventManager collisionManager = getGameEngine().getEventManager();
 		boolean collision = collisionManager.testAndAddCollisions(this);
 		if (collision) {
 			posX = lastPosX;
