@@ -36,6 +36,9 @@ public class MyGameLogic extends GameLogic {
 	private int playerHp;
 	private boolean levelOneDoorIsOpen;
 	
+	private Menu mainMenu;
+	private Menu itemsSubMenu;
+	
 	@Override
 	public void init() {
 		getGameEngine().registerClassPairCollisionHandler(new BulletEnemyCollisionHandler());
@@ -47,12 +50,25 @@ public class MyGameLogic extends GameLogic {
 		
 		getGameEngine().addOverlay(new HpOverlay());
 		
-		getGameEngine().setMenu(new Menu(Arrays.asList(new String[] {"Status", "Items", "Save"})));
+		itemsSubMenu = new Menu(Arrays.asList(new Menu.Item[] {
+				new Menu.Item("PlaceholderFullHeal", () ->  { playerHp = MAX_PLAYER_HP; }),
+				new Menu.Item("UselessPlaceholder", () ->  {}),
+		}));
+		mainMenu = new Menu(Arrays.asList(new Menu.Item[] {
+				new Menu.Item("Status", () ->  {}),
+				new Menu.Item("Items", new Menu.NavigateAction(itemsSubMenu)),
+				new Menu.Item("Save", () ->  {}),
+		}));
 		
 		playerHp = MAX_PLAYER_HP;
 		levelOneDoorIsOpen = false;
 		
 		resetState();
+	}
+	
+	@Override
+	public Menu getRootMenu() {
+		return mainMenu;
 	}
 	
 	private void resetState() {

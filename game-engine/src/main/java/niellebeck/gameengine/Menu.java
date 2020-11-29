@@ -7,11 +7,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Menu {
-	List<String> menuItems;
+	public static class Item {
+		private String name;
+		private Action action;
+		
+		public Item(String name, Action action) {
+			this.name = name;
+			this.action = action;
+		}
+	}
+	
+	/** A closure that runs when a menu item is selected. */
+	public static interface Action {
+		void onSelect();
+	}
+	
+	/**
+	 * An {@link Action} that navigates to a particular child menu, pushing the
+	 * current {@link Menu} onto the menu stack.
+	 */
+	public static class NavigateAction implements Action {
+		private Menu childMenu;
+		
+		public NavigateAction(Menu childMenu) {
+			this.childMenu = childMenu;
+		}
+		
+		@Override
+		public void onSelect() {
+			GameEngine.getGameEngine().pushMenu(childMenu);
+		}
+	}
+	
+	List<Item> menuItems;
 	int selectedItem;
 	
-	public Menu(List<String> items) {
-		menuItems = new ArrayList<String>();
+	public Menu(List<Item> items) {
+		menuItems = new ArrayList<Item>();
 		menuItems.addAll(items);
 		selectedItem = 0;
 	}
@@ -25,7 +57,7 @@ public class Menu {
 		for (int i = 0; i < menuItems.size(); i++) {
 			int vertOffset = i * 20 + 40;
 			int horizOffset = GamePanel.PANEL_WIDTH - 180;
-			g.drawString(menuItems.get(i), horizOffset, vertOffset);
+			g.drawString(menuItems.get(i).name, horizOffset, vertOffset);
 			if (selectedItem == i) {
 				g.drawRect(horizOffset - 10, vertOffset - 15, 60, 20);
 			}
@@ -35,15 +67,29 @@ public class Menu {
 	public GameState update(KeyboardInput keyboard) {
 		GameState nextState = GameState.MENU;
 		if (keyboard.keyPressed(KeyEvent.VK_TAB)) {
+			// Pop the menu stack all the way back to the root menu and return
+			// to the game.
+			while (!GameEngine.getGameEngine().onRootMenu()) {
+				GameEngine.getGameEngine().popMenu();
+			}
 			nextState = GameState.PLAYING;
 		}
-		else {
-			if (keyboard.keyPressed(KeyEvent.VK_UP)) {
-				moveCursorUp();
+		else if (keyboard.keyPressed(KeyEvent.VK_BACK_SPACE)) {
+			// Pop the menu stack once, or return to the game if the root menu
+			// is currently active.
+			if (GameEngine.getGameEngine().onRootMenu()) {
+				nextState = GameState.PLAYING;
+			} else {
+				GameEngine.getGameEngine().popMenu();
 			}
-			else if (keyboard.keyPressed(KeyEvent.VK_DOWN)) {
-				moveCursorDown();
-			}
+		}
+		else if (keyboard.keyPressed(KeyEvent.VK_UP)) {
+			moveCursorUp();
+		}
+		else if (keyboard.keyPressed(KeyEvent.VK_DOWN)) {
+			moveCursorDown();
+		} else if (keyboard.keyPressed(KeyEvent.VK_ENTER)) {
+			menuItems.get(selectedItem).action.onSelect();
 		}
 		return nextState;
 	}

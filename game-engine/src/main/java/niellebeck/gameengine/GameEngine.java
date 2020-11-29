@@ -5,13 +5,17 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 
 public class GameEngine {
 	
 	private static GameEngine singleton;
 	
-	Menu menu;
+	Menu rootMenu;
+	Menu currentMenu;
+	private Deque<Menu> menuStack;
 	
 	GameLogic gameLogic;
 	Scene currentScene;
@@ -52,19 +56,39 @@ public class GameEngine {
 		
 		overlays = new ArrayList<Overlay>();
 		
-		menu = new Menu(new ArrayList<String>());
-		
 		musicManager = new MusicManager();
 	}
 	
 	private void initGameLogic(GameLogic gameLogic) {
 		this.gameLogic = gameLogic;
 		this.gameLogic.init();
+		
+		rootMenu = gameLogic.getRootMenu();
+		currentMenu = gameLogic.getRootMenu();
+		menuStack = new LinkedList<Menu>();
+		
 		changeScene(this.gameLogic.getFirstScene());
 	}
 	
-	public void setMenu(Menu menu) {
-		this.menu = menu;
+	public void pushMenu(Menu menu) {
+		if (menu == this.rootMenu) {
+			Logger.panic("Cycles in menu graph are not allowed");
+			return;
+		}
+		menuStack.push(this.currentMenu);
+		this.currentMenu = menu;
+	}
+	
+	public void popMenu() {
+		if (menuStack.isEmpty()) {
+			Logger.panic("Menu stack is empty");
+			return;
+		}
+		this.currentMenu = menuStack.pop();
+	}
+	
+	public boolean onRootMenu() {
+		return this.currentMenu == this.rootMenu;
 	}
 	
 	public void changeScene(Scene scene) {
@@ -138,7 +162,7 @@ public class GameEngine {
 		}
 		else if (gameState == GameState.MENU) {
 			drawSpritesAndTilemap(bufferGraphics, gameScene);
-			menu.draw(bufferGraphics);
+			currentMenu.draw(bufferGraphics);
 		}
 		else if (gameState == GameState.DIALOGUE) {
 			drawSpritesAndTilemap(bufferGraphics, gameScene);
@@ -196,7 +220,7 @@ public class GameEngine {
 			gameState = updateGameScene(keyboard, gameScene);
 		}
 		else if (gameState == GameState.MENU) {
-			gameState = menu.update(keyboard);
+			gameState = currentMenu.update(keyboard);
 		}
 		else if (gameState == GameState.DIALOGUE) {
 			gameState = DialogueManager.getInstance().update(keyboard);

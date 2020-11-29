@@ -26,4 +26,6 @@ public abstract class GameLogic {
 	 * modifying of its state in response to a Scene change.
 	 */
 	public abstract void onChangeScene();
+	
+	public abstract Menu getRootMenu();
 }
